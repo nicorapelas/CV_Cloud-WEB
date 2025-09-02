@@ -1,0 +1,467 @@
+.interest-form {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 16px;
+}
+
+/* Interest Form Container */
+.interest-form-container {
+  background: #f8f9fa;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.interest-form-header {
+  background: white;
+  padding: 20px 24px;
+  margin: 16px 20px 0 20px;
+  border-bottom: 1px solid #e5e7eb;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  transition: all 0.3s ease;
+  border: none;
+  box-shadow: 0 0 50px rgba(39, 138, 205, 0.6);
+}
+
+.interest-form-header-icon {
+  font-size: 2.5rem;
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f8f9fa;
+  border-radius: 12px;
+  flex-shrink: 0;
+}
+
+.interest-form-header-content h2 {
+  margin: 0 0 4px 0;
+  font-size: 24px;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.interest-form-header-content p {
+  margin: 0;
+  color: #6b7280;
+  font-size: 14px;
+}
+
+.interest-form-element {
+  padding: 20px 24px;
+  transition: all 0.3s ease;
+  overflow: hidden;
+}
+
+.interest-form-slide-down {
+  animation: interestSlideDown 0.3s ease-out;
+}
+
+@keyframes interestSlideDown {
+  from {
+    opacity: 0;
+    max-height: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    max-height: 1000px;
+    transform: translateY(0);
+  }
+}
+
+.interest-add-section {
+  padding: 20px 24px;
+  text-align: center;
+  border-top: 1px solid #e5e7eb;
+}
+
+.interest-add-button {
+  background: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 24px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.interest-add-button::before {
+  content: '➕';
+  filter: brightness(0) invert(1);
+}
+
+.interest-add-button:hover {
+  background: #2563eb;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(59, 130, 246, 0.3);
+}
+
+.interest-add-button:active {
+  transform: translateY(0);
+}
+
+.interest-form-section {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.interest-form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.interest-form-label {
+  font-weight: 500;
+  color: #374151;
+  font-size: 14px;
+}
+
+.interest-required {
+  color: #ef4444;
+}
+
+.interest-form-input {
+  padding: 12px 16px;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  background: white;
+}
+
+.interest-form-input:focus {
+  outline: none;
+  border-color: #278acd;
+  box-shadow: 0 0 0 3px rgba(39, 138, 205, 0.1);
+}
+
+.interest-form-input.interest-form-error {
+  border-color: #ef4444;
+}
+
+.interest-form-error-message {
+  color: #ef4444;
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+.interest-form-char-count {
+  color: #9ca3af;
+  font-size: 12px;
+  text-align: right;
+  margin-top: 4px;
+}
+
+.interest-form-success {
+  background: #d1fae5;
+  color: #065f46;
+  padding: 12px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  margin-top: 20px !important;
+  margin-bottom: 16px;
+  text-align: center;
+}
+
+.interest-form-actions {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.interest-form-button {
+  padding: 0.75rem 2rem;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.interest-form-button.primary {
+  background: #278acd;
+  color: white;
+}
+
+.interest-form-button.primary:hover:not(:disabled) {
+  background: #1e6bb8;
+  transform: translateY(-1px);
+}
+
+.interest-form-button.primary:disabled {
+  background: #9ca3af;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.interest-form-button.secondary {
+  background: #f3f4f6;
+  color: #374151;
+  border: 1px solid #d1d5db;
+}
+
+.interest-form-button.secondary:hover {
+  background: #e5e7eb;
+  transform: translateY(-1px);
+}
+
+/* Interests List Styles */
+.interests-list {
+  display: flex;
+  flex-direction: column;
+  margin-top: 24px;
+  padding: 24px;
+  border-top: 1px solid #e5e7eb;
+  overflow: visible;
+}
+
+.interests-list h3 {
+  margin: 0 0 20px 0;
+  font-size: 20px;
+  font-weight: 600;
+  color: #1f2937;
+  display: block;
+  visibility: visible;
+  position: relative;
+  z-index: 1;
+}
+
+.interest-form .interest-item {
+  background: white;
+  border: 5px solid #278bcd53;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 16px;
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 16px;
+  box-shadow: none;
+  position: relative;
+  z-index: 2;
+}
+
+.interest-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 24px;
+  flex: 1;
+}
+
+.interest-title-section {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex: 1;
+}
+
+.interest-dot {
+  color: #000000;
+  font-size: 10px;
+  font-weight: bold;
+}
+
+.interest-title {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #1f2937;
+  line-height: 1.4;
+}
+
+.interest-actions-section {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.interest-actions {
+  display: flex;
+  gap: 6px;
+  width: fit-content;
+}
+
+.edit-button,
+.delete-button {
+  border: none;
+  padding: 8px;
+  border-radius: 50%;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+}
+
+.edit-button {
+  background: #558dd8;
+  color: #ffff;
+}
+
+.edit-button:hover {
+  background: #4a7bc7;
+  transform: scale(1.05);
+}
+
+.delete-button {
+  background: #c35a44;
+  color: #ffff;
+}
+
+.delete-button:hover {
+  background: #b04a35;
+  transform: scale(1.05);
+}
+
+.interest-date {
+  color: #9ca3af;
+  font-size: 12px;
+  flex-shrink: 0;
+  min-width: 120px;
+  text-align: right;
+}
+
+.delete-confirmation {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: flex-end;
+}
+
+.delete-confirmation-text-container {
+  width: 100%;
+  text-align: center;
+}
+
+.delete-confirmation-text {
+  color: #ef4444;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.delete-confirmation-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.confirm-delete-button,
+.cancel-delete-button {
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.confirm-delete-button {
+  background: #dc2626;
+  color: white;
+}
+
+.confirm-delete-button:hover {
+  background: #b91c1c;
+  transform: translateY(-1px);
+}
+
+.cancel-delete-button {
+  background: #6b7280;
+  color: white;
+}
+
+.cancel-delete-button:hover {
+  background: #4b5563;
+  transform: translateY(-1px);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .interest-form {
+    padding: 16px;
+  }
+
+  .interest-form-header {
+    padding: 20px;
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .interest-form-header-icon {
+    width: 50px;
+    height: 50px;
+    font-size: 24px;
+  }
+
+  .interest-form-element {
+    padding: 20px;
+  }
+
+  .interest-form-actions {
+    flex-direction: column;
+  }
+
+  .interest-form-button {
+    width: 100%;
+  }
+
+  .interest-item {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+
+  .interest-content {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .interest-title-section {
+    width: 100%;
+  }
+
+  .interest-actions-section {
+    align-self: flex-end;
+  }
+
+  .interest-date {
+    text-align: left;
+    min-width: auto;
+  }
+
+  .delete-confirmation {
+    align-items: flex-end;
+  }
+
+  .delete-confirmation-text {
+    text-align: right;
+  }
+}

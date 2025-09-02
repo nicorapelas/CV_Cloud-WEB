@@ -1,0 +1,97 @@
+.share-cv {
+  min-height: 100vh;
+  background: #f8f9fa;
+  font-family:
+    -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu',
+    'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+}
+
+.share-cv-header {
+  background: #232936;
+  color: white;
+  padding: 1rem 0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.share-cv-header-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.share-cv-back {
+  color: #278acd;
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.2s;
+}
+
+.share-cv-back:hover {
+  color: #1f6fa3;
+}
+
+.share-cv-header h1 {
+  margin: 0;
+  font-size: 1.8rem;
+  font-weight: bold;
+}
+
+.share-cv-main {
+  padding: 2rem 0;
+}
+
+.share-cv-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.share-cv-content {
+  background: white;
+  border-radius: 12px;
+  padding: 3rem;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.share-cv-content h2 {
+  color: #232936;
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.share-cv-content p {
+  color: #666;
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
+  line-height: 1.6;
+}
+
+.share-cv-content ul {
+  text-align: left;
+  max-width: 400px;
+  margin: 2rem auto;
+  color: #666;
+}
+
+.share-cv-content li {
+  margin-bottom: 0.5rem;
+  line-height: 1.4;
+}
+
+@media (max-width: 768px) {
+  .share-cv-header-content {
+    padding: 0 1rem;
+  }
+
+  .share-cv-container {
+    padding: 0 1rem;
+  }
+
+  .share-cv-content {
+    padding: 2rem;
+  }
+}

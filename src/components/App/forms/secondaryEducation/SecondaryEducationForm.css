@@ -1,0 +1,474 @@
+.secondary-education-form {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 16px;
+}
+
+/* Secondary Education Form Container */
+.secondary-education-form-container {
+  background: #f8f9fa;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.secondary-education-form-header {
+  background: white;
+  padding: 20px 24px;
+  margin: 16px 20px 0 20px;
+  border-bottom: 1px solid #e5e7eb;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  transition: all 0.3s ease;
+  border: none;
+  box-shadow: 0 0 50px rgba(39, 138, 205, 0.6);
+}
+
+.secondary-education-form-header-icon {
+  font-size: 2.5rem;
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f8f9fa;
+  border-radius: 12px;
+  flex-shrink: 0;
+}
+
+.secondary-education-form-header-content {
+  flex: 1;
+}
+
+.secondary-education-form-header-content h2 {
+  margin: 0 0 4px 0;
+  font-size: 24px;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.secondary-education-form-header-content p {
+  margin: 0;
+  color: #6b7280;
+  font-size: 14px;
+}
+
+.secondary-education-form-element {
+  padding: 20px 24px;
+  transition: all 0.3s ease;
+  overflow: hidden;
+}
+
+.secondary-education-slide-down {
+  animation: secondaryEducationSlideDown 0.3s ease-out;
+}
+
+@keyframes secondaryEducationSlideDown {
+  from {
+    opacity: 0;
+    max-height: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    max-height: 1000px;
+    transform: translateY(0);
+  }
+}
+
+.secondary-education-add-section {
+  padding: 24px;
+  text-align: center;
+  border-top: 1px solid #e5e7eb;
+}
+
+.secondary-education-add-button {
+  background: #278acd;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 24px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.secondary-education-add-button::before {
+  content: '➕';
+  filter: brightness(0) invert(1);
+}
+
+.secondary-education-add-button:hover {
+  background: #1e6bb8;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(39, 138, 205, 0.3);
+}
+
+.secondary-education-add-button:active {
+  transform: translateY(0);
+}
+
+.secondary-education-cancel-add-button {
+  background: #6b7280;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 24px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: 12px;
+}
+
+.secondary-education-cancel-add-button:hover {
+  background: #4b5563;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(107, 114, 128, 0.3);
+}
+
+.secondary-education-cancel-add-button:active {
+  transform: translateY(0);
+}
+
+.secondary-education-form-section {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.secondary-education-form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.secondary-education-form-label {
+  font-weight: 500;
+  color: #374151;
+  font-size: 14px;
+}
+
+.secondary-education-required {
+  color: #ef4444;
+}
+
+.secondary-education-form-input,
+.secondary-education-form-textarea {
+  padding: 12px 16px;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  background: white;
+}
+
+.secondary-education-form-input:focus,
+.secondary-education-form-textarea:focus {
+  outline: none;
+  border-color: #278acd;
+  box-shadow: 0 0 0 3px rgba(39, 138, 205, 0.1);
+}
+
+.secondary-education-form-input.secondary-education-form-error,
+.secondary-education-form-textarea.secondary-education-form-error {
+  border-color: #ef4444;
+}
+
+.secondary-education-form-textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.secondary-education-form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.secondary-education-form-col {
+  display: flex;
+  flex-direction: column;
+}
+
+.secondary-education-form-error-message {
+  color: #ef4444;
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+.secondary-education-form-char-count {
+  color: #9ca3af;
+  font-size: 12px;
+  text-align: right;
+  margin-top: 4px;
+}
+
+.secondary-education-form-success {
+  background: #d1fae5;
+  color: #065f46;
+  padding: 12px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  margin-bottom: 16px;
+  text-align: center;
+}
+
+.secondary-education-form-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.secondary-education-form-button {
+  padding: 0.75rem 2rem;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.secondary-education-form-button.primary {
+  background: #278acd;
+  color: white;
+}
+
+.secondary-education-form-button.primary:hover:not(:disabled) {
+  background: #1e6bb8;
+  transform: translateY(-1px);
+}
+
+.secondary-education-form-button.primary:disabled {
+  background: #9ca3af;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.secondary-education-form-button.secondary {
+  background: #f3f4f6;
+  color: #374151;
+  border: 1px solid #d1d5db;
+}
+
+.secondary-education-form-button.secondary:hover {
+  background: #e5e7eb;
+  transform: translateY(-1px);
+}
+
+/* Secondary Education List Styles */
+.secondary-education-list {
+  margin-top: 40px;
+  padding-top: 20px;
+  padding-left: 25px;
+  padding-right: 25px;
+  border-top: 1px solid #e0e0e0;
+}
+
+.secondary-education-list h3 {
+  margin: 0 0 20px 0;
+  font-size: 20px;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.secondary-education-item {
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 16px;
+  transition: all 0.3s ease;
+}
+
+.secondary-education-item:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transform: translateY(-1px);
+}
+
+.secondary-education-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.secondary-education-header h4 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.secondary-education-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.edit-button,
+.delete-button {
+  border: none;
+  padding: 8px;
+  border-radius: 50%;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+}
+
+.edit-button {
+  background: #558dd8;
+  color: #ffff;
+}
+
+.edit-button:hover {
+  background: #4a7bc7;
+  transform: scale(1.05);
+}
+
+.delete-button {
+  background: #c35a44;
+  color: #ffff;
+}
+
+.delete-button:hover {
+  background: #b04a35;
+  transform: scale(1.05);
+}
+
+.delete-confirmation-text {
+  color: #ef4444;
+  font-size: 12px;
+  font-weight: 500;
+  margin-right: 8px;
+}
+
+.confirm-delete-button,
+.cancel-delete-button {
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.confirm-delete-button {
+  background: #dc2626;
+  color: white;
+}
+
+.confirm-delete-button:hover {
+  background: #b91c1c;
+  transform: translateY(-1px);
+}
+
+.cancel-delete-button {
+  background: #6b7280;
+  color: white;
+}
+
+.cancel-delete-button:hover {
+  background: #4b5563;
+  transform: translateY(-1px);
+}
+
+.secondary-education-dates {
+  color: #6b7280;
+  font-size: 14px;
+  margin-bottom: 8px;
+}
+
+.secondary-education-subjects,
+.secondary-education-additional {
+  color: #374151;
+  font-size: 14px;
+  margin-bottom: 8px;
+  line-height: 1.5;
+}
+
+.secondary-education-date {
+  color: #9ca3af;
+  font-size: 12px;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid #e5e7eb;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .secondary-education-form {
+    padding: 16px;
+  }
+
+  .secondary-education-form-header {
+    padding: 20px;
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .secondary-education-form-header-icon {
+    width: 50px;
+    height: 50px;
+    font-size: 24px;
+  }
+
+  .secondary-education-form-element {
+    padding: 20px;
+  }
+
+  .secondary-education-form-row {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .secondary-education-form-actions {
+    flex-direction: column;
+  }
+
+  .secondary-education-form-button {
+    width: 100%;
+  }
+
+  .secondary-education-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .secondary-education-actions {
+    align-self: flex-end;
+  }
+
+  .delete-confirmation-text {
+    display: block;
+    margin-bottom: 8px;
+    margin-right: 0;
+  }
+
+  .edit-button {
+    align-self: flex-end;
+  }
+}
