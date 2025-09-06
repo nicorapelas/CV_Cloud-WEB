@@ -45,6 +45,10 @@ const PhotoForm = () => {
   const [uploading, setUploading] = useState(false);
   const [previewUrl, setPreviewUrl] = useState('');
   const [deletingPhotoId, setDeletingPhotoId] = useState(null);
+  const [showCamera, setShowCamera] = useState(false);
+  const [cameraStream, setCameraStream] = useState(null);
+  const videoRef = useRef(null);
+  const canvasRef = useRef(null);
 
   // Scroll to top when component mounts
   useEffect(() => {
@@ -91,27 +95,127 @@ const PhotoForm = () => {
   const handleFileSelect = async e => {
     const file = e.target.files[0];
     if (file) {
-      // Validate file type
-      if (!file.type.startsWith('image/')) {
-        setErrors({ file: 'Please select an image file' });
-        return;
-      }
+      processSelectedFile(file);
+    }
+  };
 
-      // Validate file size (max 10MB for Cloudinary)
-      if (file.size > 10 * 1024 * 1024) {
-        setErrors({ file: 'File size must be less than 10MB' });
-        return;
-      }
+  // Image compression utility function
+  const compressImage = (file, maxWidth = 1200, quality = 0.3) => {
+    return new Promise((resolve, reject) => {
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      const img = new Image();
 
-      setErrors({});
-      setSelectedFile(file);
+      img.onload = () => {
+        // Calculate new dimensions while maintaining aspect ratio
+        let { width, height } = img;
+        if (width > maxWidth) {
+          height = (height * maxWidth) / width;
+          width = maxWidth;
+        }
 
-      // Create preview URL
+        // Set canvas dimensions
+        canvas.width = width;
+        canvas.height = height;
+
+        // Draw and compress image
+        ctx.drawImage(img, 0, 0, width, height);
+
+        // Convert to blob with compression
+        canvas.toBlob(
+          blob => {
+            if (blob) {
+              // Create a new file with the compressed blob
+              const compressedFile = new File([blob], file.name, {
+                type: 'image/jpeg',
+                lastModified: Date.now(),
+              });
+              resolve(compressedFile);
+            } else {
+              reject(new Error('Failed to compress image'));
+            }
+          },
+          'image/jpeg',
+          quality
+        );
+      };
+
+      img.onerror = () => reject(new Error('Failed to load image'));
+      img.src = URL.createObjectURL(file);
+    });
+  };
+
+  // Process selected file (shared by file input and drag & drop)
+  const processSelectedFile = async file => {
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      setErrors({ file: 'Please select an image file' });
+      return;
+    }
+
+    // Validate file size (max 10MB for Cloudinary)
+    if (file.size > 10 * 1024 * 1024) {
+      setErrors({ file: 'File size must be less than 10MB' });
+      return;
+    }
+
+    setErrors({});
+
+    try {
+      // Show compression progress
+      setUploading(true);
+
+      // Compress the image (resize to max 1200px width, 30% quality, convert to JPEG)
+      const compressedFile = await compressImage(file, 1200, 0.3);
+
+      console.log('Image compression results:');
+      console.log('Original size:', (file.size / 1024 / 1024).toFixed(2), 'MB');
+      console.log(
+        'Compressed size:',
+        (compressedFile.size / 1024 / 1024).toFixed(2),
+        'MB'
+      );
+      console.log(
+        'Compression ratio:',
+        ((1 - compressedFile.size / file.size) * 100).toFixed(1),
+        '%'
+      );
+
+      setSelectedFile(compressedFile);
+
+      // Create preview URL from compressed file
       const reader = new FileReader();
       reader.onload = e => {
         setPreviewUrl(e.target.result);
       };
-      reader.readAsDataURL(file);
+      reader.readAsDataURL(compressedFile);
+    } catch (error) {
+      console.error('Image compression error:', error);
+      setErrors({ file: 'Failed to process image. Please try again.' });
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  // Drag and drop functionality
+  const handleDragOver = e => {
+    e.preventDefault();
+    e.currentTarget.classList.add('drag-over');
+  };
+
+  const handleDragLeave = e => {
+    e.preventDefault();
+    e.currentTarget.classList.remove('drag-over');
+  };
+
+  const handleDrop = e => {
+    e.preventDefault();
+    e.currentTarget.classList.remove('drag-over');
+
+    const files = e.dataTransfer.files;
+    if (files.length > 0) {
+      const file = files[0];
+      processSelectedFile(file);
     }
   };
 
@@ -236,6 +340,108 @@ const PhotoForm = () => {
     setDeletingPhotoId(null);
   };
 
+  // Camera functionality
+  const startCamera = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: {
+          width: { ideal: 1280 },
+          height: { ideal: 720 },
+          facingMode: 'user', // Front camera
+        },
+      });
+
+      setCameraStream(stream);
+      setShowCamera(true);
+
+      // Wait for the video element to be ready
+      if (videoRef.current) {
+        videoRef.current.srcObject = stream;
+
+        // Ensure the video loads and plays
+        videoRef.current.onloadedmetadata = () => {
+          videoRef.current.play().catch(console.error);
+        };
+      }
+    } catch (error) {
+      console.error('Error accessing camera:', error);
+      setErrors({
+        camera: 'Unable to access camera. Please check permissions.',
+      });
+    }
+  };
+
+  const stopCamera = () => {
+    if (cameraStream) {
+      cameraStream.getTracks().forEach(track => track.stop());
+      setCameraStream(null);
+    }
+    setShowCamera(false);
+  };
+
+  const capturePhoto = () => {
+    if (!videoRef.current || !canvasRef.current) return;
+
+    const video = videoRef.current;
+    const canvas = canvasRef.current;
+    const context = canvas.getContext('2d');
+
+    // Set canvas dimensions to match video
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+
+    // Draw the current video frame to canvas
+    context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+    // Convert canvas to blob
+    canvas.toBlob(
+      async blob => {
+        if (blob) {
+          // Create a file from the blob
+          const timestamp = Date.now();
+          const fileName = `camera-photo-${timestamp}.jpg`;
+          const file = new File([blob], fileName, {
+            type: 'image/jpeg',
+            lastModified: Date.now(),
+          });
+
+          // Process the captured photo
+          await processSelectedFile(file);
+
+          // Stop camera
+          stopCamera();
+        }
+      },
+      'image/jpeg',
+      0.8
+    );
+  };
+
+  // Handle video element when camera becomes visible
+  useEffect(() => {
+    if (showCamera && cameraStream && videoRef.current) {
+      const video = videoRef.current;
+      video.srcObject = cameraStream;
+
+      video.onloadedmetadata = () => {
+        video.play().catch(console.error);
+      };
+
+      video.onerror = e => {
+        console.error('Video error:', e);
+      };
+    }
+  }, [showCamera, cameraStream]);
+
+  // Cleanup camera stream on component unmount
+  useEffect(() => {
+    return () => {
+      if (cameraStream) {
+        cameraStream.getTracks().forEach(track => track.stop());
+      }
+    };
+  }, [cameraStream]);
+
   // Handle input changes
   const handleInputChange = e => {
     const { name, value } = e.target;
@@ -259,10 +465,12 @@ const PhotoForm = () => {
 
   return (
     <div className="photo-form-container" ref={formTopRef}>
-      <div className="form-header">
-        <div className="form-header-icon">📷</div>
-        <h2>Profile Photo</h2>
-        <p>Upload and manage your profile photos</p>
+      <div className="photo-form-header">
+        <div className="photo-form-header-icon">📷</div>
+        <div className="photo-form-header-content">
+          <h2>Profile Photo</h2>
+          <p>Upload and manage your profile photos</p>
+        </div>
       </div>
 
       {/* Success Message */}
@@ -285,23 +493,136 @@ const PhotoForm = () => {
       <form onSubmit={handleSubmit} className="photo-upload-form">
         <div className="form-group">
           <label htmlFor="photo-file">Select Photo:</label>
-          <input
-            type="file"
-            id="photo-file"
-            accept="image/*"
-            onChange={handleFileSelect}
-            disabled={uploading}
-          />
-          <small className="form-help-text">
-            Supported formats: JPG, PNG, GIF. Max size: 10MB.
-          </small>
-        </div>
 
-        {previewUrl && (
-          <div className="photo-preview">
-            <img src={previewUrl} alt="Preview" />
-          </div>
-        )}
+          {/* Camera Interface */}
+          {showCamera && (
+            <div className="photo-form-camera-container">
+              <div className="photo-form-camera-preview">
+                <video
+                  ref={videoRef}
+                  autoPlay
+                  playsInline
+                  muted
+                  className="photo-form-camera-video"
+                />
+                <canvas ref={canvasRef} style={{ display: 'none' }} />
+              </div>
+              <div className="photo-form-camera-controls">
+                <button
+                  type="button"
+                  className="photo-form-camera-button capture"
+                  onClick={capturePhoto}
+                >
+                  📸 Capture Photo
+                </button>
+                <button
+                  type="button"
+                  className="photo-form-camera-button cancel"
+                  onClick={stopCamera}
+                >
+                  ❌ Cancel
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* File Upload Interface */}
+          {!showCamera && (
+            <div className="file-upload-container">
+              {uploading && !selectedFile ? (
+                <div className="file-upload-area compressing">
+                  <div className="file-upload-content">
+                    <div className="file-upload-icon">⚙️</div>
+                    <p className="file-upload-text">
+                      <strong>Compressing image...</strong>
+                    </p>
+                    <p className="file-upload-hint">
+                      Please wait while we optimize your image for upload
+                    </p>
+                  </div>
+                </div>
+              ) : !selectedFile ? (
+                <div className="photo-form-upload-options">
+                  <div
+                    className="file-upload-area"
+                    onDragOver={handleDragOver}
+                    onDragLeave={handleDragLeave}
+                    onDrop={handleDrop}
+                  >
+                    <input
+                      type="file"
+                      id="photo-file"
+                      accept="image/*"
+                      onChange={handleFileSelect}
+                      className="file-input"
+                      disabled={uploading}
+                    />
+                    <div className="file-upload-content">
+                      <div className="file-upload-icon">📁</div>
+                      <p className="file-upload-text">
+                        <strong>Click to upload</strong> or drag and drop
+                      </p>
+                      <p className="file-upload-hint">
+                        JPG, PNG, or GIF (max 10MB) -{' '}
+                        <span className="required-text">Required</span>
+                      </p>
+                      <p className="file-upload-compression-note">
+                        Images will be automatically compressed for optimal
+                        upload
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="photo-form-upload-divider">
+                    <span>OR</span>
+                  </div>
+
+                  <button
+                    type="button"
+                    className="photo-form-camera-upload-button"
+                    onClick={startCamera}
+                    disabled={uploading}
+                  >
+                    <div className="photo-form-camera-upload-content">
+                      <div className="photo-form-camera-upload-icon">📷</div>
+                      <p className="photo-form-camera-upload-text">
+                        <strong>Take Photo</strong>
+                      </p>
+                      <p className="photo-form-camera-upload-hint">
+                        Use your camera to take a new photo
+                      </p>
+                    </div>
+                  </button>
+                </div>
+              ) : (
+                <div className="file-preview-container">
+                  <div className="image-preview">
+                    <img src={previewUrl} alt="Preview" />
+                  </div>
+                  <div className="file-preview-info">
+                    <p className="file-name">{selectedFile.name}</p>
+                    <p className="file-size">
+                      {(selectedFile.size / 1024 / 1024).toFixed(2)} MB
+                      <span className="compression-badge">Compressed</span>
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    className="remove-file-button"
+                    onClick={() => {
+                      setSelectedFile(null);
+                      setPreviewUrl('');
+                      setErrors({});
+                    }}
+                    disabled={uploading}
+                  >
+                    Remove
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
 
         <div className="form-group">
           <label htmlFor="photo-title">Photo Title:</label>
@@ -362,22 +683,29 @@ const PhotoForm = () => {
                       </button>
                     )}
                     {deletingPhotoId === photo._id ? (
-                      <>
-                        <button
-                          onClick={() =>
-                            handleDeletePhoto(photo._id, photo.publicId)
-                          }
-                          className="photo-action-button delete-confirm"
-                        >
-                          Confirm
-                        </button>
-                        <button
-                          onClick={handleDeleteCancel}
-                          className="photo-action-button cancel"
-                        >
-                          Cancel
-                        </button>
-                      </>
+                      <div className="delete-confirmation">
+                        <div className="delete-confirmation-text-container">
+                          <span className="delete-confirmation-text">
+                            Delete this photo?
+                          </span>
+                        </div>
+                        <div className="delete-confirmation-buttons">
+                          <button
+                            onClick={() =>
+                              handleDeletePhoto(photo._id, photo.publicId)
+                            }
+                            className="confirm-delete-button"
+                          >
+                            Yes, Delete
+                          </button>
+                          <button
+                            onClick={handleDeleteCancel}
+                            className="cancel-delete-button"
+                          >
+                            Cancel
+                          </button>
+                        </div>
+                      </div>
                     ) : (
                       <button
                         onClick={() =>

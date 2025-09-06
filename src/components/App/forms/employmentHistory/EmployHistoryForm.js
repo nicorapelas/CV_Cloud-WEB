@@ -206,7 +206,10 @@ const EmployHistoryForm = () => {
       newErrors.startDate = 'Start date is required';
     }
 
-    if (formData.endDate && new Date(formData.endDate) < new Date(formData.startDate)) {
+    if (
+      formData.endDate &&
+      new Date(formData.endDate) < new Date(formData.startDate)
+    ) {
       newErrors.endDate = 'End date cannot be before start date';
     }
 
@@ -215,7 +218,7 @@ const EmployHistoryForm = () => {
     }
 
     setErrors(newErrors);
-    
+
     // If there are errors, scroll to the first error field
     if (Object.keys(newErrors).length > 0) {
       const firstErrorField = Object.keys(newErrors)[0];
@@ -237,7 +240,7 @@ const EmployHistoryForm = () => {
         setTimeout(scrollToError, 100);
       }
     }
-    
+
     return Object.keys(newErrors).length === 0;
   };
 
@@ -405,9 +408,9 @@ const EmployHistoryForm = () => {
   return (
     <div className="employment-history-form">
       <div className="form-container" ref={formTopRef}>
-        <div className="form-header">
-          <div className="form-header-icon">💼</div>
-          <div className="form-header-content">
+        <div className="employment-history-form-header">
+          <div className="employment-history-form-header-icon">💼</div>
+          <div className="employment-history-form-header-content">
             <h2>Employment History</h2>
             <p>Add your work experience and employment history</p>
           </div>

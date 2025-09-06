@@ -11,40 +11,42 @@
   overflow: hidden;
 }
 
-.form-header {
+/* Employment History Form Header */
+.employment-history-form-header {
   background: white;
-  padding: 24px;
+  padding: 20px 24px;
+  margin: 16px 20px 40px 20px;
   border-bottom: 1px solid #e5e7eb;
   display: flex;
   align-items: center;
   gap: 16px;
-  transition: background-color 0.2s ease;
+  transition: all 0.3s ease;
+  border: none;
+  box-shadow: 0 0 50px rgba(39, 138, 205, 0.6);
+  position: relative;
+  z-index: 1;
 }
 
-.form-header:hover {
-  background-color: #f9fafb;
-}
-
-.form-header-icon {
-  width: 48px;
-  height: 48px;
-  border-radius: 12px;
-  background: #f8f9fa;
+.employment-history-form-header-icon {
+  font-size: 2.5rem;
+  width: 60px;
+  height: 60px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 24px;
+  background: #f8f9fa;
+  border-radius: 12px;
   flex-shrink: 0;
 }
 
-.form-header-content h2 {
+.employment-history-form-header-content h2 {
   margin: 0 0 4px 0;
   font-size: 24px;
   font-weight: 600;
-  color: #111827;
+  color: #1f2937;
 }
 
-.form-header-content p {
+.employment-history-form-header-content p {
   margin: 0;
   color: #6b7280;
   font-size: 14px;
@@ -501,17 +503,16 @@
     padding: 16px;
   }
 
-  .form-header {
+  .employment-history-form-header {
     padding: 20px;
     flex-direction: column;
     text-align: center;
-    gap: 12px;
   }
 
-  .form-header-icon {
-    width: 40px;
-    height: 40px;
-    font-size: 20px;
+  .employment-history-form-header-icon {
+    width: 50px;
+    height: 50px;
+    font-size: 24px;
   }
 
   .form {

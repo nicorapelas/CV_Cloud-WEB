@@ -21,6 +21,7 @@ const FirstImpressionRecordUpload = () => {
   const [converting, setConverting] = useState(false);
 
   const videoRef = useRef(null);
+  const portraitVideoRef = useRef(null);
   const mediaRecorderRef = useRef(null);
   const timerRef = useRef(null);
   const recordedChunksRef = useRef([]);
@@ -75,6 +76,9 @@ const FirstImpressionRecordUpload = () => {
       if (videoRef.current) {
         videoRef.current.srcObject = null;
       }
+      if (portraitVideoRef.current) {
+        portraitVideoRef.current.srcObject = null;
+      }
 
       let mediaStream;
       try {
@@ -124,6 +128,10 @@ const FirstImpressionRecordUpload = () => {
           });
         };
       }
+
+      if (portraitVideoRef.current) {
+        portraitVideoRef.current.srcObject = mediaStream;
+      }
     } catch (err) {
       if (err.name === 'NotAllowedError') {
         setError(
@@ -161,35 +169,19 @@ const FirstImpressionRecordUpload = () => {
     try {
       recordedChunksRef.current = [];
 
-      // Create canvas for portrait recording
-      const canvas = document.createElement('canvas');
-      const ctx = canvas.getContext('2d');
-
-      // Set canvas to portrait dimensions
-      canvas.width = 720;
-      canvas.height = 1280;
-
-      // Create MediaStream from canvas
-      const canvasStream = canvas.captureStream(30); // 30 FPS
-
-      // Add audio track from original stream
-      const audioTrack = stream.getAudioTracks()[0];
-      if (audioTrack) {
-        canvasStream.addTrack(audioTrack);
-      }
-
+      // Use the original stream directly (like our working test component)
       let options = {};
       const mimeTypes = [
-        'video/mp4;codecs=h264,aac', // MP4 with H.264 + AAC
-        'video/mp4;codecs=h264', // MP4 with H.264
-        'video/mp4', // MP4 - best quality and mobile compatibility
-        'video/quicktime;codecs=h264,aac', // MOV with H.264 + AAC
-        'video/quicktime', // MOV - good for cross-platform
         'video/webm;codecs=vp9,opus', // WebM VP9 with audio
         'video/webm;codecs=vp8,opus', // WebM VP8 with audio
         'video/webm;codecs=vp9', // WebM VP9 - video only
         'video/webm;codecs=vp8', // WebM VP8 - video only
         'video/webm', // WebM - basic fallback
+        'video/mp4;codecs=h264,aac', // MP4 with H.264 + AAC
+        'video/mp4;codecs=h264', // MP4 with H.264
+        'video/mp4', // MP4 - best quality and mobile compatibility
+        'video/quicktime;codecs=h264,aac', // MOV with H.264 + AAC
+        'video/quicktime', // MOV - good for cross-platform
         'video/ogg;codecs=theora,vorbis',
         'video/ogg',
       ];
@@ -210,56 +202,13 @@ const FirstImpressionRecordUpload = () => {
         audioBitsPerSecond: 128000, // 128 kbps for audio
       };
 
-      const mediaRecorder = new MediaRecorder(canvasStream, recorderOptions);
+      const mediaRecorder = new MediaRecorder(stream, recorderOptions);
 
       // Log what the browser actually supports
       // console.log('MediaRecorder state:', mediaRecorder.state)
       // console.log('MediaRecorder MIME type:', mediaRecorder.mimeType)
       // console.log('MediaRecorder created successfully')
       mediaRecorderRef.current = mediaRecorder;
-
-      // Function to draw video frames to canvas
-      const drawFrame = () => {
-        if (videoRef.current && ctx) {
-          // Clear canvas
-          ctx.fillStyle = '#000';
-          ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-          // Calculate scaling to fit video in portrait canvas
-          const videoWidth = videoRef.current.videoWidth;
-          const videoHeight = videoRef.current.videoHeight;
-
-          let drawWidth, drawHeight, offsetX, offsetY;
-
-          if (videoWidth / videoHeight > 9 / 16) {
-            // Video is wider than portrait, scale to height
-            drawHeight = canvas.height;
-            drawWidth = (videoWidth / videoHeight) * drawHeight;
-            offsetX = (canvas.width - drawWidth) / 2;
-            offsetY = 0;
-          } else {
-            // Video is taller than portrait, scale to width
-            drawWidth = canvas.width;
-            drawHeight = (videoHeight / videoWidth) * drawWidth;
-            offsetX = 0;
-            offsetY = (canvas.height - drawHeight) / 2;
-          }
-
-          // Draw the video frame
-          ctx.drawImage(
-            videoRef.current,
-            offsetX,
-            offsetY,
-            drawWidth,
-            drawHeight
-          );
-        }
-
-        // Continue drawing frames if still recording
-        if (isRecording) {
-          requestAnimationFrame(drawFrame);
-        }
-      };
 
       mediaRecorder.ondataavailable = event => {
         if (event.data.size > 0) {
@@ -431,9 +380,6 @@ const FirstImpressionRecordUpload = () => {
       setIsTimerRunning(true);
       setRecordingTime(30); // Start countdown from 30 seconds
 
-      // Start drawing frames to canvas
-      drawFrame();
-
       // Start countdown timer
       timerRef.current = setInterval(() => {
         setRecordingTime(prev => {
@@ -477,9 +423,12 @@ const FirstImpressionRecordUpload = () => {
       setStream(null);
     }
 
-    // Clear any existing video element
+    // Clear any existing video elements
     if (videoRef.current) {
       videoRef.current.srcObject = null;
+    }
+    if (portraitVideoRef.current) {
+      portraitVideoRef.current.srcObject = null;
     }
 
     // Wait a moment for cleanup to complete
@@ -933,35 +882,74 @@ const FirstImpressionRecordUpload = () => {
       <div className="camera-container">
         {!recordedVideo ? (
           <>
-            <video
-              ref={videoRef}
-              autoPlay
-              playsInline
-              muted
-              className="camera-stream"
-            />
-            {isRecording && (
-              <div
-                className={`recording-timer ${recordingTime <= 5 && 'warning'}`}
-              >
-                <div className="timer-text">
-                  ⏱️ {formatTime(recordingTime)} remaining
-                </div>
-                {recordingTime <= 5 && (
-                  <div className="warning-text">
-                    ⚠️ Recording will stop soon!
+            {/* Two-Window Recording Setup */}
+            <div className="recording-setup">
+              <div className="recording-windows">
+                {/* Hidden Recording Window - Still records but invisible */}
+                <div className="recording-window hidden">
+                  <h4>📹 Recording Window (Hidden)</h4>
+                  <div className="video-container">
+                    <video
+                      ref={videoRef}
+                      autoPlay
+                      playsInline
+                      muted
+                      className="camera-stream"
+                    />
+                    {isRecording && (
+                      <div
+                        className={`recording-timer ${recordingTime <= 5 && 'warning'}`}
+                      >
+                        <div className="timer-text">
+                          ⏱️ {formatTime(recordingTime)} remaining
+                        </div>
+                        {recordingTime <= 5 && (
+                          <div className="warning-text">
+                            ⚠️ Recording will stop soon!
+                          </div>
+                        )}
+                      </div>
+                    )}
                   </div>
-                )}
-              </div>
-            )}
-            {!stream && (
-              <div className="camera-overlay">
-                <div>
-                  <h3>Camera Not Active</h3>
-                  <p>Click "Start Camera" to begin</p>
+                </div>
+
+                {/* Visible Portrait Preview Window */}
+                <div className="portrait-preview-window">
+                  <div className="portrait-video-container">
+                    <video
+                      ref={portraitVideoRef}
+                      autoPlay
+                      playsInline
+                      muted
+                      className="portrait-camera-stream"
+                    />
+                    {isRecording && (
+                      <div
+                        className={`recording-timer portrait ${recordingTime <= 5 && 'warning'}`}
+                      >
+                        <div className="timer-text">
+                          ⏱️ {formatTime(recordingTime)} remaining
+                        </div>
+                        {recordingTime <= 5 && (
+                          <div className="warning-text">
+                            ⚠️ Recording will stop soon!
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
-            )}
+
+              {!stream && (
+                <div className="camera-overlay">
+                  <div>
+                    <h3>Camera Not Active</h3>
+                    <p>Click "Start Camera" to begin</p>
+                  </div>
+                </div>
+              )}
+            </div>
           </>
         ) : (
           <>
@@ -969,12 +957,16 @@ const FirstImpressionRecordUpload = () => {
               'Rendering video element with src:',
               recordedVideo.url
             )}
-            <video
-              ref={previewVideoRef}
-              src={recordedVideo.url}
-              controls
-              className="video-player"
-            />
+            <div className="playback-container">
+              <div className="portrait-playback-container">
+                <video
+                  ref={previewVideoRef}
+                  src={recordedVideo.url}
+                  controls
+                  className="portrait-video-player"
+                />
+              </div>
+            </div>
           </>
         )}
       </div>

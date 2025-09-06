@@ -44,6 +44,10 @@ const ExperienceForm = () => {
   const [deletingId, setDeletingId] = useState(null);
   const [showForm, setShowForm] = useState(false); // Start with form hidden
 
+  useEffect(() => {
+    fetchExperiences();
+  }, []);
+
   // Scroll to top when component mounts
   useEffect(() => {
     // Cross-browser compatible scroll to top

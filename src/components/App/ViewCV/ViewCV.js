@@ -118,6 +118,7 @@ const ViewCV = () => {
     fetchTertEdus,
     fetchInterests,
     fetchEmployHistorys,
+    fetchAssignedPhoto,
   ]);
 
   // Check if any data is still loading
@@ -172,9 +173,22 @@ const ViewCV = () => {
           <Link to="/app/dashboard" className="view-cv-back">
             ← Back to Dashboard
           </Link>
-          <h1>Your CV</h1>
         </div>
-        <div className="view-cv-header-right">
+        <div className="view-cv-header-center">
+          <div className="view-cv-header-icon">📄</div>
+          <div className="view-cv-header-content">
+            <h1>Your CV</h1>
+            <p>Preview and manage your CV templates</p>
+          </div>
+        </div>
+        <div className="view-cv-header-actions">
+          <button
+            className="view-cv-print-button"
+            onClick={() => window.print()}
+            title="Print CV"
+          >
+            🖨️ Print CV
+          </button>
           <div className="template-selector">
             <label htmlFor="template-select">Template:</label>
             <select
@@ -186,9 +200,6 @@ const ViewCV = () => {
               {/* Future templates will be added here */}
             </select>
           </div>
-          <Link to="/app/cv-builder" className="view-cv-edit">
-            ✏️ Edit CV
-          </Link>
         </div>
       </div>
 

@@ -43,6 +43,10 @@ const PersonalSummaryForm = () => {
   const [successMessage, setSuccessMessage] = useState('');
   const [isRefreshing, setIsRefreshing] = useState(false);
 
+  useEffect(() => {
+    fetchPersonalSummary();
+  }, []);
+
   // Scroll to top when component mounts
   useEffect(() => {
     // Cross-browser compatible scroll to top

@@ -43,6 +43,10 @@ const TertiaryEducationForm = () => {
   // Ref to track last refresh to prevent multiple rapid refreshes
   const lastRefreshTimestamp = useRef(null);
 
+  useEffect(() => {
+    fetchTertEdus();
+  }, []);
+
   // Scroll to top when component mounts
   useEffect(() => {
     // Cross-browser compatible scroll to top

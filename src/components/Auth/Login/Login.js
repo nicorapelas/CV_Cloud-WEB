@@ -71,84 +71,87 @@ const Login = () => {
 
   return (
     <>
-      <Loader show={loading} message="Signing you in..." />
-      <div className="login-page">
-        <div className="login-container">
-          <div className="login-card">
-            <div className="login-header">
-              <div className="login-logo">
-                <img
-                  src="/icon-512.png"
-                  alt="CV Cloud Icon"
-                  className="login-logo-image"
-                />
-              </div>
-              <h1>Welcome Back</h1>
-              <p>Sign in to your CV Cloud account</p>
-            </div>
-
-            <form onSubmit={handleSubmit} className="login-form">
-              {renderErrorMessage()}
-              {renderApiMessage()}
-
-              <div className="login-form-group">
-                <label htmlFor="email">Email</label>
-                <input
-                  type="email"
-                  id="email"
-                  value={email}
-                  onChange={handleEmailChange}
-                  placeholder="Enter your email"
-                  required
-                  className="login-input"
-                />
+      {loading ? (
+        <Loader show={true} message="Signing you in..." />
+      ) : (
+        <div className="login-page">
+          <div className="login-container">
+            <div className="login-card">
+              <div className="login-header">
+                <div className="login-logo">
+                  <img
+                    src="/icon-512.png"
+                    alt="CV Cloud Icon"
+                    className="login-logo-image"
+                  />
+                </div>
+                <h1>Welcome Back</h1>
+                <p>Sign in to your CV Cloud account</p>
               </div>
 
-              <div className="login-form-group">
-                <label htmlFor="password">Password</label>
-                <div className="login-password-container">
+              <form onSubmit={handleSubmit} className="login-form">
+                {renderErrorMessage()}
+                {renderApiMessage()}
+
+                <div className="login-form-group">
+                  <label htmlFor="email">Email</label>
                   <input
-                    type={showPassword ? 'text' : 'password'}
-                    id="password"
-                    value={password}
-                    onChange={handlePasswordChange}
-                    placeholder="Enter your password"
+                    type="email"
+                    id="email"
+                    value={email}
+                    onChange={handleEmailChange}
+                    placeholder="Enter your email"
                     required
                     className="login-input"
                   />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="login-password-toggle"
-                  >
-                    {showPassword ? '👁️' : '👁️‍🗨️'}
-                  </button>
                 </div>
-              </div>
 
-              <button
-                type="submit"
-                disabled={loading || !email || !password}
-                className="login-submit-button"
-              >
-                {loading ? 'Signing In...' : 'Sign In'}
-              </button>
-            </form>
+                <div className="login-form-group">
+                  <label htmlFor="password">Password</label>
+                  <div className="login-password-container">
+                    <input
+                      type={showPassword ? 'text' : 'password'}
+                      id="password"
+                      value={password}
+                      onChange={handlePasswordChange}
+                      placeholder="Enter your password"
+                      required
+                      className="login-input"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="login-password-toggle"
+                    >
+                      {showPassword ? '👁️' : '👁️‍🗨️'}
+                    </button>
+                  </div>
+                </div>
 
-            <div className="login-footer">
-              <p>
-                Don't have an account?{' '}
-                <Link to="/signup" className="login-link">
-                  Sign up here
+                <button
+                  type="submit"
+                  disabled={!email || !password}
+                  className="login-submit-button"
+                >
+                  Sign In
+                </button>
+              </form>
+
+              <div className="login-footer">
+                <p>
+                  Don't have an account?{' '}
+                  <Link to="/signup" className="login-link">
+                    Sign up here
+                  </Link>
+                </p>
+                <Link to="/forgot-password" className="login-link">
+                  Forgot your password?
                 </Link>
-              </p>
-              <Link to="/forgot-password" className="login-link">
-                Forgot your password?
-              </Link>
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      )}
     </>
   );
 };

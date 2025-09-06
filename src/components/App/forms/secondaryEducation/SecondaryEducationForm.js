@@ -10,6 +10,7 @@ const SecondaryEducationForm = () => {
   const {
     state: { user },
   } = useContext(AuthContext);
+
   const {
     state: { secondEdu, loading: contextLoading, error },
     fetchSecondEdu,
@@ -41,6 +42,10 @@ const SecondaryEducationForm = () => {
 
   // Ref to track last refresh to prevent multiple rapid refreshes
   const lastRefreshTimestamp = useRef(null);
+
+  useEffect(() => {
+    fetchSecondEdu();
+  }, []);
 
   // Scroll to top when component mounts
   useEffect(() => {
@@ -201,13 +206,33 @@ const SecondaryEducationForm = () => {
       setSuccessMessage('');
       clearSecondEduErrors(); // Clear any previous context errors
 
+      // Convert subjects string to array format expected by server
+      const subjectsArray = formData.subjects
+        ? formData.subjects
+            .split(',')
+            .map(subject => subject.trim())
+            .filter(subject => subject.length > 0)
+            .map(subject => ({
+              subject: subject,
+              key:
+                Math.random().toString(36).substring(2, 15) +
+                Math.random().toString(36).substring(2, 15),
+            }))
+        : [];
+
+      // Prepare data for submission
+      const submissionData = {
+        ...formData,
+        subjects: subjectsArray,
+      };
+
       if (editingId) {
         // Edit existing secondary education entry
-        await editSecondEdu({ id: editingId }, formData);
+        await editSecondEdu({ id: editingId }, submissionData);
         setEditingId(null);
       } else {
         // Create new secondary education entry
-        await createSecondEdu(formData);
+        await createSecondEdu(submissionData);
       }
 
       // Reset form
@@ -245,11 +270,18 @@ const SecondaryEducationForm = () => {
 
   const handleEdit = education => {
     setEditingId(education._id);
+
+    // Convert subjects array back to string for editing
+    const subjectsString =
+      education.subjects && Array.isArray(education.subjects)
+        ? education.subjects.map(subject => subject.subject).join(', ')
+        : education.subjects || '';
+
     setFormData({
       schoolName: education.schoolName || '',
       startYear: education.startYear || '',
       endYear: education.endYear || '',
-      subjects: education.subjects || '',
+      subjects: subjectsString,
       additionalInfo: education.additionalInfo || '',
     });
 

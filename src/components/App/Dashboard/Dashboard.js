@@ -87,6 +87,13 @@ const Dashboard = () => {
       route: '/app/cv-builder',
     },
     {
+      id: 'certificates',
+      title: 'Certificates',
+      description: 'Add your professional certifications and achievements',
+      icon: '🏆',
+      route: '/app/cv-builder',
+    },
+    {
       id: 'skills',
       title: 'Skills',
       description: 'Highlight your key skills and competencies',
@@ -189,12 +196,6 @@ const Dashboard = () => {
               className="dashboard-action-button secondary"
             >
               Share CV
-            </Link>
-            <Link
-              to="/app/cv-builder"
-              className="dashboard-action-button secondary"
-            >
-              Edit CV
             </Link>
           </div>
         </div>

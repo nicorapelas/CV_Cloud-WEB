@@ -14,6 +14,7 @@ import InterestForm from '../forms/interest/InterestForm';
 import EmployHistoryForm from '../forms/employmentHistory/EmployHistoryForm';
 import PhotoForm from '../forms/photo/PhotoForm';
 import FirstImpressionSourceSelector from '../forms/firstImpression/FirstImpressionSourceSelector';
+import CertificateForm from '../forms/certificate/CertificateForm';
 import './CVBuilder.css';
 
 const CVBuilder = () => {
@@ -29,6 +30,7 @@ const CVBuilder = () => {
       experience: 'Work Experience',
       education: 'Secondary Education',
       tertiaryEducation: 'Tertiary Education',
+      certificates: 'Certificates',
       skills: 'Skills',
       languages: 'Languages',
       references: 'References',
@@ -61,6 +63,8 @@ const CVBuilder = () => {
         return <ReferenceForm />;
       case 'tertiaryEducation':
         return <TertiaryEducationForm />;
+      case 'certificates':
+        return <CertificateForm />;
       case 'interest':
         return <InterestForm />;
       case 'employmentHistory':

@@ -23,6 +23,9 @@ import { Provider as InterestProvider } from './context/InterestContext';
 import { Provider as EmployHistoryProvider } from './context/EmployHistoryContext';
 import { Provider as PhotoProvider } from './context/PhotoContext';
 import { Provider as FirstImpressionProvider } from './context/FirstImpressionContext';
+import { Provider as CertificateProvider } from './context/CertificateContext';
+import { Provider as ShareCVProvider } from './context/ShareCVContext';
+import { Provider as UniversalProvider } from './context/UniversalContext';
 import { RealTimeProvider } from './context/RealTimeContext';
 
 // Landing and Auth Components
@@ -173,9 +176,15 @@ function App() {
                               <EmployHistoryProvider>
                                 <PhotoProvider>
                                   <FirstImpressionProvider>
-                                    <RealTimeProvider>
-                                      <AppRoutes />
-                                    </RealTimeProvider>
+                                    <CertificateProvider>
+                                      <ShareCVProvider>
+                                        <UniversalProvider>
+                                          <RealTimeProvider>
+                                            <AppRoutes />
+                                          </RealTimeProvider>
+                                        </UniversalProvider>
+                                      </ShareCVProvider>
+                                    </CertificateProvider>
                                   </FirstImpressionProvider>
                                 </PhotoProvider>
                               </EmployHistoryProvider>

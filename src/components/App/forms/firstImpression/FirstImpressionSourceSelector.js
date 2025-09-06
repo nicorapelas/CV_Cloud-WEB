@@ -52,11 +52,14 @@ const FirstImpressionSourceSelector = () => {
   if (selectedSource === 'upload') {
     return (
       <div className="first-impression-container">
-        <div className="source-header">
+        <div className="first-impression-form-header">
           <button onClick={handleBackToSelector} className="back-button">
             ← Back to Options
           </button>
-          <h2>Upload Video File</h2>
+          <div className="first-impression-form-header-icon">📁</div>
+          <div className="first-impression-form-header-content">
+            <h2>Upload Video File</h2>
+          </div>
         </div>
         <FirstImpressionFileUpload />
       </div>
@@ -66,11 +69,14 @@ const FirstImpressionSourceSelector = () => {
   if (selectedSource === 'record') {
     return (
       <div className="first-impression-container">
-        <div className="source-header">
+        <div className="first-impression-form-header">
           <button onClick={handleBackToSelector} className="back-button">
             ← Back to Options
           </button>
-          <h2>Record New Video</h2>
+          <div className="first-impression-form-header-icon">🎬</div>
+          <div className="first-impression-form-header-content">
+            <h2>Record New Video</h2>
+          </div>
         </div>
         <FirstImpressionRecordUpload />
       </div>
@@ -81,15 +87,19 @@ const FirstImpressionSourceSelector = () => {
   return (
     <div className="first-impression-container">
       <div className="source-selector">
-        <div className="selector-header">
-          <h2>Create Your First Impression</h2>
-          <p>Choose how you'd like to add your video introduction</p>
+        <div className="first-impression-form-header">
+          <div className="first-impression-form-header-icon">🎥</div>
+          <div className="first-impression-form-header-content">
+            <h2>Create Your First Impression</h2>
+            <p>Choose how you'd like to add your video introduction</p>
+          </div>
         </div>
 
-        <div className="source-options">
+        <div className="source-options" id="first-impression-source-options">
           <div
             className="source-option"
             onClick={() => handleSourceSelect('upload')}
+            style={{ transition: 'all 0.3s ease' }}
           >
             <div className="option-icon">📁</div>
             <div className="option-content">
@@ -107,6 +117,7 @@ const FirstImpressionSourceSelector = () => {
           <div
             className="source-option"
             onClick={() => handleSourceSelect('record')}
+            style={{ transition: 'all 0.3s ease' }}
           >
             <div className="option-icon">🎥</div>
             <div className="option-content">
