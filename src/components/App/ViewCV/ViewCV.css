@@ -134,13 +134,26 @@
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
-/* .cv-preview-container {
+.cv-preview-container {
   background: white;
   border-radius: 12px;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
   overflow: hidden;
   min-height: 800px;
-} */
+}
+
+/* Print styles for cv-preview-container */
+@media print {
+  .cv-preview-container {
+    background: white !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    overflow: visible !important;
+    min-height: auto !important;
+    display: block !important;
+    visibility: visible !important;
+  }
+}
 
 /* Responsive Design */
 @media (max-width: 768px) {
