@@ -14,6 +14,7 @@ const Template01 = ({ cvData }) => {
     references,
     tertEdus,
     interests,
+    attributes,
     employHistorys,
     assignedPhotoUrl,
   } = cvData;
@@ -227,40 +228,37 @@ const Template01 = ({ cvData }) => {
           )}
 
           {/* Work Experience */}
-          {experiences &&
-            experiences.length > 0 &&
-            (console.log(experiences),
-            (
-              <section className="template01-section">
-                <div className="template01-section-header">
-                  <h2 className="template01-section-title">
-                    <span className="template01-section-icon">⚡</span>
-                    Work Experience
-                  </h2>
-                </div>
-                <div className="template01-section-content">
-                  {experiences.map((experience, index) => (
-                    <div
-                      key={experience._id || index}
-                      className="template01-item"
-                    >
-                      <div className="template01-item-header">
-                        <div>
-                          <h3 className="template01-item-title">
-                            {experience.title}
-                          </h3>
-                        </div>
+          {experiences && experiences.length > 0 && (
+            <section className="template01-section">
+              <div className="template01-section-header">
+                <h2 className="template01-section-title">
+                  <span className="template01-section-icon">⚡</span>
+                  Work Experience
+                </h2>
+              </div>
+              <div className="template01-section-content">
+                {experiences.map((experience, index) => (
+                  <div
+                    key={experience._id || index}
+                    className="template01-item"
+                  >
+                    <div className="template01-item-header">
+                      <div>
+                        <h3 className="template01-item-title">
+                          {experience.title}
+                        </h3>
                       </div>
-                      {experience.description && (
-                        <p className="template01-item-description">
-                          {experience.description}
-                        </p>
-                      )}
                     </div>
-                  ))}
-                </div>
-              </section>
-            ))}
+                    {experience.description && (
+                      <p className="template01-item-description">
+                        {experience.description}
+                      </p>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </section>
+          )}
 
           {/* Education */}
           {(secondEdu && secondEdu.length > 0) ||
@@ -457,6 +455,30 @@ const Template01 = ({ cvData }) => {
                       className="template01-interest-tag"
                     >
                       {interest.interest}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </section>
+          )}
+
+          {/* Attributes */}
+          {attributes && attributes.length > 0 && (
+            <section className="template01-section">
+              <div className="template01-section-header">
+                <h2 className="template01-section-title">
+                  <span className="template01-section-icon">✨</span>
+                  Attributes
+                </h2>
+              </div>
+              <div className="template01-section-content">
+                <div className="template01-attributes">
+                  {attributes.map((attribute, index) => (
+                    <span
+                      key={attribute._id || index}
+                      className="template01-attribute-tag"
+                    >
+                      {attribute.attribute}
                     </span>
                   ))}
                 </div>

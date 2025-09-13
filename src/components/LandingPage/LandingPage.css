@@ -89,7 +89,16 @@
 
 /* Hero Section */
 .landing-hero {
-  background: linear-gradient(135deg, #232936 0%, #1a1f2a 100%);
+  background:
+    linear-gradient(
+      135deg,
+      rgba(35, 41, 54, 0.8) 0%,
+      rgba(26, 31, 42, 0.8) 100%
+    ),
+    url('/src/assets/images/cv-cloud-bg01.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
   color: white;
   padding: 4rem 0;
 }
@@ -103,6 +112,54 @@
 
 .landing-hero-content {
   margin-top: -60px;
+}
+
+/* Typing Quote Effect */
+.landing-quote-container {
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.landing-quote-text {
+  font-size: 1.1rem;
+  font-style: italic;
+  color: rgba(255, 255, 255, 0.9);
+  line-height: 1.6;
+  min-height: 3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.landing-cursor {
+  color: #f9b600;
+  font-weight: bold;
+  animation: blink 1s infinite;
+  margin-left: 2px;
+}
+
+.landing-cursor.visible {
+  opacity: 1;
+}
+
+.landing-cursor:not(.visible) {
+  opacity: 0;
+}
+
+@keyframes blink {
+  0%,
+  50% {
+    opacity: 1;
+  }
+  51%,
+  100% {
+    opacity: 0;
+  }
 }
 
 .landing-hero-title {
@@ -298,6 +355,12 @@
 
   .landing-hero-title {
     font-size: 2rem;
+  }
+
+  .landing-quote-text {
+    font-size: 1rem;
+    padding: 0.8rem;
+    min-height: 2.5rem;
   }
 
   .landing-hero-buttons {

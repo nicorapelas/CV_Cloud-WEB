@@ -1,1079 +1,644 @@
-import React, { useState, useRef, useContext, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useContext } from 'react';
 import { Context as FirstImpressionContext } from '../../../../context/FirstImpressionContext';
-import Loader from '../../../common/loader/Loader';
-import './FirstImpression.css';
-import api from '../../../../api/api';
+import { Context as AuthContext } from '../../../../context/AuthContext';
+import { Context as NavContext } from '../../../../context/NavContext';
+import { useNavigate } from 'react-router-dom';
 import { FFmpeg } from '@ffmpeg/ffmpeg';
 import { fetchFile, toBlobURL } from '@ffmpeg/util';
-
-const ffmpeg = new FFmpeg();
+import { uploadMessages } from './uploadingMessagesArray';
+import './FirstImpression.css';
 
 const FirstImpressionRecordUpload = () => {
-  const [stream, setStream] = useState(null);
+  const { videoDemoUrl, firstImpressionStatus, fetchFirstImpressionStatus } =
+    useContext(FirstImpressionContext);
+  const { user } = useContext(AuthContext);
+  const { setNavTabSelected } = useContext(NavContext);
+  const navigate = useNavigate();
+
+  // State management
   const [isRecording, setIsRecording] = useState(false);
   const [recordedVideo, setRecordedVideo] = useState(null);
+  const [isUploading, setIsUploading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState('');
+  const [error, setError] = useState('');
+  const [mediaStream, setMediaStream] = useState(null);
+  const [isCameraStarted, setIsCameraStarted] = useState(false);
 
-  const [recordingTime, setRecordingTime] = useState(30);
-  const [isTimerRunning, setIsTimerRunning] = useState(false);
-  const [showUploadProgress, setShowUploadProgress] = useState(false);
-  const [uploadStatus, setUploadStatus] = useState('');
-  const [error, setError] = useState(null);
-  const [converting, setConverting] = useState(false);
+  // Timing and messaging state
+  const [uploadStartTime, setUploadStartTime] = useState(null);
+  const [conversionStartTime, setConversionStartTime] = useState(null);
+  const [uploadTimes, setUploadTimes] = useState({});
+  const [currentMessage, setCurrentMessage] = useState('');
+  const [currentStage, setCurrentStage] = useState('');
 
+  // Refs
   const videoRef = useRef(null);
-  const portraitVideoRef = useRef(null);
+  const playbackVideoRef = useRef(null);
   const mediaRecorderRef = useRef(null);
-  const timerRef = useRef(null);
   const recordedChunksRef = useRef([]);
-  const previewVideoRef = useRef(null);
+  const ffmpegRef = useRef(new FFmpeg());
 
-  const {
-    state: { loading, uploadSignature, videoUploading },
-    createUploadSignature,
-    clearUploadSignature,
-    createFirstImpression,
-    setVideoUploading,
-  } = useContext(FirstImpressionContext);
-
+  // Cleanup on unmount
   useEffect(() => {
-    startCamera();
     return () => {
-      if (stream) {
-        stream.getTracks().forEach(track => {
-          track.stop();
-        });
-      }
-      if (timerRef.current) {
-        clearInterval(timerRef.current);
-      }
-      if (recordedVideo) {
-        URL.revokeObjectURL(recordedVideo.url);
+      if (mediaStream) {
+        mediaStream.getTracks().forEach(track => track.stop());
       }
     };
-  }, []);
+  }, [mediaStream]);
 
+  // Ensure playback video gets the correct source
   useEffect(() => {
-    if (recordingTime === 0) {
-      stopRecording();
-      setIsRecording(false);
-      setIsTimerRunning(false);
-      setRecordingTime(30);
-      if (timerRef.current) {
-        clearInterval(timerRef.current);
-      }
+    if (recordedVideo && playbackVideoRef.current) {
+      console.log('🎬 Setting playback video source:', recordedVideo.url);
+      playbackVideoRef.current.src = recordedVideo.url;
+      playbackVideoRef.current.load(); // Force reload the video
     }
-  }, [recordingTime]);
+  }, [recordedVideo]);
 
+  // Dynamic message updates
+  useEffect(() => {
+    if (isUploading && uploadStartTime) {
+      const interval = setInterval(() => {
+        const elapsed = Date.now() - uploadStartTime;
+        const message = getCurrentMessage(elapsed);
+        setCurrentMessage(message.text);
+        setCurrentStage(message.stage);
+      }, 1000);
+
+      return () => clearInterval(interval);
+    }
+  }, [isUploading, uploadStartTime]);
+
+  // Get current message based on elapsed time
+  const getCurrentMessage = elapsed => {
+    const seconds = Math.floor(elapsed / 1000);
+
+    if (seconds < 5) {
+      return { text: uploadMessages[0], stage: 'preparing' };
+    } else if (seconds < 15) {
+      return { text: uploadMessages[1], stage: 'converting' };
+    } else if (seconds < 30) {
+      return { text: uploadMessages[2], stage: 'uploading' };
+    } else if (seconds < 45) {
+      return { text: uploadMessages[3], stage: 'processing' };
+    } else {
+      return { text: uploadMessages[4], stage: 'finalizing' };
+    }
+  };
+
+  // Start camera with optimized settings
   const startCamera = async () => {
     try {
-      if (stream) {
-        stream.getTracks().forEach(track => {
-          track.stop();
-        });
-        setStream(null);
-      }
+      console.log('🎥 Starting camera...');
+      setError('');
 
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: {
+          width: { ideal: 360, max: 480 },
+          height: { ideal: 640, max: 720 },
+          frameRate: { ideal: 15, max: 24 },
+          facingMode: 'user',
+          aspectRatio: { ideal: 9 / 16 },
+        },
+        audio: {
+          echoCancellation: true,
+          noiseSuppression: true,
+          autoGainControl: true,
+        },
+      });
+
+      console.log('✅ Camera access granted!', stream);
+      console.log('📊 Video tracks:', stream.getVideoTracks());
+      console.log('🎵 Audio tracks:', stream.getAudioTracks());
+
+      setMediaStream(stream);
+
+      // Wait a bit for video element to be ready
+      setTimeout(() => {
+        if (videoRef.current) {
+          console.log('🎬 Setting stream to video element...');
+          console.log('Video element before:', videoRef.current.srcObject);
+          videoRef.current.srcObject = stream;
+          console.log('Video element after:', videoRef.current.srcObject);
+
+          // Add event listeners to track video element state
+          videoRef.current.addEventListener('loadedmetadata', () => {
+            console.log('📹 Video loadedmetadata - ready to play');
+            if (videoRef.current) {
+              console.log(
+                'Video dimensions:',
+                videoRef.current.videoWidth,
+                'x',
+                videoRef.current.videoHeight
+              );
+              console.log(
+                'Video element dimensions:',
+                videoRef.current.offsetWidth,
+                'x',
+                videoRef.current.offsetHeight
+              );
+            } else {
+              console.log('❌ Video ref is null in loadedmetadata');
+            }
+          });
+
+          videoRef.current.addEventListener('canplay', () => {
+            console.log('▶️ Video canplay - can start playing');
+            // Force the video to play
+            if (videoRef.current) {
+              videoRef.current
+                .play()
+                .then(() => {
+                  console.log('🎬 Video play() successful');
+                })
+                .catch(err => {
+                  console.error('❌ Video play() failed:', err);
+                });
+            } else {
+              console.log('❌ Video ref is null, cannot play');
+            }
+          });
+
+          videoRef.current.addEventListener('error', e => {
+            console.error('❌ Video error:', e);
+          });
+        } else {
+          console.log('❌ videoRef.current is null');
+        }
+      }, 100);
+
+      setIsCameraStarted(true);
+    } catch (err) {
+      setError('Failed to access camera. Please check permissions.');
+      console.error('Camera error:', err);
+    }
+  };
+
+  // Start recording
+  const startRecording = () => {
+    if (!mediaStream) return;
+
+    recordedChunksRef.current = [];
+    const mediaRecorder = new MediaRecorder(mediaStream, {
+      mimeType: 'video/webm;codecs=vp9',
+      videoBitsPerSecond: 500000, // Low bitrate for faster processing
+    });
+
+    mediaRecorder.ondataavailable = event => {
+      if (event.data.size > 0) {
+        recordedChunksRef.current.push(event.data);
+      }
+    };
+
+    mediaRecorder.onstop = () => {
+      console.log('🛑 MediaRecorder stopped');
+      console.log('🛑 MediaRecorder state:', mediaRecorder.state);
+      const blob = new Blob(recordedChunksRef.current, { type: 'video/webm' });
+      const url = URL.createObjectURL(blob);
+      console.log('📹 Created video blob:', blob.size, 'bytes');
+      console.log('🔗 Created video URL:', url);
+
+      // Clear the camera stream from the video element to prepare for playback
       if (videoRef.current) {
+        console.log('🧹 Clearing camera stream from video element');
         videoRef.current.srcObject = null;
       }
-      if (portraitVideoRef.current) {
-        portraitVideoRef.current.srcObject = null;
-      }
 
-      let mediaStream;
-      try {
-        mediaStream = await navigator.mediaDevices.getUserMedia({
-          video: {
-            width: { ideal: 720, min: 480 },
-            height: { ideal: 1280, min: 640 },
-            frameRate: { ideal: 30, min: 24 },
-            facingMode: 'user',
-            aspectRatio: { ideal: 9 / 16 }, // Portrait aspect ratio (9:16)
-            // Force portrait orientation
-            resizeMode: 'crop-and-scale',
-          },
-          audio: {
-            echoCancellation: true,
-            noiseSuppression: true,
-            autoGainControl: true,
-          },
-        });
-      } catch (audioError) {
-        mediaStream = await navigator.mediaDevices.getUserMedia({
-          video: {
-            width: { ideal: 720, min: 480 },
-            height: { ideal: 1280, min: 640 },
-            frameRate: { ideal: 30, min: 24 },
-            facingMode: 'user',
-            aspectRatio: { ideal: 9 / 16 }, // Portrait aspect ratio (9:16)
-            // Force portrait orientation
-            resizeMode: 'crop-and-scale',
-          },
-          audio: false,
-        });
-      }
+      setRecordedVideo({ blob, url });
+    };
 
-      setStream(mediaStream);
-
-      if (videoRef.current) {
-        videoRef.current.srcObject = mediaStream;
-        // Debug camera stream dimensions
-        videoRef.current.onloadedmetadata = () => {
-          console.log('📹 Camera stream dimensions:', {
-            width: videoRef.current.videoWidth,
-            height: videoRef.current.videoHeight,
-            aspectRatio: (
-              videoRef.current.videoWidth / videoRef.current.videoHeight
-            ).toFixed(2),
-          });
-        };
-      }
-
-      if (portraitVideoRef.current) {
-        portraitVideoRef.current.srcObject = mediaStream;
-      }
-    } catch (err) {
-      if (err.name === 'NotAllowedError') {
-        setError(
-          'Camera access denied. Please allow camera permissions and try again.'
-        );
-      } else if (err.name === 'NotFoundError') {
-        setError('No camera found. Please connect a camera and try again.');
-      } else if (err.name === 'NotSupportedError') {
-        setError(
-          'Camera not supported in this browser. Please try a different browser.'
-        );
-      } else if (err.name === 'AbortError') {
-        setError('Camera access was interrupted. Please try again.');
-      } else {
-        setError(
-          `Unable to access camera: ${err.message}. Please check permissions.`
-        );
-      }
-    }
+    mediaRecorderRef.current = mediaRecorder;
+    mediaRecorder.start();
+    console.log('🎬 MediaRecorder started, state:', mediaRecorder.state);
+    setIsRecording(true);
   };
 
-  const stopCamera = () => {
-    if (stream) {
-      stream.getTracks().forEach(track => track.stop());
-      setStream(null);
-    }
-  };
-
-  const startRecording = () => {
-    if (!stream) {
-      setError('Camera not available. Please start camera first.');
-      return;
-    }
-
-    try {
-      recordedChunksRef.current = [];
-
-      // Use the original stream directly (like our working test component)
-      let options = {};
-      const mimeTypes = [
-        'video/webm;codecs=vp9,opus', // WebM VP9 with audio
-        'video/webm;codecs=vp8,opus', // WebM VP8 with audio
-        'video/webm;codecs=vp9', // WebM VP9 - video only
-        'video/webm;codecs=vp8', // WebM VP8 - video only
-        'video/webm', // WebM - basic fallback
-        'video/mp4;codecs=h264,aac', // MP4 with H.264 + AAC
-        'video/mp4;codecs=h264', // MP4 with H.264
-        'video/mp4', // MP4 - best quality and mobile compatibility
-        'video/quicktime;codecs=h264,aac', // MOV with H.264 + AAC
-        'video/quicktime', // MOV - good for cross-platform
-        'video/ogg;codecs=theora,vorbis',
-        'video/ogg',
-      ];
-
-      // Find the first supported MIME type
-      for (const mimeType of mimeTypes) {
-        const isSupported = MediaRecorder.isTypeSupported(mimeType);
-        if (isSupported) {
-          options = { mimeType };
-          break;
-        }
-      }
-
-      // Add high quality settings to options
-      const recorderOptions = {
-        ...options,
-        videoBitsPerSecond: 5000000, // 5 Mbps for high quality
-        audioBitsPerSecond: 128000, // 128 kbps for audio
-      };
-
-      const mediaRecorder = new MediaRecorder(stream, recorderOptions);
-
-      // Log what the browser actually supports
-      // console.log('MediaRecorder state:', mediaRecorder.state)
-      // console.log('MediaRecorder MIME type:', mediaRecorder.mimeType)
-      // console.log('MediaRecorder created successfully')
-      mediaRecorderRef.current = mediaRecorder;
-
-      mediaRecorder.ondataavailable = event => {
-        if (event.data.size > 0) {
-          recordedChunksRef.current.push(event.data);
-          // console.log('Data chunk received:', event.data.size, 'bytes')
-        }
-      };
-
-      mediaRecorder.onstop = () => {
-        // console.log('Recording stopped. Chunks:', recordedChunksRef.current.length)
-
-        if (recordedChunksRef.current.length === 0) {
-          // console.error('No video data recorded!')
-          setError('No video data was recorded. Please try again.');
-          setIsRecording(false);
-          setIsTimerRunning(false);
-          setRecordingTime(30);
-          if (timerRef.current) {
-            clearInterval(timerRef.current);
-          }
-          return;
-        }
-
-        // Filter out empty chunks
-        const validChunks = recordedChunksRef.current.filter(
-          chunk => chunk.size > 0
-        );
-        // console.log('Valid chunks:', validChunks.length, 'out of', recordedChunksRef.current.length)
-
-        if (validChunks.length === 0) {
-          // console.error('No valid video data recorded!')
-          setError('No valid video data was recorded. Please try again.');
-          setIsRecording(false);
-          setIsTimerRunning(false);
-          setRecordingTime(30);
-          if (timerRef.current) {
-            clearInterval(timerRef.current);
-          }
-          return;
-        }
-
-        // Determine the correct MIME type for the blob
-        let mimeType = 'video/quicktime'; // Default to MOV for cross-platform compatibility
-        if (validChunks[0].type) {
-          mimeType = validChunks[0].type;
-        }
-
-        // Create blob with proper error handling
-        let blob;
-        try {
-          blob = new Blob(validChunks, { type: mimeType });
-          // console.log('Created blob:', blob.size, 'bytes, type:', blob.type)
-
-          if (blob.size === 0) {
-            throw new Error('Blob size is 0 - no valid video data');
-          }
-        } catch (blobError) {
-          console.error('Error creating blob:', blobError);
-          // Try with default type if specified type fails
-          try {
-            blob = new Blob(validChunks, { type: 'video/webm' });
-            console.log(
-              'Created blob with fallback type:',
-              blob.size,
-              'bytes, type:',
-              blob.type
-            );
-          } catch (fallbackError) {
-            // console.error('Fallback blob creation also failed:', fallbackError)
-            setError('Failed to create video file. Please try again.');
-            setIsRecording(false);
-            setIsTimerRunning(false);
-            setRecordingTime(30);
-            if (timerRef.current) {
-              clearInterval(timerRef.current);
-            }
-            return;
-          }
-        }
-
-        // Create blob URL with explicit type
-        const videoUrl = URL.createObjectURL(blob);
-        // console.log('Created video URL:', videoUrl)
-        // console.log('Blob URL test - can access:', !!videoUrl)
-
-        // Test if we can fetch the blob URL
-        fetch(videoUrl);
-        // .then(response => {
-        //   console.log('✅ Blob URL fetch successful:', response.status, response.statusText)
-        //   console.log('Content-Type:', response.headers.get('content-type'))
-        // })
-        // .catch(error => {
-        //   console.error('❌ Blob URL fetch failed:', error)
-        // })
-
-        // Create a File object with appropriate extension based on MIME type
-        const getFileExtension = mimeType => {
-          if (mimeType.includes('quicktime')) return 'mov';
-          if (mimeType.includes('mp4')) return 'mp4';
-          if (mimeType.includes('webm')) return 'webm';
-          if (mimeType.includes('ogg')) return 'ogg';
-          return 'mov'; // Default to MOV for cross-platform compatibility
-        };
-
-        const fileExtension = getFileExtension(mimeType);
-        const videoFile = new File(
-          [blob],
-          `first-impression-${Date.now()}.${fileExtension}`,
-          { type: mimeType }
-        );
-        // console.log('Created video file:', videoFile.name, videoFile.size, 'bytes')
-
-        // Simple test video creation
-        const testVideo = document.createElement('video');
-        testVideo.src = videoUrl;
-        testVideo.onloadedmetadata = () => {
-          console.log(
-            '✅ Test video loaded successfully. Duration:',
-            testVideo.duration
-          );
-          console.log(
-            '📐 Video dimensions:',
-            testVideo.videoWidth,
-            'x',
-            testVideo.videoHeight
-          );
-          console.log(
-            '📐 Aspect ratio:',
-            (testVideo.videoWidth / testVideo.videoHeight).toFixed(2)
-          );
-        };
-
-        // Set the recorded video with both blob and file
-        const videoData = {
-          url: videoUrl,
-          blob: blob,
-          file: videoFile,
-          mimeType: mimeType,
-        };
-        // console.log('Setting recorded video:', videoData)
-        setRecordedVideo(videoData);
-        setIsRecording(false);
-        setIsTimerRunning(false);
-        setRecordingTime(30);
-        if (timerRef.current) {
-          clearInterval(timerRef.current);
-        }
-
-        // Stop the camera stream when recording is complete
-        if (stream) {
-          stream.getTracks().forEach(track => track.stop());
-          setStream(null);
-        }
-      };
-
-      mediaRecorder.onerror = event => {
-        // console.error('MediaRecorder error:', event)
-        setError('Recording failed. Please try again.');
-        setIsRecording(false);
-        setIsTimerRunning(false);
-        setRecordingTime(30);
-        if (timerRef.current) {
-          clearInterval(timerRef.current);
-        }
-      };
-
-      mediaRecorder.start(100); // Collect data every 100ms
-      setIsRecording(true);
-      setIsTimerRunning(true);
-      setRecordingTime(30); // Start countdown from 30 seconds
-
-      // Start countdown timer
-      timerRef.current = setInterval(() => {
-        setRecordingTime(prev => {
-          const newTime = prev - 1;
-          if (newTime <= 0) {
-            // Auto-stop recording when timer reaches 0
-            stopRecording();
-            return 0;
-          }
-          return newTime;
-        });
-      }, 1000);
-    } catch (err) {
-      // console.error('Error starting recording:', err)
-      setError(
-        `Unable to start recording: ${err.message}. Please try a different browser or check camera permissions.`
-      );
-    }
-  };
-
+  // Stop recording
   const stopRecording = () => {
+    console.log('🛑 Stop recording called');
+    console.log('MediaRecorder exists:', !!mediaRecorderRef.current);
+    console.log('Is recording:', isRecording);
+
     if (mediaRecorderRef.current && isRecording) {
+      console.log('🛑 Stopping MediaRecorder...');
       mediaRecorderRef.current.stop();
+      setIsRecording(false);
+      console.log('✅ Recording stopped, isRecording set to false');
+    } else {
+      console.log('❌ Cannot stop recording - conditions not met');
     }
   };
 
-  const retakeVideo = async () => {
-    // Clean up existing video
-    if (recordedVideo) {
-      URL.revokeObjectURL(recordedVideo.url);
-      setRecordedVideo(null);
-      recordedChunksRef.current = [];
-    }
+  // Reset recording
+  const resetRecording = () => {
+    setRecordedVideo(null);
+    setError('');
+    setUploadProgress('');
+    setCurrentMessage('');
+    setCurrentStage('');
 
-    // Ensure any existing stream is properly stopped
-    if (stream) {
-      stream.getTracks().forEach(track => {
-        track.stop();
-        // console.log('Stopped track:', track.kind)
-      });
-      setStream(null);
+    // Restore camera stream to video element
+    if (videoRef.current && mediaStream) {
+      console.log('🔄 Restoring camera stream to video element');
+      videoRef.current.srcObject = mediaStream;
     }
-
-    // Clear any existing video elements
-    if (videoRef.current) {
-      videoRef.current.srcObject = null;
-    }
-    if (portraitVideoRef.current) {
-      portraitVideoRef.current.srcObject = null;
-    }
-
-    // Wait a moment for cleanup to complete
-    await new Promise(resolve => setTimeout(resolve, 100));
-
-    // Start fresh camera
-    await startCamera();
   };
 
-  const uploadToCloudinary = async () => {
-    // console.log('=== UPLOAD DEBUG ===')
-    // console.log('recordedVideo:', recordedVideo)
-    // console.log('uploadSignature:', uploadSignature)
-
-    if (!recordedVideo || !uploadSignature) {
-      // console.error('Missing video or signature:', { recordedVideo: !!recordedVideo, uploadSignature: !!uploadSignature })
-      return;
-    }
+  // Convert video to MOV using FFmpeg
+  const convertToMOV = async videoBlob => {
+    const ffmpeg = ffmpegRef.current;
 
     try {
-      const { apiKey, signature, timestamp } = uploadSignature;
-      // console.log('Upload signature received:', { apiKey: !!apiKey, signature: !!signature, timestamp })
+      setConversionStartTime(Date.now());
+      setUploadProgress('Converting video format...');
 
-      const data = new FormData();
-
-      // Use the file object for better compatibility
-      // console.log('File being uploaded:', recordedVideo.file)
-      // console.log('File name:', recordedVideo.file.name)
-      // console.log('File size:', recordedVideo.file.size)
-      // console.log('File type:', recordedVideo.file.type)
-
-      data.append('file', recordedVideo.file);
-      data.append('api_key', apiKey);
-      data.append('signature', signature);
-      data.append('timestamp', timestamp);
-
-      setShowUploadProgress(true);
-      setUploadStatus('Uploading to cloud...');
-
-      // console.log('Sending request to Cloudinary...')
-      const response = await fetch(
-        'https://api.cloudinary.com/v1_1/cv-cloud/video/upload',
-        {
-          method: 'POST',
-          body: data,
-        }
-      );
-
-      // console.log('Response status:', response.status)
-      // console.log('Response headers:', response.headers)
-
-      const result = await response.json();
-      // console.log('Cloudinary response:', result)
-
-      if (result.error) {
-        // console.error('Cloudinary upload error:', result.error)
-        clearUploadSignature();
-        alert('Unable to upload video, please try again later');
-        setShowUploadProgress(false);
-        return;
+      // Load FFmpeg
+      if (!ffmpeg.loaded) {
+        const baseURL = 'https://unpkg.com/@ffmpeg/core@0.12.6/dist/umd';
+        await ffmpeg.load({
+          coreURL: await toBlobURL(
+            `${baseURL}/ffmpeg-core.js`,
+            'text/javascript'
+          ),
+          wasmURL: await toBlobURL(
+            `${baseURL}/ffmpeg-core.wasm`,
+            'application/wasm'
+          ),
+        });
       }
 
-      // Create first impression with Cloudinary URL
-      await createFirstImpression({
-        videoUrl: result.url,
-        publicId: result.public_id,
+      // Write input file
+      await ffmpeg.writeFile('input.webm', await fetchFile(videoBlob));
+
+      // Convert to MOV with optimized settings
+      await ffmpeg.exec([
+        '-i',
+        'input.webm',
+        '-c:v',
+        'libx264',
+        '-preset',
+        'ultrafast',
+        '-crf',
+        '28',
+        '-c:a',
+        'aac',
+        '-b:a',
+        '64k',
+        '-movflags',
+        '+faststart',
+        'output.mov',
+      ]);
+
+      // Read output file
+      const data = await ffmpeg.readFile('output.mov');
+      const convertedBlob = new Blob([data.buffer], {
+        type: 'video/quicktime',
       });
-
-      clearUploadSignature();
-      setShowUploadProgress(false);
-      setUploadStatus('');
-
-      // Show success message
-      alert('Video uploaded successfully!');
 
       // Clean up
-      if (recordedVideo) {
-        URL.revokeObjectURL(recordedVideo.url);
-        setRecordedVideo(null);
-      }
+      await ffmpeg.deleteFile('input.webm');
+      await ffmpeg.deleteFile('output.mov');
+
+      return convertedBlob;
     } catch (error) {
-      // console.error('Error uploading to Cloudinary:', error)
-      clearUploadSignature();
-      alert('Unable to upload video, please try again later');
-      setShowUploadProgress(false);
+      console.error('Conversion error:', error);
+      throw new Error('Failed to convert video format');
     }
   };
 
-  const uploadToCloudinaryWithSignature = async (
-    signatureData,
-    videoData = recordedVideo
-  ) => {
-    // console.log('=== UPLOAD WITH SIGNATURE DEBUG ===')
-    // console.log('videoData:', videoData)
-    // console.log('signatureData:', signatureData)
-
-    if (!videoData || !signatureData) {
-      // console.error('Missing videoData or signatureData')
-      return;
-    }
-
+  // Upload to Cloudinary with signature
+  const uploadToCloudinaryWithSignature = async videoBlob => {
     try {
-      setVideoUploading(true);
-      setError(null);
-      setShowUploadProgress(true);
-      setUploadStatus('Uploading to cloud...');
+      setUploadProgress('Getting upload signature...');
 
-      const { apiKey, signature, timestamp } = signatureData;
-      const { file } = videoData;
+      // Get upload signature from server
+      const signatureResponse = await fetch(
+        '/api/cvBits/firstImpression/signature',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${user.token}`,
+          },
+          body: JSON.stringify({
+            folder: `users/${user.id}/firstImpression`,
+            resource_type: 'video',
+          }),
+        }
+      );
 
-      // console.log('Upload details:')
-      // console.log('- File:', file)
-      // console.log('- File size:', file.size)
-      // console.log('- File type:', file.type)
-      // console.log('- API Key:', apiKey)
-      // console.log('- Signature:', signature)
-      // console.log('- Timestamp:', timestamp)
+      if (!signatureResponse.ok) {
+        throw new Error('Failed to get upload signature');
+      }
 
+      const { signature, timestamp, cloudName } =
+        await signatureResponse.json();
+
+      // Create form data
       const formData = new FormData();
-      formData.append('file', file);
-      formData.append('api_key', apiKey);
-      formData.append('timestamp', timestamp);
+      formData.append('file', videoBlob);
       formData.append('signature', signature);
+      formData.append('timestamp', timestamp);
+      formData.append('api_key', process.env.REACT_APP_CLOUDINARY_API_KEY);
+      formData.append('folder', `users/${user.id}/firstImpression`);
+      formData.append('resource_type', 'video');
 
-      // console.log('FormData created, sending to Cloudinary...')
+      setUploadProgress('Uploading to cloud...');
 
-      const response = await fetch(
-        'https://api.cloudinary.com/v1_1/cv-cloud/video/upload',
+      // Upload to Cloudinary
+      const uploadResponse = await fetch(
+        `https://api.cloudinary.com/v1_1/${cloudName}/video/upload`,
         {
           method: 'POST',
           body: formData,
         }
       );
 
-      // console.log('Cloudinary response status:', response.status)
+      if (!uploadResponse.ok) {
+        throw new Error('Upload failed');
+      }
+
+      const uploadResult = await uploadResponse.json();
+      return uploadResult.secure_url;
+    } catch (error) {
+      console.error('Upload error:', error);
+      throw new Error('Failed to upload video');
+    }
+  };
+
+  // Handle complete upload process
+  const handleUpload = async () => {
+    if (!recordedVideo || !user) return;
+
+    try {
+      setIsUploading(true);
+      setError('');
+      setUploadStartTime(Date.now());
+      setUploadProgress('Starting upload process...');
+
+      // Convert video format
+      const convertedBlob = await convertToMOV(recordedVideo.blob);
+
+      // Upload to cloud
+      const videoUrl = await uploadToCloudinaryWithSignature(convertedBlob);
+
+      // Save to database
+      setUploadProgress('Saving to database...');
+      const response = await fetch('/api/cvBits/firstImpression', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${user.token}`,
+        },
+        body: JSON.stringify({
+          videoUrl,
+          userId: user.id,
+        }),
+      });
 
       if (!response.ok) {
-        const errorText = await response.text();
-        // console.error('Cloudinary upload failed:', errorText)
-        throw new Error(
-          `Upload failed: ${response.status} ${response.statusText}`
-        );
+        throw new Error('Failed to save video');
       }
 
-      const result = await response.json();
-      // console.log('Cloudinary upload successful:', result)
+      // Update status
+      await fetchFirstImpressionStatus();
+      setUploadProgress('Upload completed successfully!');
 
-      // Create first impression with the uploaded video
-      await createFirstImpression({
-        videoUrl: result.secure_url,
-        publicId: result.public_id,
-      });
-
-      // console.log('First impression created successfully')
-      setVideoUploading(false);
-      setRecordedVideo(null);
-      clearUploadSignature();
-
-      // Show completion
-      setUploadStatus('Upload complete! 🎉');
-
-      // Wait 2 seconds to show completion before hiding
+      // Navigate back to dashboard after success
       setTimeout(() => {
-        setShowUploadProgress(false);
-        setUploadStatus('');
-        // Show success message
-        alert('Video uploaded successfully!');
+        navigate('/app/dashboard');
       }, 2000);
-    } catch (error) {
-      // console.error('Upload error:', error)
-      setError(error.message);
-      setVideoUploading(false);
-      setShowUploadProgress(false);
-      setUploadStatus('');
+    } catch (err) {
+      setError(err.message || 'Upload failed. Please try again.');
+      console.error('Upload error:', err);
+    } finally {
+      setIsUploading(false);
     }
   };
 
-  const handleUpload = async () => {
-    // console.log('=== HANDLE UPLOAD DEBUG ===')
-    // console.log('recordedVideo exists:', !!recordedVideo)
-
-    if (!recordedVideo) {
-      alert('Please record a video first.');
-      return;
-    }
-
-    try {
-      // Show upload progress
-      setShowUploadProgress(true);
-      setUploadStatus(
-        'Converting video format... This will take 2 or so minutes, depending on your network speed.'
-      );
-
-      // Convert to MOV format for mobile compatibility
-      // console.log('Converting video to MOV format...')
-      const convertedVideo = await convertToMOV(recordedVideo.blob);
-
-      // Update recordedVideo with converted data
-      const updatedVideo = {
-        ...recordedVideo,
-        blob: convertedVideo.blob,
-        file: convertedVideo.file,
-        url: convertedVideo.url,
-        mimeType: 'video/quicktime',
-      };
-
-      //console.log('Video converted successfully:', updatedVideo.file.name, updatedVideo.file.size, 'bytes')
-      // console.log('Converted file type:', updatedVideo.file.type)
-      // console.log('Converted blob type:', updatedVideo.blob.type)
-
-      setUploadStatus('Preparing upload... Almost done!');
-
-      // console.log('Getting upload signature...')
-      // Get upload signature using the API client (includes auth headers)
-      const response = await api.post(
-        '/api/cloudinary/signature-request-no-preset'
-      );
-      // console.log('API response:', response.data)
-
-      if (response.data.error) {
-        throw new Error(response.data.error);
+  // Play demo video
+  const playDemo = () => {
+    if (videoDemoUrl && videoDemoUrl.url) {
+      const demoWindow = window.open('', '_blank', 'width=800,height=600');
+      if (demoWindow) {
+        demoWindow.document.write(`
+          <html>
+            <head><title>First Impression Demo</title></head>
+            <body style="margin:0; padding:20px; background:#000; display:flex; align-items:center; justify-content:center;">
+              <video controls autoplay style="max-width:100%; max-height:100%;">
+                <source src="${videoDemoUrl.url}" type="video/mp4">
+                Your browser does not support the video tag.
+              </video>
+            </body>
+          </html>
+        `);
+        demoWindow.document.close();
+      } else {
+        // Fallback if popup blocked
+        window.open(videoDemoUrl.url, '_blank');
       }
-
-      setUploadStatus('Uploading to cloud... Final step!');
-
-      // Use the signature directly for upload with converted video
-      // console.log('Using signature directly for upload...')
-      await uploadToCloudinaryWithSignature(response.data, updatedVideo);
-    } catch (error) {
-      // console.error('Error getting upload signature:', error)
-      setShowUploadProgress(false);
-      setUploadStatus('');
-      alert('Failed to prepare upload. Please try again.');
     }
   };
-
-  // Auto-upload when signature is received
-  useEffect(() => {
-    // console.log('=== UPLOAD SIGNATURE EFFECT DEBUG ===')
-    // console.log('uploadSignature changed:', uploadSignature)
-
-    if (uploadSignature) {
-      // console.log('Signature received, starting upload...')
-      uploadToCloudinary();
-      setVideoUploading(true);
-    }
-  }, [uploadSignature]);
-
-  const formatTime = seconds => {
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-  };
-
-  const handleManualPlay = () => {
-    if (previewVideoRef.current) {
-      previewVideoRef.current.play();
-    }
-  };
-
-  const handleRetryVideo = () => {
-    if (recordedVideo && recordedVideo.blob) {
-      // Create a new blob URL
-      const newUrl = URL.createObjectURL(recordedVideo.blob);
-      console.log('Creating new blob URL:', newUrl);
-
-      // Revoke the old URL
-      URL.revokeObjectURL(recordedVideo.url);
-
-      // Update the recorded video with new URL
-      setRecordedVideo(prev => ({
-        ...prev,
-        url: newUrl,
-      }));
-    }
-  };
-
-  const convertToMOV = async webmBlob => {
-    console.log('Starting FFmpeg conversion to MOV...');
-    setConverting(true);
-
-    try {
-      // Load FFmpeg if not already loaded
-      if (!ffmpeg.loaded) {
-        console.log('Loading FFmpeg...');
-        await ffmpeg.load({
-          coreURL: await toBlobURL('/ffmpeg/ffmpeg-core.js', 'text/javascript'),
-          wasmURL: await toBlobURL(
-            '/ffmpeg/ffmpeg-core.wasm',
-            'application/wasm'
-          ),
-        });
-        console.log('FFmpeg loaded successfully');
-      }
-
-      // Create a file from the blob for FFmpeg
-      const inputFile = new File([webmBlob], 'input.webm', {
-        type: 'video/webm',
-      });
-      console.log('Input file size:', inputFile.size, 'bytes');
-
-      // Write input file to FFmpeg virtual filesystem
-      await ffmpeg.writeFile('input.webm', await fetchFile(inputFile));
-      console.log('Input file written to FFmpeg FS');
-
-      // Convert to MOV using H.264 video + AAC audio for best quality and compatibility
-      console.log('Starting FFmpeg conversion...');
-      await ffmpeg.exec([
-        '-i',
-        'input.webm',
-        '-c:v',
-        'libx264', // H.264 video codec
-        '-preset',
-        'medium', // Balance between speed and quality
-        '-crf',
-        '23', // Constant Rate Factor (18-28 is good, lower = better quality)
-        '-c:a',
-        'aac', // AAC audio codec
-        '-b:a',
-        '128k', // Audio bitrate
-        '-movflags',
-        '+faststart', // Optimize for web streaming
-        'output.mov',
-      ]);
-      console.log('FFmpeg conversion completed');
-
-      // Read the converted file
-      const data = await ffmpeg.readFile('output.mov');
-      console.log('Output file size:', data.length, 'bytes');
-
-      // Create blob from converted data
-      const movBlob = new Blob([data.buffer], { type: 'video/quicktime' });
-
-      // Create a new file with MOV extension
-      const movFile = new File(
-        [movBlob],
-        `first-impression-${Date.now()}.mov`,
-        {
-          type: 'video/quicktime',
-        }
-      );
-
-      console.log('Conversion completed:', movFile.name, movFile.size, 'bytes');
-      setConverting(false);
-
-      return {
-        blob: movBlob,
-        file: movFile,
-        url: URL.createObjectURL(movBlob),
-      };
-    } catch (error) {
-      console.error('FFmpeg conversion failed:', error);
-      setConverting(false);
-
-      // Fallback to simple blob conversion if FFmpeg fails
-      console.log('Using fallback conversion...');
-      const movBlob = new Blob([webmBlob], { type: 'video/quicktime' });
-      const movFile = new File(
-        [movBlob],
-        `first-impression-${Date.now()}.mov`,
-        {
-          type: 'video/quicktime',
-        }
-      );
-
-      return {
-        blob: movBlob,
-        file: movFile,
-        url: URL.createObjectURL(movBlob),
-      };
-    }
-  };
-
-  const handleDownload = () => {
-    if (recordedVideo) {
-      console.log('Download - recordedVideo.mimeType:', recordedVideo.mimeType);
-
-      const getFileExtension = mimeType => {
-        console.log('Getting extension for MIME type:', mimeType);
-        if (mimeType.includes('quicktime')) return 'mov';
-        if (mimeType.includes('mp4')) return 'mp4';
-        if (mimeType.includes('webm')) return 'webm';
-        if (mimeType.includes('ogg')) return 'ogg';
-        return 'mov';
-      };
-
-      const fileExtension = getFileExtension(recordedVideo.mimeType);
-      console.log('Selected file extension:', fileExtension);
-
-      const a = document.createElement('a');
-      a.href = recordedVideo.url;
-      a.download = `first-impression-${Date.now()}.${fileExtension}`;
-      console.log('Download filename:', a.download);
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-    }
-  };
-
-  if (loading) {
-    return <Loader message="Loading..." />;
-  }
-
-  if (error) {
-    return (
-      <div className="first-impression-create">
-        <div className="error-message">
-          <h3>Camera Access Error</h3>
-          <p>{error}</p>
-          <button onClick={startCamera} className="retry-button">
-            Try Again
-          </button>
-        </div>
-      </div>
-    );
-  }
-
-  if (showUploadProgress) {
-    return (
-      <div className="first-impression-create">
-        <div className="upload-progress-container">
-          <div className="upload-progress-content">
-            <div className="upload-logo">
-              <img
-                src="/icon-512.png"
-                alt="CV Cloud Logo"
-                className="upload-logo-image"
-              />
-            </div>
-            <h3>Uploading Your Video...</h3>
-            <p>{uploadStatus}</p>
-            <div className="bouncing-loader">
-              <span></span>
-              <span></span>
-              <span></span>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  console.log(
-    'Rendering component - recordedVideo:',
-    !!recordedVideo,
-    recordedVideo?.url
-  );
 
   return (
-    <div className="first-impression-form">
-      <div className="camera-container">
-        {!recordedVideo ? (
-          <>
-            {/* Two-Window Recording Setup */}
-            <div className="recording-setup">
-              <div className="recording-windows">
-                {/* Hidden Recording Window - Still records but invisible */}
-                <div className="recording-window hidden">
-                  <h4>📹 Recording Window (Hidden)</h4>
-                  <div className="video-container">
-                    <video
-                      ref={videoRef}
-                      autoPlay
-                      playsInline
-                      muted
-                      className="camera-stream"
-                    />
-                    {isRecording && (
-                      <div
-                        className={`recording-timer ${recordingTime <= 5 && 'warning'}`}
-                      >
-                        <div className="timer-text">
-                          ⏱️ {formatTime(recordingTime)} remaining
-                        </div>
-                        {recordingTime <= 5 && (
-                          <div className="warning-text">
-                            ⚠️ Recording will stop soon!
-                          </div>
-                        )}
-                      </div>
-                    )}
-                  </div>
-                </div>
-
-                {/* Visible Portrait Preview Window */}
-                <div className="portrait-preview-window">
-                  <div className="portrait-video-container">
-                    <video
-                      ref={portraitVideoRef}
-                      autoPlay
-                      playsInline
-                      muted
-                      className="portrait-camera-stream"
-                    />
-                    {isRecording && (
-                      <div
-                        className={`recording-timer portrait ${recordingTime <= 5 && 'warning'}`}
-                      >
-                        <div className="timer-text">
-                          ⏱️ {formatTime(recordingTime)} remaining
-                        </div>
-                        {recordingTime <= 5 && (
-                          <div className="warning-text">
-                            ⚠️ Recording will stop soon!
-                          </div>
-                        )}
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </div>
-
-              {!stream && (
-                <div className="camera-overlay">
-                  <div>
-                    <h3>Camera Not Active</h3>
-                    <p>Click "Start Camera" to begin</p>
-                  </div>
-                </div>
-              )}
-            </div>
-          </>
-        ) : (
-          <>
-            {console.log(
-              'Rendering video element with src:',
-              recordedVideo.url
-            )}
-            <div className="playback-container">
-              <div className="portrait-playback-container">
-                <video
-                  ref={previewVideoRef}
-                  src={recordedVideo.url}
-                  controls
-                  className="portrait-video-player"
-                />
-              </div>
-            </div>
-          </>
-        )}
+    <div className="first-impression-container">
+      <div className="first-impression-header">
+        <h2>Record Your First Impression</h2>
+        <p>Create a short video introduction to showcase your personality</p>
       </div>
 
-      {recordedVideo && (
-        <div className="video-info">
-          <h3>Recorded Video</h3>
-          <p>Your video has been recorded successfully!</p>
-          <div className="video-warning">
-            <p>⚠️ Video preview may not work in all browsers</p>
-            <p>
-              If the video is not playing, download the video to verify it
-              recorded correctly
-            </p>
-            <button onClick={handleDownload} className="download-button">
-              📥 Download & Verify
-            </button>
+      {/* Demo Section */}
+      <div className="demo-section">
+        <p className="demo-message">Want to see an example first?</p>
+        <button className="demo-button" onClick={playDemo}>
+          🎬 Watch Demo Video
+        </button>
+      </div>
+
+      {/* Error Display */}
+      {error && <div className="error-message">{error}</div>}
+
+      {/* Upload Progress */}
+      {isUploading && (
+        <div className="upload-progress">
+          <div>{currentMessage}</div>
+          <div style={{ fontSize: '14px', marginTop: '5px', opacity: 0.8 }}>
+            {uploadProgress}
           </div>
-          {/* <div className="video-debug">
-            <p>File size: {Math.round(recordedVideo.blob.size / 1024)} KB</p>
-            <p>Type: {recordedVideo.mimeType}</p>
-            <p>Duration: {Math.round(recordedVideo.blob.size / 100000)} seconds (estimated)</p>
-            <button 
-              onClick={handleManualPlay}
-              className="manual-play-button"
-            >
-              ▶️ Try Play
-            </button>
-            <button 
-              onClick={handleDownload}
-              className="download-button"
-            >
-              📥 Download & Verify
-            </button>
-            <button 
-              onClick={handleRetryVideo}
-              className="manual-play-button"
-              style={{ marginLeft: '8px' }}
-            >
-              🔄 Retry Video
-            </button>
-            <button 
-              onClick={async () => {
-                if (recordedVideo && recordedVideo.blob) {
-                  try {
-                    const convertedVideo = await convertToMOV(recordedVideo.blob)
-                    setRecordedVideo(prev => ({
-                      ...prev,
-                      ...convertedVideo,
-                      mimeType: 'video/quicktime'
-                    }))
-                    console.log('Video converted to MOV format')
-                  } catch (error) {
-                    console.error('Failed to convert video:', error)
-                    setError('Failed to convert video to MOV format')
-                  }
-                }
-              }}
-              className="manual-play-button"
-              style={{ marginLeft: '8px' }}
-              disabled={converting}
-            >
-              {converting ? '🔄 Converting...' : '🎬 Convert to MOV'}
-            </button>
-          </div> */}
         </div>
       )}
 
-      <div className="camera-controls">
-        {!recordedVideo ? (
-          <>
-            <button
-              onClick={stream ? stopCamera : startCamera}
-              className={`camera-toggle-button ${!stream ? 'off' : ''}`}
-              disabled={isRecording}
-            >
-              {stream ? '📷 Stop Camera' : '📷 Start Camera'}
-            </button>
-            <button
-              onClick={isRecording ? stopRecording : startRecording}
-              className={`record-toggle-button ${isRecording ? 'recording' : ''}`}
-              disabled={!stream}
-            >
-              {isRecording ? '⏹️ Stop Recording' : '🎥 Start Recording'}
-            </button>
-          </>
-        ) : (
-          <div className="video-controls">
-            <button onClick={retakeVideo} className="retake-button">
-              🔄 Retake Video
-            </button>
-            <button
-              onClick={handleUpload}
-              className="new-recording-button"
-              disabled={videoUploading}
-            >
-              ☁️ Upload to Cloudinary
-            </button>
-          </div>
-        )}
+      {/* Debug Info */}
+      <div
+        style={{
+          background: '#f0f0f0',
+          padding: '10px',
+          margin: '10px 0',
+          borderRadius: '5px',
+          fontSize: '12px',
+          fontFamily: 'monospace',
+        }}
+      >
+        <strong>Debug Info:</strong>
+        <br />
+        Camera Started: {isCameraStarted ? '✅ Yes' : '❌ No'}
+        <br />
+        Media Stream: {mediaStream ? '✅ Active' : '❌ None'}
+        <br />
+        Recording: {isRecording ? '🔴 Yes' : '⏸️ No'}
+        <br />
+        Uploading: {isUploading ? '⏳ Yes' : '❌ No'}
+        <br />
+        Upload Start Time:{' '}
+        {uploadStartTime
+          ? new Date(uploadStartTime).toLocaleTimeString()
+          : 'None'}
+        <br />
+        Camera Video Ref: {videoRef.current ? '✅ Set' : '❌ Null'}
+        <br />
+        Playback Video Ref: {playbackVideoRef.current ? '✅ Set' : '❌ Null'}
+        <br />
+        Recorded Video: {recordedVideo ? '✅ Available' : '❌ None'}
+        <br />
+        Error: {error || 'None'}
       </div>
 
-      <div className="recording-info">
-        <p>
-          💡 <strong>Tip:</strong> Record a video using your webcam, then
-          preview and upload it.
-        </p>
+      {/* Recording Interface */}
+      <div className="recording-interface">
+        {!recordedVideo ? (
+          <>
+            {/* Camera Preview */}
+            <div className="camera-container">
+              {isCameraStarted ? (
+                <video
+                  ref={videoRef}
+                  autoPlay
+                  playsInline
+                  muted
+                  className="camera-preview"
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'cover',
+                    display: 'block',
+                    border: '3px solid #ff0000', // Red border for visibility
+                    backgroundColor: '#333', // Gray background to see if element is there
+                    minHeight: '200px', // Ensure minimum height
+                    position: 'relative',
+                    zIndex: 10,
+                    visibility: 'visible',
+                    opacity: 1,
+                  }}
+                  onLoadStart={() => console.log('🎬 Video onLoadStart')}
+                  onLoadedMetadata={() => {
+                    console.log('📹 Video onLoadedMetadata');
+                    console.log(
+                      '🎥 Video element visible?',
+                      videoRef.current?.offsetWidth,
+                      'x',
+                      videoRef.current?.offsetHeight
+                    );
+                  }}
+                  onCanPlay={() => console.log('▶️ Video onCanPlay')}
+                  onError={e => console.error('❌ Video onError:', e)}
+                  onPlay={() => console.log('🎥 Video onPlay')}
+                />
+              ) : (
+                <div className="camera-placeholder">
+                  <p>Click to start your camera</p>
+                  <button onClick={startCamera} className="start-camera-btn">
+                    📹 Start Camera
+                  </button>
+                </div>
+              )}
+            </div>
+
+            {/* Recording Controls */}
+            {isCameraStarted && (
+              <div className="recording-controls">
+                {!isRecording ? (
+                  <button onClick={startRecording} className="record-btn">
+                    🔴 Start Recording
+                  </button>
+                ) : (
+                  <button onClick={stopRecording} className="stop-btn">
+                    ⏹️ Stop Recording
+                  </button>
+                )}
+              </div>
+            )}
+          </>
+        ) : (
+          <>
+            {/* Playback */}
+            <div className="playback-container">
+              <video
+                ref={playbackVideoRef}
+                src={recordedVideo.url}
+                controls
+                className="recorded-video"
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover',
+                  display: 'block',
+                  border: '3px solid #00ff00', // Green border for playback
+                  backgroundColor: '#333',
+                  minHeight: '200px',
+                  position: 'relative',
+                  zIndex: 10,
+                  visibility: 'visible',
+                  opacity: 1,
+                }}
+                onLoadStart={() => {
+                  console.log('🎬 Playback Video onLoadStart');
+                  console.log('📹 Video src URL:', recordedVideo?.url);
+                  console.log(
+                    '📹 Playback video element:',
+                    playbackVideoRef.current
+                  );
+                }}
+                onLoadedMetadata={() => {
+                  console.log('📹 Playback Video onLoadedMetadata');
+                  if (playbackVideoRef.current) {
+                    console.log(
+                      '🎥 Playback Video element visible?',
+                      playbackVideoRef.current.offsetWidth,
+                      'x',
+                      playbackVideoRef.current.offsetHeight
+                    );
+                    console.log(
+                      '📹 Playback video dimensions:',
+                      playbackVideoRef.current.videoWidth,
+                      'x',
+                      playbackVideoRef.current.videoHeight
+                    );
+                  } else {
+                    console.log('❌ Playback video ref is null');
+                  }
+                }}
+                onCanPlay={() => console.log('▶️ Playback Video onCanPlay')}
+                onError={e => console.error('❌ Playback Video onError:', e)}
+                onPlay={() => console.log('🎥 Playback Video onPlay')}
+              />
+            </div>
+
+            {/* Action Buttons */}
+            <div className="action-buttons">
+              <button onClick={resetRecording} className="retry-btn">
+                🔄 Retry
+              </button>
+              <button
+                onClick={handleUpload}
+                className="upload-btn"
+                disabled={isUploading}
+              >
+                {isUploading ? '⏳ Uploading...' : '☁️ Upload to Cloud'}
+              </button>
+            </div>
+          </>
+        )}
       </div>
     </div>
   );

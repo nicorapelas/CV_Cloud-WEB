@@ -1,8 +1,65 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { cvQuotes } from '../App/Dashboard/cvQuotes';
 import './LandingPage.css';
 
 const LandingPage = () => {
+  // Typing effect state
+  const [currentQuoteIndex, setCurrentQuoteIndex] = useState(0);
+  const [displayedText, setDisplayedText] = useState('');
+  const [isTyping, setIsTyping] = useState(true);
+  const [showCursor, setShowCursor] = useState(true);
+
+  // Typing effect logic
+  useEffect(() => {
+    const currentQuote = cvQuotes[currentQuoteIndex];
+    const fullText = `"${currentQuote.quote}" - ${currentQuote.author}`;
+
+    let timeout;
+
+    if (isTyping) {
+      // Typing effect
+      if (displayedText.length < fullText.length) {
+        timeout = setTimeout(
+          () => {
+            setDisplayedText(fullText.slice(0, displayedText.length + 1));
+          },
+          50 + Math.random() * 50
+        ); // Variable typing speed for realism
+      } else {
+        // Finished typing, wait before starting to delete
+        timeout = setTimeout(() => {
+          setIsTyping(false);
+        }, 3000);
+      }
+    } else {
+      // Deleting effect
+      if (displayedText.length > 0) {
+        timeout = setTimeout(
+          () => {
+            setDisplayedText(displayedText.slice(0, -1));
+          },
+          30 + Math.random() * 30
+        ); // Faster deletion
+      } else {
+        // Finished deleting, move to next quote
+        setCurrentQuoteIndex(prevIndex => (prevIndex + 1) % cvQuotes.length);
+        setIsTyping(true);
+      }
+    }
+
+    return () => clearTimeout(timeout);
+  }, [displayedText, isTyping, currentQuoteIndex]);
+
+  // Cursor blinking effect
+  useEffect(() => {
+    const cursorInterval = setInterval(() => {
+      setShowCursor(prev => !prev);
+    }, 500);
+
+    return () => clearInterval(cursorInterval);
+  }, []);
+
   return (
     <div className="landing-page">
       <header className="landing-header">
@@ -29,6 +86,17 @@ const LandingPage = () => {
         <section className="landing-hero">
           <div className="landing-container">
             <div className="landing-hero-content">
+              {/* Typing Quote Effect */}
+              <div className="landing-quote-container">
+                <div className="landing-quote-text">
+                  {displayedText}
+                  <span
+                    className={`landing-cursor ${showCursor ? 'visible' : ''}`}
+                  >
+                    |
+                  </span>
+                </div>
+              </div>
               <h1 className="landing-hero-title">
                 Create Professional CVs with Ease
               </h1>

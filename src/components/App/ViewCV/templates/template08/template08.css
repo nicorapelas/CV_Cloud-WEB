@@ -1,0 +1,530 @@
+/* Template08 - Restaurant Menu Theme */
+.template08-menu {
+  font-family: 'Georgia', 'Times New Roman', serif;
+  background: #f8f6f0;
+  color: #2c1810;
+  line-height: 1.6;
+  max-width: 800px;
+  margin: 0 auto;
+  margin-top: 25px;
+  box-shadow: 0 0 50px rgba(139, 69, 19, 0.3);
+  border: 2px solid #8b4513;
+}
+
+/* Restaurant Header */
+.template08-header {
+  background: linear-gradient(135deg, #8b4513 0%, #a0522d 100%);
+  color: #f8f6f0;
+  padding: 40px;
+  text-align: center;
+  position: relative;
+  border-bottom: 4px solid #654321;
+}
+
+.template08-header::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #ffd700, #ffed4e, #ffd700);
+}
+
+.template08-restaurant-name {
+  font-size: 3.5rem;
+  font-weight: bold;
+  margin: 0 0 10px 0;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  font-family: 'Georgia', serif;
+}
+
+.template08-restaurant-tagline {
+  font-size: 1.4rem;
+  font-style: italic;
+  margin: 0 0 20px 0;
+  opacity: 0.9;
+  color: #f5deb3;
+}
+
+.template08-header-divider {
+  width: 200px;
+  height: 2px;
+  background: #f5deb3;
+  margin: 0 auto;
+  border-radius: 1px;
+}
+
+/* Contact Section */
+.template08-contact-section {
+  background: #f5deb3;
+  padding: 30px 40px;
+  border-bottom: 2px solid #8b4513;
+}
+
+.template08-contact-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.template08-contact-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 15px;
+  background: #ffffff;
+  border-radius: 8px;
+  border: 1px solid #d2b48c;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.template08-contact-label {
+  font-weight: bold;
+  color: #8b4513;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-size: 0.9rem;
+}
+
+.template08-contact-value {
+  color: #2c1810;
+  font-weight: 500;
+}
+
+/* Photo Section */
+.template08-photo-section {
+  text-align: center;
+  padding: 30px;
+  background: #ffffff;
+  border-bottom: 2px solid #8b4513;
+}
+
+.template08-profile-photo {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 6px solid #8b4513;
+  box-shadow: 0 8px 25px rgba(139, 69, 19, 0.3);
+}
+
+/* Main Content */
+.template08-main {
+  padding: 40px;
+  background: #ffffff;
+}
+
+/* Menu Sections */
+.template08-menu-section {
+  margin-bottom: 40px;
+}
+
+.template08-section-title {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #8b4513;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin: 0 0 25px 0;
+  padding-bottom: 10px;
+  border-bottom: 3px solid #8b4513;
+  text-align: center;
+  font-family: 'Georgia', serif;
+  position: relative;
+}
+
+.template08-section-title::after {
+  content: '✦';
+  position: absolute;
+  right: 0;
+  top: 0;
+  color: #ffd700;
+  font-size: 1.5rem;
+}
+
+.template08-section-title::before {
+  content: '✦';
+  position: absolute;
+  left: 0;
+  top: 0;
+  color: #ffd700;
+  font-size: 1.5rem;
+}
+
+.template08-section-content {
+  padding: 0 20px;
+}
+
+/* Two Column Layout */
+.template08-columns {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 40px;
+  margin-bottom: 40px;
+}
+
+.template08-left-column,
+.template08-right-column {
+  /* Column styling handled by grid */
+}
+
+/* Menu Items */
+.template08-menu-item {
+  margin-bottom: 25px;
+  padding: 20px;
+  background: #f8f6f0;
+  border-radius: 12px;
+  border: 2px solid #d2b48c;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.template08-menu-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.template08-item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 10px;
+  border-bottom: 1px solid #d2b48c;
+  padding-bottom: 8px;
+}
+
+.template08-item-name {
+  font-size: 1.3rem;
+  font-weight: bold;
+  color: #8b4513;
+  margin: 0;
+  flex: 1;
+  font-family: 'Georgia', serif;
+}
+
+.template08-item-price {
+  font-size: 1rem;
+  color: #a0522d;
+  font-weight: 600;
+  font-style: italic;
+  background: #f5deb3;
+  padding: 4px 12px;
+  border-radius: 20px;
+  border: 1px solid #d2b48c;
+}
+
+.template08-item-description {
+  color: #2c1810;
+  line-height: 1.6;
+}
+
+.template08-item-description strong {
+  color: #8b4513;
+  font-weight: 600;
+}
+
+.template08-item-description p {
+  margin: 8px 0 0 0;
+  font-style: italic;
+}
+
+/* Professional Summary */
+.template08-summary-text {
+  font-size: 1.1rem;
+  line-height: 1.8;
+  text-align: justify;
+  color: #2c1810;
+  background: #f8f6f0;
+  padding: 25px;
+  border-radius: 12px;
+  border: 2px solid #d2b48c;
+  font-style: italic;
+  position: relative;
+}
+
+.template08-summary-text::before {
+  content: '"';
+  font-size: 4rem;
+  color: #8b4513;
+  position: absolute;
+  top: -10px;
+  left: 15px;
+  font-family: 'Georgia', serif;
+  opacity: 0.3;
+}
+
+.template08-summary-text::after {
+  content: '"';
+  font-size: 4rem;
+  color: #8b4513;
+  position: absolute;
+  bottom: -30px;
+  right: 15px;
+  font-family: 'Georgia', serif;
+  opacity: 0.3;
+}
+
+/* Skills */
+.template08-skill-item {
+  margin-bottom: 15px;
+  padding: 15px;
+  background: #f8f6f0;
+  border-radius: 8px;
+  border: 1px solid #d2b48c;
+}
+
+.template08-skill-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.template08-skill-name {
+  font-weight: 600;
+  color: #8b4513;
+  font-size: 1rem;
+}
+
+.template08-stars {
+  display: flex;
+  gap: 2px;
+}
+
+.template08-star {
+  font-size: 1.2rem;
+  color: #d2b48c;
+}
+
+.template08-star.filled {
+  color: #ffd700;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+/* Languages */
+.template08-language-item {
+  margin-bottom: 12px;
+  padding: 12px;
+  background: #f8f6f0;
+  border-radius: 8px;
+  border: 1px solid #d2b48c;
+}
+
+.template08-language-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.template08-language-name {
+  font-weight: 600;
+  color: #8b4513;
+}
+
+.template08-language-level {
+  color: #a0522d;
+  font-style: italic;
+  font-size: 0.9rem;
+}
+
+/* Attributes and Interests */
+.template08-attributes-grid,
+.template08-interests-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.template08-attribute-tag,
+.template08-interest-tag {
+  background: #8b4513;
+  color: #f8f6f0;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border: 2px solid #654321;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.template08-interest-tag {
+  background: #f5deb3;
+  color: #8b4513;
+  border-color: #d2b48c;
+}
+
+/* Subjects */
+.template08-subjects {
+  margin-top: 8px;
+}
+
+.template08-subject-tag {
+  display: inline-block;
+  background: #e6d7c3;
+  color: #8b4513;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  margin: 2px;
+  border: 1px solid #d2b48c;
+}
+
+/* References */
+.template08-reference-item {
+  margin-bottom: 20px;
+  padding: 20px;
+  background: #f8f6f0;
+  border-radius: 12px;
+  border: 2px solid #d2b48c;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.template08-reference-header {
+  margin-bottom: 8px;
+  border-bottom: 1px solid #d2b48c;
+  padding-bottom: 8px;
+}
+
+.template08-reference-name {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #8b4513;
+  margin: 0;
+  font-family: 'Georgia', serif;
+}
+
+.template08-reference-details {
+  color: #2c1810;
+  line-height: 1.5;
+}
+
+.template08-reference-details p {
+  margin: 4px 0;
+}
+
+/* Footer */
+.template08-footer {
+  background: linear-gradient(135deg, #8b4513 0%, #a0522d 100%);
+  color: #f8f6f0;
+  padding: 30px;
+  text-align: center;
+  border-top: 4px solid #654321;
+}
+
+.template08-footer-text {
+  font-size: 1.2rem;
+  font-style: italic;
+  opacity: 0.9;
+  font-family: 'Georgia', serif;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .template08-menu {
+    margin: 10px;
+    max-width: none;
+  }
+
+  .template08-header {
+    padding: 30px 20px;
+  }
+
+  .template08-restaurant-name {
+    font-size: 2.5rem;
+    letter-spacing: 2px;
+  }
+
+  .template08-restaurant-tagline {
+    font-size: 1.1rem;
+  }
+
+  .template08-main {
+    padding: 20px;
+  }
+
+  .template08-columns {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+
+  .template08-contact-grid {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+
+  .template08-contact-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+  }
+
+  .template08-item-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .template08-item-price {
+    align-self: flex-start;
+  }
+
+  .template08-skill-header,
+  .template08-language-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+  }
+}
+
+/* Print Styles */
+@media print {
+  .template08-menu {
+    box-shadow: none;
+    border: 1px solid #000;
+    max-width: none;
+    margin: 0;
+  }
+
+  .template08-header,
+  .template08-footer {
+    background: #8b4513 !important;
+    -webkit-print-color-adjust: exact;
+    color-adjust: exact;
+  }
+
+  .template08-contact-section {
+    background: #f5deb3 !important;
+    -webkit-print-color-adjust: exact;
+    color-adjust: exact;
+  }
+
+  .template08-menu-item,
+  .template08-skill-item,
+  .template08-language-item,
+  .template08-reference-item {
+    break-inside: avoid;
+    box-shadow: none;
+    border: 1px solid #d2b48c;
+  }
+
+  .template08-section-title {
+    break-after: avoid;
+  }
+
+  .template08-columns {
+    display: block;
+  }
+
+  .template08-left-column,
+  .template08-right-column {
+    margin-bottom: 30px;
+  }
+}

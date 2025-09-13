@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Context as AuthContext } from '../../../context/AuthContext';
 import Loader from '../../common/loader/Loader';
 import './Signup.css';
@@ -14,7 +14,7 @@ const Signup = () => {
   });
   const [showPassword, setShowPassword] = useState(false);
   const [showPassword2, setShowPassword2] = useState(false);
-
+  const navigate = useNavigate();
   const {
     state: { loading, errorMessage, apiMessage },
     register,
@@ -84,6 +84,7 @@ const Signup = () => {
                     src="/icon-512.png"
                     alt="CV Cloud Icon"
                     className="signup-logo-image"
+                    onClick={() => navigate('/')}
                   />
                 </div>
                 <h1>Create Account</h1>

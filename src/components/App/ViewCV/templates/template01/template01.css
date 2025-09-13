@@ -322,6 +322,22 @@
   font-weight: 500;
 }
 
+/* Attributes */
+.template01-attributes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-sm);
+}
+
+.template01-attribute-tag {
+  background: var(--secondary-color);
+  color: white;
+  padding: var(--spacing-xs) var(--spacing-md);
+  border-radius: var(--radius-sm);
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
 /* References */
 .template01-references-grid {
   display: grid;
@@ -461,10 +477,17 @@
 /* Print Styles */
 @media print {
   /* Hide non-printable elements */
-  .view-cv-header,
-  .view-cv-container > *:not(.cv-preview-container),
-  .cv-preview-container > *:not(.template01-wrapper) {
+  .view-cv-header {
     display: none !important;
+  }
+
+  /* Ensure template01-wrapper is visible */
+  .template01-wrapper {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    background: white !important;
+    min-height: 100vh !important;
   }
 
   /* Page setup */
@@ -674,8 +697,17 @@
   }
 
   .template01-skill-dot {
-    width: 4pt !important;
-    height: 4pt !important;
+    width: 6pt !important;
+    height: 6pt !important;
+    border-radius: 50% !important;
+    background: #e5e7eb !important;
+    border: 0.5pt solid #d1d5db !important;
+  }
+
+  .template01-skill-dot.filled {
+    background: var(--accent-color) !important;
+    border: 0.5pt solid var(--accent-color) !important;
+    box-shadow: none !important;
   }
 
   /* Languages - Compressed */
@@ -749,6 +781,20 @@
 
   .template01-interest-tag {
     background: var(--primary-color) !important;
+    color: white !important;
+    padding: 2pt 4pt !important;
+    border-radius: 0 !important;
+    font-size: 8pt !important;
+    font-weight: 500 !important;
+  }
+
+  /* Attributes - Compressed */
+  .template01-attributes {
+    gap: 2pt !important;
+  }
+
+  .template01-attribute-tag {
+    background: var(--secondary-color) !important;
     color: white !important;
     padding: 2pt 4pt !important;
     border-radius: 0 !important;

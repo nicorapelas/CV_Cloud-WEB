@@ -1,0 +1,620 @@
+/* Template10 - Agriculture/Farming Theme with John Deere Colors */
+
+.template10-agriculture {
+  max-width: 800px;
+  margin: 0 auto;
+  font-family: 'Arial', 'Helvetica', sans-serif;
+  background-color: #f8f9fa;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 50px rgba(39, 138, 205, 0.6);
+}
+
+.template10-container {
+  background-color: #ffffff;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+/* Header */
+.template10-header {
+  background: linear-gradient(135deg, #2d5016 0%, #4a7c59 50%, #2d5016 100%);
+  padding: 30px;
+  color: #ffffff;
+  position: relative;
+  border-radius: 8px 8px 0 0;
+}
+
+.template10-header::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="10" cy="10" r="1" fill="%23ffffff" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+  opacity: 0.3;
+  border-radius: 8px 8px 0 0;
+}
+
+.template10-header-content {
+  display: flex;
+  align-items: center;
+  gap: 25px;
+  position: relative;
+  z-index: 1;
+}
+
+.template10-logo-section {
+  flex-shrink: 0;
+}
+
+.template10-logo {
+  width: 80px;
+  height: 80px;
+  background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 4px solid #ffffff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.template10-tractor-icon {
+  font-size: 36px;
+  color: #2d5016;
+}
+
+.template10-title-section {
+  flex: 1;
+}
+
+.template10-name {
+  font-size: 28px;
+  font-weight: bold;
+  margin: 0 0 8px 0;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: #ffffff;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.template10-title {
+  font-size: 16px;
+  margin: 0 0 15px 0;
+  color: #ffd700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: 600;
+}
+
+.template10-header-divider {
+  width: 100px;
+  height: 3px;
+  background: linear-gradient(90deg, #ffd700 0%, #ffed4e 100%);
+  border-radius: 2px;
+}
+
+/* Contact Section */
+.template10-contact-section {
+  background-color: #ffffff;
+  padding: 25px;
+  border-bottom: 3px solid #2d5016;
+  border-radius: 0;
+}
+
+.template10-contact-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+.template10-contact-item {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 15px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  border: 2px solid #e9ecef;
+  transition: all 0.3s ease;
+}
+
+.template10-contact-item:hover {
+  border-color: #2d5016;
+  box-shadow: 0 2px 8px rgba(45, 80, 22, 0.1);
+}
+
+.template10-contact-icon {
+  width: 40px;
+  height: 40px;
+  background: linear-gradient(135deg, #2d5016 0%, #4a7c59 100%);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  color: #ffffff;
+  flex-shrink: 0;
+}
+
+.template10-contact-details {
+  flex: 1;
+}
+
+.template10-contact-label {
+  font-size: 12px;
+  font-weight: bold;
+  color: #6c757d;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 4px;
+}
+
+.template10-contact-value {
+  font-size: 14px;
+  color: #2c3e50;
+  font-weight: 500;
+}
+
+/* Photo Section */
+.template10-photo-section {
+  text-align: center;
+  padding: 20px;
+  background-color: #ffffff;
+}
+
+.template10-profile-photo {
+  width: 120px;
+  height: 120px;
+  border-radius: 8px;
+  border: 4px solid #2d5016;
+  object-fit: cover;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Sections */
+.template10-section {
+  margin-bottom: 30px;
+}
+
+.template10-section-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  border-bottom: 3px solid #2d5016;
+}
+
+.template10-section-icon {
+  width: 35px;
+  height: 35px;
+  background: linear-gradient(135deg, #2d5016 0%, #4a7c59 100%);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  color: #ffffff;
+  flex-shrink: 0;
+}
+
+.template10-section-title {
+  font-size: 18px;
+  font-weight: bold;
+  color: #2d5016;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin: 0;
+}
+
+.template10-section-content {
+  padding-left: 47px;
+}
+
+/* Summary Box */
+.template10-summary-box {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  padding: 20px;
+  border-radius: 8px;
+  border: 2px solid #2d5016;
+  border-left: 6px solid #ffd700;
+}
+
+.template10-summary-text {
+  font-size: 14px;
+  line-height: 1.6;
+  color: #2c3e50;
+  margin: 0;
+  text-align: justify;
+}
+
+/* Two Column Layout */
+.template10-columns {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 30px;
+  padding: 0 25px;
+}
+
+.template10-left-column,
+.template10-right-column {
+  background-color: #ffffff;
+}
+
+/* Experience Items */
+.template10-experience-item {
+  margin-bottom: 20px;
+  padding: 20px;
+  background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+  border-radius: 8px;
+  border: 2px solid #e9ecef;
+  border-left: 6px solid #2d5016;
+  transition: all 0.3s ease;
+}
+
+.template10-experience-item:hover {
+  border-color: #4a7c59;
+  box-shadow: 0 4px 12px rgba(45, 80, 22, 0.1);
+}
+
+.template10-experience-header {
+  margin-bottom: 12px;
+}
+
+.template10-experience-name {
+  font-size: 16px;
+  font-weight: bold;
+  color: #2d5016;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin: 0 0 6px 0;
+}
+
+.template10-experience-company {
+  font-size: 14px;
+  color: #ffd700;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
+}
+
+.template10-experience-dates {
+  font-size: 12px;
+  color: #6c757d;
+  font-style: italic;
+}
+
+.template10-experience-description {
+  font-size: 13px;
+  line-height: 1.5;
+  color: #2c3e50;
+  margin: 0;
+}
+
+/* Education Items */
+.template10-education-item {
+  margin-bottom: 15px;
+  padding: 15px;
+  background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+  border-radius: 8px;
+  border: 2px solid #e9ecef;
+  border-left: 6px solid #4a7c59;
+}
+
+.template10-education-name {
+  font-size: 14px;
+  font-weight: bold;
+  color: #2d5016;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin: 0 0 6px 0;
+}
+
+.template10-education-institution {
+  font-size: 13px;
+  color: #4a7c59;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
+}
+
+.template10-education-description {
+  font-size: 12px;
+  line-height: 1.4;
+  color: #2c3e50;
+  margin: 0 0 6px 0;
+  font-style: italic;
+}
+
+.template10-education-additional {
+  font-size: 11px;
+  line-height: 1.3;
+  color: #6c757d;
+  margin: 0;
+  font-style: italic;
+}
+
+/* Reference Items */
+.template10-reference-item {
+  margin-bottom: 15px;
+  padding: 15px;
+  background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+  border-radius: 8px;
+  border: 2px solid #e9ecef;
+  border-left: 6px solid #ffd700;
+}
+
+.template10-reference-name {
+  font-size: 14px;
+  font-weight: bold;
+  color: #2d5016;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin: 0 0 6px 0;
+}
+
+.template10-reference-position {
+  font-size: 12px;
+  color: #4a7c59;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.template10-reference-contact {
+  font-size: 11px;
+  color: #6c757d;
+  margin-bottom: 2px;
+}
+
+/* Skill Items */
+.template10-skill-item {
+  margin-bottom: 15px;
+  padding: 12px;
+  background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+  border-radius: 8px;
+  border: 2px solid #e9ecef;
+  border-left: 4px solid #2d5016;
+}
+
+.template10-skill-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: #2d5016;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
+}
+
+.template10-skill-level {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.template10-skill-bar {
+  flex: 1;
+  height: 8px;
+  background-color: #e9ecef;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.template10-skill-progress {
+  height: 100%;
+  background: linear-gradient(90deg, #2d5016 0%, #4a7c59 100%);
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+
+.template10-skill-rating {
+  font-size: 11px;
+  color: #2d5016;
+  font-weight: 600;
+  min-width: 30px;
+}
+
+/* Language Items */
+.template10-language-item {
+  margin-bottom: 10px;
+  padding: 10px;
+  background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+  border-radius: 8px;
+  border: 2px solid #e9ecef;
+  border-left: 4px solid #4a7c59;
+}
+
+.template10-language-name {
+  font-size: 12px;
+  font-weight: 600;
+  color: #2d5016;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
+}
+
+.template10-language-level {
+  font-size: 11px;
+  color: #4a7c59;
+  font-weight: 500;
+}
+
+/* Attributes Grid */
+.template10-attributes-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.template10-attribute-tag {
+  background: linear-gradient(135deg, #2d5016 0%, #4a7c59 100%);
+  color: #ffffff;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 11px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border: 2px solid #ffd700;
+}
+
+/* Interests Grid */
+.template10-interests-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.template10-interest-tag {
+  background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+  color: #2d5016;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 11px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border: 2px solid #2d5016;
+}
+
+/* Footer */
+.template10-footer {
+  background: linear-gradient(135deg, #2d5016 0%, #4a7c59 100%);
+  padding: 20px;
+  text-align: center;
+  border-radius: 0 0 8px 8px;
+  position: relative;
+}
+
+.template10-footer::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="10" cy="10" r="1" fill="%23ffffff" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+  opacity: 0.3;
+  border-radius: 0 0 8px 8px;
+}
+
+.template10-footer-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  position: relative;
+  z-index: 1;
+}
+
+.template10-footer-icon {
+  font-size: 20px;
+  color: #ffd700;
+}
+
+.template10-footer-text {
+  font-size: 14px;
+  color: #ffffff;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin: 0;
+}
+
+/* Print Styles */
+@media print {
+  .template10-agriculture {
+    max-width: none;
+    margin: 0;
+    padding: 0;
+    background-color: #ffffff;
+    border-radius: 0;
+  }
+
+  .template10-container {
+    box-shadow: none;
+    border-radius: 0;
+  }
+
+  .template10-header {
+    border-radius: 0;
+    padding: 20px;
+  }
+
+  .template10-header::before,
+  .template10-footer::before {
+    display: none;
+  }
+
+  .template10-contact-section {
+    padding: 15px;
+  }
+
+  .template10-columns {
+    gap: 20px;
+    padding: 0 15px;
+  }
+
+  .template10-section {
+    margin-bottom: 20px;
+    page-break-inside: avoid;
+  }
+
+  .template10-experience-item,
+  .template10-education-item,
+  .template10-reference-item {
+    page-break-inside: avoid;
+    margin-bottom: 15px;
+    padding: 15px;
+  }
+
+  .template10-footer {
+    border-radius: 0;
+    padding: 15px;
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .template10-agriculture {
+    padding: 10px;
+  }
+
+  .template10-header {
+    padding: 20px;
+  }
+
+  .template10-header-content {
+    flex-direction: column;
+    text-align: center;
+    gap: 15px;
+  }
+
+  .template10-name {
+    font-size: 24px;
+  }
+
+  .template10-columns {
+    grid-template-columns: 1fr;
+    gap: 20px;
+    padding: 0 15px;
+  }
+
+  .template10-contact-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .template10-section-content {
+    padding-left: 0;
+  }
+
+  .template10-section-header {
+    flex-direction: column;
+    text-align: center;
+    gap: 8px;
+  }
+}

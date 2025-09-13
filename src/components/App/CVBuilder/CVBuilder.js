@@ -11,6 +11,7 @@ import LanguageForm from '../forms/language/LanguageForm';
 import ReferenceForm from '../forms/reference/ReferenceForm';
 import TertiaryEducationForm from '../forms/tertiaryEducation/TertiaryEducationForm';
 import InterestForm from '../forms/interest/InterestForm';
+import AttributeForm from '../forms/attribute/AttributeForm';
 import EmployHistoryForm from '../forms/employmentHistory/EmployHistoryForm';
 import PhotoForm from '../forms/photo/PhotoForm';
 import FirstImpressionSourceSelector from '../forms/firstImpression/FirstImpressionSourceSelector';
@@ -22,6 +23,9 @@ const CVBuilder = () => {
     state: { navTabSelected },
   } = useContext(NavContext);
 
+  console.log('🏗️ CVBuilder loaded');
+  console.log('📋 Nav tab selected:', navTabSelected);
+
   const getSectionTitle = () => {
     const sectionMap = {
       personalInfo: 'Personal Information',
@@ -32,6 +36,7 @@ const CVBuilder = () => {
       tertiaryEducation: 'Tertiary Education',
       certificates: 'Certificates',
       skills: 'Skills',
+      attributes: 'Attributes',
       languages: 'Languages',
       references: 'References',
       interest: 'Interest',
@@ -57,6 +62,8 @@ const CVBuilder = () => {
         return <SecondaryEducationForm />;
       case 'skills':
         return <SkillForm />;
+      case 'attributes':
+        return <AttributeForm />;
       case 'languages':
         return <LanguageForm />;
       case 'references':
@@ -72,6 +79,7 @@ const CVBuilder = () => {
       case 'photo':
         return <PhotoForm />;
       case 'firstImpression':
+        console.log('🎥 Rendering first impression section');
         return <FirstImpressionSourceSelector />;
       default:
         return (

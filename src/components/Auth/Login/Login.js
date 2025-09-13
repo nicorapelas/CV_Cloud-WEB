@@ -83,6 +83,7 @@ const Login = () => {
                     src="/icon-512.png"
                     alt="CV Cloud Icon"
                     className="login-logo-image"
+                    onClick={() => navigate('/')}
                   />
                 </div>
                 <h1>Welcome Back</h1>

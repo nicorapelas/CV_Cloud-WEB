@@ -1,0 +1,657 @@
+/* Template07 - Finance Industry Theme */
+.template07-finance {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: #ffffff;
+  color: #2c3e50;
+  line-height: 1.6;
+  max-width: 800px;
+  margin: 0 auto;
+  box-shadow: 0 0 50px rgba(39, 138, 205, 0.6);
+}
+
+/* Header Section */
+.template07-header {
+  background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+  color: #ffffff;
+  padding: 40px;
+  margin-top: 25px;
+  position: relative;
+  overflow: hidden;
+}
+
+.template07-header::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 200px;
+  height: 200px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 50%;
+  transform: translate(50%, -50%);
+}
+
+.template07-header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  position: relative;
+  z-index: 1;
+}
+
+.template07-header-left {
+  flex: 1;
+  margin-right: 40px;
+}
+
+.template07-name {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin: 0 0 8px 0;
+  letter-spacing: -0.5px;
+  color: #ffffff;
+}
+
+.template07-title {
+  font-size: 1.3rem;
+  font-weight: 400;
+  margin: 0 0 20px 0;
+  color: #e8f4fd;
+  opacity: 0.9;
+}
+
+.template07-header-contact {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.template07-contact-item {
+  display: flex;
+  align-items: center;
+  font-size: 1rem;
+  color: #ffffff;
+  opacity: 0.9;
+}
+
+.template07-contact-icon {
+  margin-right: 10px;
+  font-size: 1.1rem;
+  width: 20px;
+  text-align: center;
+}
+
+.template07-header-right {
+  flex-shrink: 0;
+}
+
+.template07-profile-photo {
+  width: 150px;
+  height: 150px;
+  border-radius: 8px;
+  object-fit: cover;
+  border: 4px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+}
+
+/* Main Content */
+.template07-main {
+  padding: 40px;
+}
+
+.template07-content {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 40px;
+}
+
+/* Section Styling */
+.template07-section {
+  margin-bottom: 35px;
+}
+
+.template07-section-title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #1e3c72;
+  margin: 0 0 20px 0;
+  padding-bottom: 8px;
+  border-bottom: 3px solid #3498db;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Left Column */
+.template07-left-column {
+  /* Left column styling */
+}
+
+/* Professional Summary */
+.template07-summary-content {
+  font-size: 1.1rem;
+  line-height: 1.7;
+  color: #34495e;
+  text-align: justify;
+  background: #f8f9fa;
+  padding: 20px;
+  border-left: 4px solid #3498db;
+  border-radius: 0 8px 8px 0;
+}
+
+/* Work Experience */
+.template07-experiences {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.template07-experience-item {
+  padding: 20px;
+  background: #ffffff;
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  transition: box-shadow 0.3s ease;
+}
+
+.template07-experience-item:hover {
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.template07-experience-title {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #1e3c72;
+  margin: 0 0 12px 0;
+}
+
+.template07-experience-description {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #34495e;
+}
+
+/* Employment History */
+.template07-employment-list {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+.template07-employment-item {
+  padding: 20px;
+  background: #ffffff;
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  transition: box-shadow 0.3s ease;
+}
+
+.template07-employment-item:hover {
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.template07-employment-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 12px;
+}
+
+.template07-employment-title-section {
+  flex: 1;
+}
+
+.template07-employment-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #1e3c72;
+  margin: 0 0 4px 0;
+}
+
+.template07-employment-company {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #3498db;
+  margin: 0;
+}
+
+.template07-employment-dates {
+  font-size: 0.9rem;
+  color: #7f8c8d;
+  font-weight: 500;
+  white-space: nowrap;
+  margin-left: 20px;
+}
+
+.template07-employment-description {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #34495e;
+}
+
+/* Education */
+.template07-education-section {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.template07-education-item {
+  padding: 20px;
+  background: #ffffff;
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.template07-education-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 12px;
+}
+
+.template07-education-title-section {
+  flex: 1;
+}
+
+.template07-education-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #1e3c72;
+  margin: 0 0 4px 0;
+}
+
+.template07-education-type {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #3498db;
+  margin: 0;
+}
+
+.template07-education-dates {
+  font-size: 0.9rem;
+  color: #7f8c8d;
+  font-weight: 500;
+  white-space: nowrap;
+  margin-left: 20px;
+}
+
+.template07-education-description {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #34495e;
+  margin-bottom: 8px;
+}
+
+.template07-education-additional {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: #7f8c8d;
+  font-style: italic;
+}
+
+.template07-education-subjects {
+  margin-top: 12px;
+}
+
+.template07-education-subjects strong {
+  font-weight: 600;
+  color: #1e3c72;
+  display: block;
+  margin-bottom: 8px;
+}
+
+.template07-subjects-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.template07-subject-tag {
+  background: #e3f2fd;
+  color: #1976d2;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  border: 1px solid #bbdefb;
+}
+
+/* Right Column */
+.template07-right-column {
+  /* Right column styling */
+}
+
+/* Personal Information */
+.template07-personal-info {
+  background: #f8f9fa;
+  padding: 20px;
+  border-radius: 8px;
+  border: 1px solid #e9ecef;
+}
+
+.template07-personal-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.template07-personal-item:last-child {
+  border-bottom: none;
+}
+
+.template07-personal-label {
+  font-weight: 600;
+  color: #1e3c72;
+  font-size: 0.9rem;
+}
+
+.template07-personal-value {
+  color: #34495e;
+  font-size: 0.9rem;
+  text-align: right;
+}
+
+/* Skills */
+.template07-skills {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.template07-skill-item {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.template07-skill-name {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #1e3c72;
+}
+
+.template07-proficiency-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.template07-proficiency-bar {
+  flex: 1;
+  height: 8px;
+  background: #e9ecef;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.template07-proficiency-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #3498db 0%, #2980b9 100%);
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+
+.template07-proficiency-text {
+  font-size: 0.8rem;
+  color: #7f8c8d;
+  font-weight: 500;
+  min-width: 25px;
+}
+
+/* Languages */
+.template07-languages {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.template07-language-item {
+  padding: 15px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border: 1px solid #e9ecef;
+}
+
+.template07-language-name {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #1e3c72;
+  margin-bottom: 10px;
+}
+
+.template07-language-proficiency {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.template07-language-skill {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.9rem;
+}
+
+.template07-language-skill span {
+  font-weight: 600;
+  color: #1e3c72;
+  min-width: 50px;
+}
+
+/* Attributes */
+.template07-attributes {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.template07-attribute-item {
+  background: #e3f2fd;
+  color: #1976d2;
+  padding: 10px 15px;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  border-left: 4px solid #2196f3;
+}
+
+/* Interests */
+.template07-interests {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.template07-interest-item {
+  background: #f3e5f5;
+  color: #7b1fa2;
+  padding: 10px 15px;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  border-left: 4px solid #9c27b0;
+}
+
+/* References */
+.template07-references {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.template07-reference-item {
+  padding: 15px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border: 1px solid #e9ecef;
+}
+
+.template07-reference-name {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #1e3c72;
+  margin-bottom: 4px;
+}
+
+.template07-reference-company {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #3498db;
+  margin-bottom: 8px;
+}
+
+.template07-reference-contact {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.template07-reference-email,
+.template07-reference-phone {
+  font-size: 0.85rem;
+  color: #7f8c8d;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .template07-finance {
+    margin: 0;
+    box-shadow: none;
+  }
+
+  .template07-header {
+    padding: 30px 20px;
+  }
+
+  .template07-header-content {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .template07-header-left {
+    margin-right: 0;
+    margin-bottom: 20px;
+  }
+
+  .template07-name {
+    font-size: 2rem;
+  }
+
+  .template07-title {
+    font-size: 1.1rem;
+  }
+
+  .template07-profile-photo {
+    width: 120px;
+    height: 120px;
+  }
+
+  .template07-main {
+    padding: 20px;
+  }
+
+  .template07-content {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+
+  .template07-employment-header,
+  .template07-education-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .template07-employment-dates,
+  .template07-education-dates {
+    margin-left: 0;
+    margin-top: 8px;
+  }
+
+  .template07-personal-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+
+  .template07-personal-value {
+    text-align: left;
+  }
+}
+
+/* Print Styles */
+@media print {
+  .template07-finance {
+    background: white !important;
+    box-shadow: none !important;
+    max-width: none !important;
+    margin: 0 !important;
+  }
+
+  .template07-header {
+    background: #1e3c72 !important;
+    color: white !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  .template07-main {
+    background: white !important;
+    padding: 20pt !important;
+  }
+
+  .template07-section-title {
+    color: #1e3c72 !important;
+    border-bottom: 2pt solid #3498db !important;
+  }
+
+  .template07-experience-item,
+  .template07-employment-item,
+  .template07-education-item {
+    background: white !important;
+    border: 1pt solid #e9ecef !important;
+    box-shadow: none !important;
+  }
+
+  .template07-personal-info,
+  .template07-language-item,
+  .template07-reference-item {
+    background: #f8f9fa !important;
+    border: 1pt solid #e9ecef !important;
+  }
+
+  .template07-attribute-item {
+    background: #e3f2fd !important;
+    color: #1976d2 !important;
+    border-left: 2pt solid #2196f3 !important;
+  }
+
+  .template07-interest-item {
+    background: #f3e5f5 !important;
+    color: #7b1fa2 !important;
+    border-left: 2pt solid #9c27b0 !important;
+  }
+
+  .template07-proficiency-fill {
+    background: #3498db !important;
+  }
+
+  /* Ensure proper page breaks */
+  .template07-section {
+    page-break-inside: avoid !important;
+  }
+
+  .template07-employment-item,
+  .template07-education-item {
+    page-break-inside: avoid !important;
+  }
+
+  .template07-content {
+    page-break-inside: avoid !important;
+  }
+}

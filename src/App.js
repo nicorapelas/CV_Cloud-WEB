@@ -20,6 +20,7 @@ import { Provider as LanguageProvider } from './context/LanguageContext';
 import { Provider as ReferenceProvider } from './context/ReferenceContext';
 import { Provider as TertEduProvider } from './context/TertEduContext';
 import { Provider as InterestProvider } from './context/InterestContext';
+import { Provider as AttributeProvider } from './context/AttributeContext';
 import { Provider as EmployHistoryProvider } from './context/EmployHistoryContext';
 import { Provider as PhotoProvider } from './context/PhotoContext';
 import { Provider as FirstImpressionProvider } from './context/FirstImpressionContext';
@@ -173,21 +174,23 @@ function App() {
                         <ReferenceProvider>
                           <TertEduProvider>
                             <InterestProvider>
-                              <EmployHistoryProvider>
-                                <PhotoProvider>
-                                  <FirstImpressionProvider>
-                                    <CertificateProvider>
-                                      <ShareCVProvider>
-                                        <UniversalProvider>
-                                          <RealTimeProvider>
-                                            <AppRoutes />
-                                          </RealTimeProvider>
-                                        </UniversalProvider>
-                                      </ShareCVProvider>
-                                    </CertificateProvider>
-                                  </FirstImpressionProvider>
-                                </PhotoProvider>
-                              </EmployHistoryProvider>
+                              <AttributeProvider>
+                                <EmployHistoryProvider>
+                                  <PhotoProvider>
+                                    <FirstImpressionProvider>
+                                      <CertificateProvider>
+                                        <ShareCVProvider>
+                                          <UniversalProvider>
+                                            <RealTimeProvider>
+                                              <AppRoutes />
+                                            </RealTimeProvider>
+                                          </UniversalProvider>
+                                        </ShareCVProvider>
+                                      </CertificateProvider>
+                                    </FirstImpressionProvider>
+                                  </PhotoProvider>
+                                </EmployHistoryProvider>
+                              </AttributeProvider>
                             </InterestProvider>
                           </TertEduProvider>
                         </ReferenceProvider>

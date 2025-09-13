@@ -1,0 +1,840 @@
+/* Template06 - Newspaper Theme */
+.template06-newspaper {
+  font-family: 'Times New Roman', Times, serif;
+  background: #f5f5f5;
+  color: #000;
+  line-height: 1.4;
+  max-width: 800px;
+  margin: 0 auto;
+  box-shadow: 0 0 50px rgba(39, 138, 205, 0.6);
+}
+
+/* Newspaper Header */
+.template06-header {
+  background: #000;
+  color: #fff;
+  padding: 20px 40px;
+  margin-top: 25px;
+  text-align: center;
+  border-bottom: 3px solid #000;
+}
+
+.template06-masthead {
+  margin-bottom: 10px;
+}
+
+.template06-newspaper-title {
+  font-size: 3rem;
+  font-weight: bold;
+  margin: 0;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  font-family: 'Times New Roman', Times, serif;
+}
+
+.template06-date-line {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.9rem;
+  margin-top: 10px;
+}
+
+.template06-date {
+  font-weight: bold;
+}
+
+.template06-volume {
+  font-style: italic;
+}
+
+.template06-header-line {
+  height: 2px;
+  background: #fff;
+  margin-top: 15px;
+}
+
+/* Main Content */
+.template06-main {
+  background: #fff;
+  padding: 40px;
+}
+
+/* Front Page Headlines */
+.template06-front-page {
+  border-bottom: 3px solid #000;
+  padding-bottom: 30px;
+  margin-bottom: 30px;
+}
+
+.template06-headline-section {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.template06-main-headline {
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin: 0 0 10px 0;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #000;
+}
+
+.template06-subheadline {
+  font-size: 1.2rem;
+  font-style: italic;
+  color: #333;
+  max-width: 800px;
+  margin: 0 auto;
+  line-height: 1.5;
+}
+
+.template06-photo-section {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.template06-profile-photo {
+  width: 200px;
+  height: 250px;
+  object-fit: cover;
+  border: 3px solid #000;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.template06-photo-caption {
+  font-size: 0.9rem;
+  font-style: italic;
+  margin-top: 10px;
+  color: #666;
+}
+
+/* Contact Section */
+.template06-contact-section {
+  border-bottom: 2px solid #000;
+  padding-bottom: 20px;
+  margin-bottom: 30px;
+}
+
+.template06-contact-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 15px;
+  margin-top: 15px;
+}
+
+.template06-contact-item {
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+.template06-contact-item strong {
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Section Headlines */
+.template06-section-headline {
+  font-size: 1.4rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin: 0 0 20px 0;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #000;
+  color: #000;
+}
+
+.template06-section {
+  margin-bottom: 40px;
+}
+
+/* Personal Information */
+.template06-personal-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 15px;
+}
+
+.template06-personal-item {
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+.template06-personal-item strong {
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Two Column Layout */
+.template06-columns {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 40px;
+  margin-bottom: 40px;
+}
+
+.template06-column {
+  /* Column styling handled by grid */
+}
+
+/* Professional Summary */
+.template06-summary-text {
+  font-size: 1.1rem;
+  line-height: 1.7;
+  text-align: justify;
+  color: #333;
+  margin-top: 15px;
+}
+
+/* Work Experience */
+.template06-experiences {
+  margin-top: 15px;
+}
+
+.template06-experience-item {
+  margin-bottom: 25px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #ddd;
+}
+
+.template06-experience-item:last-child {
+  border-bottom: none;
+}
+
+.template06-experience-title {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin: 0 0 10px 0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #000;
+}
+
+.template06-experience-description {
+  font-size: 1rem;
+  line-height: 1.6;
+  text-align: justify;
+  color: #333;
+}
+
+/* Employment History */
+.template06-employment-list {
+  margin-top: 15px;
+}
+
+.template06-employment-item {
+  margin-bottom: 25px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #ddd;
+}
+
+.template06-employment-item:last-child {
+  border-bottom: none;
+}
+
+.template06-employment-header {
+  margin-bottom: 10px;
+}
+
+.template06-employment-title {
+  font-size: 1.1rem;
+  font-weight: bold;
+  margin: 0 0 5px 0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #000;
+}
+
+.template06-employment-company {
+  font-size: 1rem;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 5px;
+}
+
+.template06-employment-dates {
+  font-size: 0.9rem;
+  font-style: italic;
+  color: #666;
+}
+
+.template06-employment-description {
+  font-size: 1rem;
+  line-height: 1.6;
+  text-align: justify;
+  color: #333;
+  margin-top: 10px;
+}
+
+/* Skills */
+.template06-skills {
+  margin-top: 15px;
+}
+
+.template06-skill-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  padding: 8px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.template06-skill-item:last-child {
+  border-bottom: none;
+}
+
+.template06-skill-name {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #000;
+}
+
+.template06-skill-level {
+  display: flex;
+  gap: 3px;
+}
+
+.template06-skill-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: 1px solid #000;
+}
+
+.template06-skill-dot.filled {
+  background: #000;
+}
+
+/* Languages */
+.template06-languages {
+  margin-top: 15px;
+}
+
+.template06-language-item {
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+.template06-language-item:last-child {
+  border-bottom: none;
+}
+
+.template06-language-name {
+  font-size: 1rem;
+  font-weight: bold;
+  color: #000;
+  margin-bottom: 5px;
+}
+
+.template06-language-proficiency {
+  font-size: 0.9rem;
+  color: #666;
+}
+
+/* Attributes */
+.template06-attributes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 15px;
+}
+
+.template06-attribute-tag {
+  background: #000;
+  color: #fff;
+  padding: 6px 12px;
+  border-radius: 3px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Interests */
+.template06-interests {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 15px;
+}
+
+.template06-interest-tag {
+  background: #333;
+  color: #fff;
+  padding: 6px 12px;
+  border-radius: 3px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Education */
+.template06-full-width {
+  grid-column: 1 / -1;
+}
+
+.template06-education-section {
+  margin-bottom: 30px;
+}
+
+.template06-education-subheadline {
+  font-size: 1.2rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin: 0 0 20px 0;
+  color: #000;
+  border-bottom: 1px solid #000;
+  padding-bottom: 5px;
+}
+
+.template06-education-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 25px;
+}
+
+.template06-education-item {
+  padding: 20px;
+  border: 1px solid #ddd;
+  background: #f9f9f9;
+}
+
+.template06-education-header {
+  margin-bottom: 10px;
+}
+
+.template06-education-title {
+  font-size: 1.1rem;
+  font-weight: bold;
+  margin: 0 0 5px 0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #000;
+}
+
+.template06-education-dates {
+  font-size: 0.9rem;
+  font-style: italic;
+  color: #666;
+}
+
+.template06-education-type {
+  font-size: 1rem;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.template06-education-description {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.template06-education-additional {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: #666;
+  font-style: italic;
+}
+
+.template06-education-subjects {
+  margin-top: 10px;
+}
+
+.template06-education-subjects strong {
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.template06-subject-tag {
+  display: inline-block;
+  background: #e0e0e0;
+  color: #000;
+  padding: 3px 8px;
+  border-radius: 2px;
+  font-size: 0.8rem;
+  margin: 2px 4px 2px 0;
+  border: 1px solid #ccc;
+}
+
+/* References */
+.template06-references-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+  margin-top: 15px;
+}
+
+.template06-reference-item {
+  padding: 15px;
+  border: 1px solid #ddd;
+  background: #f9f9f9;
+}
+
+.template06-reference-name {
+  font-size: 1rem;
+  font-weight: bold;
+  color: #000;
+  margin-bottom: 5px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.template06-reference-company {
+  font-size: 0.9rem;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 8px;
+}
+
+.template06-reference-contact {
+  font-size: 0.9rem;
+  color: #666;
+  line-height: 1.4;
+}
+
+/* Footer */
+.template06-footer {
+  background: #000;
+  color: #fff;
+  padding: 20px 40px;
+  text-align: center;
+}
+
+.template06-footer-line {
+  height: 2px;
+  background: #fff;
+  margin-bottom: 15px;
+}
+
+.template06-footer-text {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.9rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .template06-newspaper {
+    margin: 0;
+    box-shadow: none;
+  }
+
+  .template06-header {
+    padding: 15px 20px;
+  }
+
+  .template06-newspaper-title {
+    font-size: 2rem;
+  }
+
+  .template06-main {
+    padding: 20px;
+  }
+
+  .template06-main-headline {
+    font-size: 1.8rem;
+  }
+
+  .template06-columns {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+
+  .template06-contact-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .template06-personal-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .template06-education-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .template06-references-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .template06-footer-text {
+    flex-direction: column;
+    gap: 5px;
+  }
+}
+
+/* Print Styles */
+@media print {
+  .template06-newspaper {
+    background: white !important;
+    box-shadow: none !important;
+    max-width: none !important;
+    margin: 0 !important;
+  }
+
+  .template06-header {
+    background: #000 !important;
+    color: white !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    padding: 15pt 20pt !important;
+    margin-bottom: 0 !important;
+  }
+
+  .template06-newspaper-title {
+    font-size: 2.5rem !important;
+    margin-bottom: 8pt !important;
+  }
+
+  .template06-main {
+    background: white !important;
+    padding: 15pt 20pt !important;
+  }
+
+  .template06-front-page {
+    padding-bottom: 15pt !important;
+    margin-bottom: 15pt !important;
+  }
+
+  .template06-main-headline {
+    font-size: 2rem !important;
+    margin-bottom: 8pt !important;
+  }
+
+  .template06-subheadline {
+    font-size: 1rem !important;
+    margin-bottom: 10pt !important;
+  }
+
+  .template06-profile-photo {
+    width: 150px !important;
+    height: 180px !important;
+  }
+
+  .template06-section {
+    margin-bottom: 20pt !important;
+  }
+
+  .template06-section-headline {
+    border-bottom: 2pt solid #000 !important;
+    color: #000 !important;
+    font-size: 1.2rem !important;
+    margin-bottom: 12pt !important;
+    padding-bottom: 4pt !important;
+  }
+
+  .template06-columns {
+    gap: 20pt !important;
+    margin-bottom: 20pt !important;
+  }
+
+  .template06-contact-grid,
+  .template06-personal-grid {
+    gap: 8pt !important;
+  }
+
+  .template06-contact-item,
+  .template06-personal-item {
+    font-size: 0.9rem !important;
+    line-height: 1.3 !important;
+  }
+
+  .template06-summary-text {
+    font-size: 1rem !important;
+    line-height: 1.4 !important;
+    margin-top: 8pt !important;
+  }
+
+  .template06-experience-item,
+  .template06-employment-item {
+    margin-bottom: 15pt !important;
+    padding-bottom: 10pt !important;
+  }
+
+  .template06-experience-title,
+  .template06-employment-title {
+    font-size: 1rem !important;
+    margin-bottom: 6pt !important;
+  }
+
+  .template06-experience-description,
+  .template06-employment-description {
+    font-size: 0.9rem !important;
+    line-height: 1.3 !important;
+  }
+
+  .template06-skill-item {
+    margin-bottom: 8pt !important;
+    padding: 4pt 0 !important;
+  }
+
+  .template06-skill-name {
+    font-size: 0.9rem !important;
+  }
+
+  .template06-language-item {
+    margin-bottom: 10pt !important;
+    padding-bottom: 6pt !important;
+  }
+
+  .template06-language-name {
+    font-size: 0.9rem !important;
+  }
+
+  .template06-language-proficiency {
+    font-size: 0.8rem !important;
+  }
+
+  .template06-attribute-tag,
+  .template06-interest-tag {
+    background: #000 !important;
+    color: white !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    padding: 3pt 6pt !important;
+    font-size: 0.8rem !important;
+    margin: 2pt 4pt 2pt 0 !important;
+  }
+
+  .template06-education-section {
+    margin-bottom: 15pt !important;
+  }
+
+  .template06-education-subheadline {
+    font-size: 1rem !important;
+    margin-bottom: 12pt !important;
+  }
+
+  .template06-education-grid {
+    gap: 15pt !important;
+  }
+
+  .template06-education-item {
+    padding: 12pt !important;
+    margin-bottom: 10pt !important;
+  }
+
+  .template06-education-title {
+    font-size: 1rem !important;
+    margin-bottom: 4pt !important;
+  }
+
+  .template06-education-type {
+    font-size: 0.9rem !important;
+    margin-bottom: 6pt !important;
+  }
+
+  .template06-education-description {
+    font-size: 0.9rem !important;
+    line-height: 1.3 !important;
+    margin-bottom: 6pt !important;
+  }
+
+  .template06-education-additional {
+    font-size: 0.8rem !important;
+    line-height: 1.2 !important;
+  }
+
+  .template06-references-grid {
+    gap: 12pt !important;
+  }
+
+  .template06-reference-item {
+    padding: 10pt !important;
+    background: #f9f9f9 !important;
+    border: 1pt solid #ddd !important;
+  }
+
+  .template06-reference-name {
+    font-size: 0.9rem !important;
+    margin-bottom: 4pt !important;
+  }
+
+  .template06-reference-company {
+    font-size: 0.8rem !important;
+    margin-bottom: 6pt !important;
+  }
+
+  .template06-reference-contact {
+    font-size: 0.8rem !important;
+    line-height: 1.2 !important;
+  }
+
+  .template06-footer {
+    background: #000 !important;
+    color: white !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    padding: 10pt 20pt !important;
+  }
+
+  .template06-footer-text {
+    font-size: 0.8rem !important;
+  }
+
+  /* Optimize page breaks to reduce white space */
+  .template06-section {
+    page-break-inside: avoid !important;
+  }
+
+  .template06-columns {
+    page-break-inside: avoid !important;
+  }
+
+  .template06-education-item,
+  .template06-reference-item {
+    page-break-inside: avoid !important;
+  }
+
+  .template06-experience-item,
+  .template06-employment-item {
+    page-break-inside: avoid !important;
+  }
+
+  /* Allow page breaks between major sections */
+  .template06-front-page {
+    page-break-after: avoid !important;
+  }
+
+  .template06-contact-section {
+    page-break-after: avoid !important;
+  }
+
+  .template06-section:nth-child(4n) {
+    page-break-after: auto !important;
+  }
+
+  /* Reduce margins and padding for better space utilization */
+  * {
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+  }
+
+  .template06-section-headline,
+  .template06-education-subheadline {
+    margin-top: 0 !important;
+    margin-bottom: 8pt !important;
+  }
+
+  .template06-experience-item,
+  .template06-employment-item,
+  .template06-education-item,
+  .template06-reference-item {
+    margin-top: 0 !important;
+  }
+}

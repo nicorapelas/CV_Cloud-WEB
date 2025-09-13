@@ -2,6 +2,19 @@ import React, { useContext, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Context as AuthContext } from '../../../context/AuthContext';
 import { Context as NavContext } from '../../../context/NavContext';
+import FirstImpressionCard from './bitCards/FirstImpressionCard';
+import PersonalInfoCard from './bitCards/PersonalInfoCard';
+import ContactInfoCard from './bitCards/ContactInfoCard';
+import PersonalSummaryCard from './bitCards/PersonalSummaryCard';
+import ExperienceCard from './bitCards/ExperienceCard';
+import EducationCard from './bitCards/EducationCard';
+import TertiaryEducationCard from './bitCards/TertiaryEducationCard';
+import SkillsCard from './bitCards/SkillsCard';
+import LanguagesCard from './bitCards/LanguagesCard';
+import AttributesCard from './bitCards/AttributesCard';
+import InterestCard from './bitCards/InterestCard';
+import ReferencesCard from './bitCards/ReferencesCard';
+import PhotoCard from './bitCards/PhotoCard';
 import './Dashboard.css';
 
 const Dashboard = () => {
@@ -36,107 +49,6 @@ const Dashboard = () => {
     signout();
   };
 
-  const cvSections = [
-    {
-      id: 'personalInfo',
-      title: 'Personal Information',
-      description: 'Add your basic details and contact information',
-      icon: '👤',
-      route: '/app/cv-builder',
-    },
-    {
-      id: 'contactInfo',
-      title: 'Contact Information',
-      description: 'Manage your contact details and social links',
-      icon: '📞',
-      route: '/app/cv-builder',
-    },
-    {
-      id: 'personalSummary',
-      title: 'Personal Summary',
-      description: 'Write a compelling professional summary',
-      icon: '📝',
-      route: '/app/cv-builder',
-    },
-    {
-      id: 'experience',
-      title: 'Work Experience',
-      description: 'Add your professional work history',
-      icon: '💼',
-      route: '/app/cv-builder',
-    },
-    {
-      id: 'employmentHistory',
-      title: 'Employment History',
-      description: 'Track your complete employment timeline',
-      icon: '📋',
-      route: '/app/cv-builder',
-    },
-    {
-      id: 'education',
-      title: 'Secondary Education',
-      description: 'Include your academic background',
-      icon: '🎓',
-      route: '/app/cv-builder',
-    },
-    {
-      id: 'tertiaryEducation',
-      title: 'Tertiary Education',
-      description: 'Add your higher education qualifications',
-      icon: '🎓',
-      route: '/app/cv-builder',
-    },
-    {
-      id: 'certificates',
-      title: 'Certificates',
-      description: 'Add your professional certifications and achievements',
-      icon: '🏆',
-      route: '/app/cv-builder',
-    },
-    {
-      id: 'skills',
-      title: 'Skills',
-      description: 'Highlight your key skills and competencies',
-      icon: '⚡',
-      route: '/app/cv-builder',
-    },
-    {
-      id: 'languages',
-      title: 'Languages',
-      description: 'List your language proficiencies',
-      icon: '🌍',
-      route: '/app/cv-builder',
-    },
-    {
-      id: 'references',
-      title: 'References',
-      description: 'Add professional references',
-      icon: '📋',
-      route: '/app/cv-builder',
-    },
-    {
-      id: 'interest',
-      title: 'Interest',
-      description: 'Add your personal interests and hobbies',
-      icon: '🎯',
-      route: '/app/cv-builder',
-    },
-    {
-      id: 'firstImpression',
-      title: 'First Impression',
-      description: 'Create a video introduction',
-      icon: '🎥',
-      route: '/app/cv-builder',
-    },
-    {
-      id: 'photo',
-      title: 'Profile Photo',
-      description: 'Add a professional photo',
-      icon: '📸',
-      route: '/app/cv-builder',
-    },
-  ];
-
   return (
     <div className="dashboard">
       <header className="dashboard-header">
@@ -159,31 +71,28 @@ const Dashboard = () => {
 
       <main className="dashboard-main">
         <div className="dashboard-container">
-          <div className="dashboard-welcome">
-            <h2>Build Your Professional CV</h2>
-            <p>
-              Complete each section to create a comprehensive and professional
-              CV
-            </p>
-          </div>
+          <h3 className="dashboard-sections-title">
+            Create a professional CV that stands out from the crowd. Start with
+            your First Impression video to make a lasting impact.
+          </h3>
+          {/* Hero First Impression Section */}
+          <FirstImpressionCard setNavTabSelected={setNavTabSelected} />
 
+          {/* Regular CV Sections */}
           <div className="dashboard-sections">
             <div className="dashboard-sections-grid">
-              {cvSections.map(section => (
-                <Link
-                  key={section.id}
-                  to={section.route}
-                  className="dashboard-section-card"
-                  onClick={() => setNavTabSelected(section.id)}
-                >
-                  <div className="dashboard-section-icon">{section.icon}</div>
-                  <div className="dashboard-section-content">
-                    <h3>{section.title}</h3>
-                    <p>{section.description}</p>
-                  </div>
-                  <div className="dashboard-section-arrow">→</div>
-                </Link>
-              ))}
+              <PersonalInfoCard setNavTabSelected={setNavTabSelected} />
+              <ContactInfoCard setNavTabSelected={setNavTabSelected} />
+              <PersonalSummaryCard setNavTabSelected={setNavTabSelected} />
+              <ExperienceCard setNavTabSelected={setNavTabSelected} />
+              <EducationCard setNavTabSelected={setNavTabSelected} />
+              <TertiaryEducationCard setNavTabSelected={setNavTabSelected} />
+              <SkillsCard setNavTabSelected={setNavTabSelected} />
+              <LanguagesCard setNavTabSelected={setNavTabSelected} />
+              <AttributesCard setNavTabSelected={setNavTabSelected} />
+              <InterestCard setNavTabSelected={setNavTabSelected} />
+              <ReferencesCard setNavTabSelected={setNavTabSelected} />
+              <PhotoCard setNavTabSelected={setNavTabSelected} />
             </div>
           </div>
 

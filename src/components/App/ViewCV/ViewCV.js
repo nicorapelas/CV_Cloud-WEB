@@ -11,9 +11,19 @@ import { Context as LanguageContext } from '../../../context/LanguageContext';
 import { Context as ReferenceContext } from '../../../context/ReferenceContext';
 import { Context as TertEduContext } from '../../../context/TertEduContext';
 import { Context as InterestContext } from '../../../context/InterestContext';
+import { Context as AttributeContext } from '../../../context/AttributeContext';
 import { Context as EmployHistoryContext } from '../../../context/EmployHistoryContext';
 import { Context as PhotoContext } from '../../../context/PhotoContext';
 import Template01 from './templates/template01/Template01';
+import Template02 from './templates/template02/Template02';
+import Template03 from './templates/template03/Template03';
+import Template04 from './templates/template04/Template04';
+import Template05 from './templates/template05/Template05';
+import Template06 from './templates/template06/Template06';
+import Template07 from './templates/template07/Template07';
+import Template08 from './templates/template08/Template08';
+import Template09 from './templates/template09/Template09';
+import Template10 from './templates/template10/Template10';
 import Loader from '../../common/loader/Loader';
 import './ViewCV.css';
 
@@ -64,6 +74,10 @@ const ViewCV = () => {
     fetchInterests,
   } = useContext(InterestContext);
   const {
+    state: { attributes, loading: attributeLoading },
+    fetchAttributes,
+  } = useContext(AttributeContext);
+  const {
     state: { employHistorys, loading: employHistoryLoading },
     fetchEmployHistorys,
   } = useContext(EmployHistoryContext);
@@ -92,6 +106,7 @@ const ViewCV = () => {
           fetchReferences(),
           fetchTertEdus(),
           fetchInterests(),
+          fetchAttributes(),
           fetchEmployHistorys(),
           fetchAssignedPhoto(),
         ]);
@@ -117,6 +132,7 @@ const ViewCV = () => {
     fetchReferences,
     fetchTertEdus,
     fetchInterests,
+    fetchAttributes,
     fetchEmployHistorys,
     fetchAssignedPhoto,
   ]);
@@ -133,6 +149,7 @@ const ViewCV = () => {
     referenceLoading ||
     tertEduLoading ||
     interestLoading ||
+    attributeLoading ||
     employHistoryLoading ||
     photoLoading;
 
@@ -148,6 +165,7 @@ const ViewCV = () => {
     references: references || [],
     tertEdus: tertEdus || [],
     interests: interests || [],
+    attributes: attributes || [],
     employHistorys: employHistorys || [],
     assignedPhotoUrl: assignedPhotoUrl,
   };
@@ -157,10 +175,30 @@ const ViewCV = () => {
     switch (selectedTemplate) {
       case 'template01':
         return <Template01 cvData={cvData} />;
+      case 'template02':
+        return <Template02 cvData={cvData} />;
+      case 'template03':
+        return <Template03 cvData={cvData} />;
+      case 'template04':
+        return <Template04 cvData={cvData} />;
+      case 'template05':
+        return <Template05 cvData={cvData} />;
+      case 'template06':
+        return <Template06 cvData={cvData} />;
+      case 'template07':
+        return <Template07 cvData={cvData} />;
+      case 'template08':
+        return <Template08 cvData={cvData} />;
+      case 'template09':
+        return <Template09 cvData={cvData} />;
+      case 'template10':
+        return <Template10 cvData={cvData} />;
       default:
         return <Template01 cvData={cvData} />;
     }
   };
+
+  console.log('cvData:', cvData);
 
   if (isLoading || isDataLoading) {
     return <Loader show={true} message="Loading your CV..." />;
@@ -184,7 +222,17 @@ const ViewCV = () => {
         <div className="view-cv-header-actions">
           <button
             className="view-cv-print-button"
-            onClick={() => window.print()}
+            onClick={() => {
+              console.log('Print button clicked');
+              console.log('Selected template:', selectedTemplate);
+              console.log(
+                'Template wrapper exists:',
+                document.querySelector(
+                  '.template01-wrapper, .template02-wrapper'
+                )
+              );
+              window.print();
+            }}
             title="Print CV"
           >
             🖨️ Print CV
@@ -196,7 +244,16 @@ const ViewCV = () => {
               value={selectedTemplate}
               onChange={e => setSelectedTemplate(e.target.value)}
             >
-              <option value="template01">Template 01</option>
+              <option value="template01">Modern</option>
+              <option value="template02">Clean</option>
+              <option value="template03">Creative</option>
+              <option value="template04">Dark</option>
+              <option value="template05">Tech</option>
+              <option value="template06">Newspaper</option>
+              <option value="template07">Finance</option>
+              <option value="template08">Menu</option>
+              <option value="template09">Industrial</option>
+              <option value="template10">Agriculture</option>
               {/* Future templates will be added here */}
             </select>
           </div>

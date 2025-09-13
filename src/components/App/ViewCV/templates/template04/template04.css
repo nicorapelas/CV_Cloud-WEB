@@ -1,0 +1,745 @@
+/* Template04 - Dark Minimalist Theme */
+
+:root {
+  --template04-bg-primary: #0f172a;
+  --template04-bg-secondary: #1e293b;
+  --template04-bg-card: #334155;
+  --template04-bg-accent: #475569;
+  --template04-text-primary: #f8fafc;
+  --template04-text-secondary: #cbd5e1;
+  --template04-text-muted: #94a3b8;
+  --template04-accent: #06b6d4;
+  --template04-accent-secondary: #0891b2;
+  --template04-accent-light: #67e8f9;
+  --template04-border: #475569;
+  --template04-border-light: #64748b;
+  --template04-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+  --template04-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.4);
+  --template04-shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+}
+
+.template04-wrapper {
+  min-height: 100vh;
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.template04-container {
+  background: var(--template04-bg-secondary);
+  border-radius: 20px;
+  box-shadow: 0 0 50px rgba(39, 138, 205, 0.6);
+  max-width: 800px;
+  width: 100%;
+  overflow: hidden;
+  border: 1px solid var(--template04-border);
+}
+
+/* Header Section */
+.template04-header {
+  background: linear-gradient(
+    135deg,
+    var(--template04-accent) 0%,
+    var(--template04-accent-secondary) 100%
+  );
+  padding: 40px;
+  position: relative;
+  overflow: hidden;
+}
+
+.template04-header::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="75" cy="75" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="50" cy="10" r="0.5" fill="rgba(255,255,255,0.05)"/><circle cx="10" cy="60" r="0.5" fill="rgba(255,255,255,0.05)"/><circle cx="90" cy="40" r="0.5" fill="rgba(255,255,255,0.05)"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+  opacity: 0.3;
+}
+
+.template04-header-content {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+  position: relative;
+  z-index: 1;
+}
+
+.template04-photo-section {
+  flex-shrink: 0;
+}
+
+.template04-photo {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  border: 4px solid rgba(255, 255, 255, 0.3);
+  object-fit: cover;
+  box-shadow: var(--template04-shadow-lg);
+}
+
+.template04-info-section {
+  flex: 1;
+  color: white;
+}
+
+.template04-name {
+  font-size: 2.5rem;
+  font-weight: 800;
+  margin: 0 0 8px 0;
+  color: white;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.template04-title {
+  font-size: 1.1rem;
+  font-weight: 500;
+  margin: 0 0 20px 0;
+  color: rgba(255, 255, 255, 0.9);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.template04-contact-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.template04-contact-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.template04-contact-icon {
+  font-size: 1.2rem;
+  width: 24px;
+  text-align: center;
+  opacity: 0.9;
+}
+
+.template04-contact-text {
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 500;
+}
+
+/* Main Content Grid */
+.template04-main-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  min-height: 600px;
+}
+
+.template04-left-column {
+  background: var(--template04-bg-secondary);
+  padding: 30px;
+  border-right: 1px solid var(--template04-border);
+}
+
+.template04-right-column {
+  background: var(--template04-bg-card);
+  padding: 30px;
+}
+
+/* Section Styles */
+.template04-section {
+  margin-bottom: 35px;
+}
+
+.template04-section-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid var(--template04-accent);
+}
+
+.template04-section-icon {
+  font-size: 1.5rem;
+  width: 40px;
+  height: 40px;
+  background: var(--template04-accent);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  box-shadow: var(--template04-shadow);
+}
+
+.template04-section-title {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--template04-text-primary);
+  margin: 0;
+}
+
+.template04-section-content {
+  color: var(--template04-text-secondary);
+  line-height: 1.6;
+}
+
+/* Summary */
+.template04-summary-text {
+  background: var(--template04-bg-card);
+  padding: 20px;
+  border-radius: 12px;
+  border-left: 4px solid var(--template04-accent);
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.7;
+  color: var(--template04-text-secondary);
+}
+
+/* Experience Items */
+.template04-experience-item {
+  background: var(--template04-bg-card);
+  padding: 20px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  border: 1px solid var(--template04-border-light);
+  transition: all 0.3s ease;
+}
+
+.template04-experience-item:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--template04-shadow-lg);
+  border-color: var(--template04-accent);
+}
+
+.template04-experience-header {
+  margin-bottom: 12px;
+}
+
+.template04-experience-title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--template04-accent);
+  margin: 0 0 6px 0;
+}
+
+.template04-experience-company {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--template04-text-primary);
+  margin: 0 0 6px 0;
+}
+
+.template04-experience-dates {
+  font-size: 0.9rem;
+  color: var(--template04-text-muted);
+  background: var(--template04-bg-accent);
+  padding: 4px 12px;
+  border-radius: 20px;
+  display: inline-block;
+}
+
+.template04-experience-description {
+  color: var(--template04-text-secondary);
+  line-height: 1.6;
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+/* Education Items */
+.template04-education-item {
+  background: var(--template04-bg-accent);
+  padding: 18px;
+  border-radius: 10px;
+  margin-bottom: 15px;
+  border-left: 4px solid var(--template04-accent-light);
+}
+
+.template04-education-header {
+  margin-bottom: 10px;
+}
+
+.template04-education-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--template04-accent-light);
+  margin: 0 0 6px 0;
+}
+
+.template04-education-dates {
+  font-size: 0.85rem;
+  color: var(--template04-text-muted);
+  font-weight: 500;
+}
+
+.template04-education-description {
+  color: var(--template04-text-secondary);
+  line-height: 1.5;
+  margin: 8px 0 0 0;
+  font-size: 0.9rem;
+}
+
+.template04-education-subjects {
+  margin-top: 8px;
+}
+
+.template04-education-subjects-label {
+  font-size: 0.85rem;
+  color: var(--template04-text-muted);
+  font-weight: 600;
+}
+
+.template04-subject {
+  font-size: 0.85rem;
+  color: var(--template04-text-muted);
+}
+
+/* Skills Grid */
+.template04-skills-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.template04-skill-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  background: var(--template04-bg-secondary);
+  border-radius: 10px;
+  border: 1px solid var(--template04-border-light);
+  transition: all 0.3s ease;
+}
+
+.template04-skill-item:hover {
+  border-color: var(--template04-accent);
+  transform: translateX(4px);
+}
+
+.template04-skill-name {
+  font-weight: 600;
+  color: var(--template04-text-primary);
+  font-size: 1rem;
+}
+
+.template04-skill-level {
+  display: flex;
+  gap: 6px;
+}
+
+.template04-skill-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--template04-bg-accent);
+  border: 1px solid var(--template04-border-light);
+  transition: all 0.3s ease;
+}
+
+.template04-skill-dot.filled {
+  background: var(--template04-accent);
+  border-color: var(--template04-accent);
+  box-shadow: 0 0 8px rgba(6, 182, 212, 0.4);
+}
+
+/* Languages List */
+.template04-languages-list {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.template04-language-item {
+  padding: 18px;
+  background: var(--template04-bg-secondary);
+  border-radius: 10px;
+  border: 1px solid var(--template04-border-light);
+}
+
+.template04-language-name {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--template04-accent);
+  margin: 0 0 12px 0;
+}
+
+.template04-language-proficiency {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.template04-language-proficiency-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.template04-language-proficiency-label {
+  font-size: 0.9rem;
+  color: var(--template04-text-muted);
+  min-width: 50px;
+  font-weight: 500;
+}
+
+/* References List */
+.template04-references-list {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.template04-reference-item {
+  padding: 18px;
+  background: var(--template04-bg-secondary);
+  border-radius: 10px;
+  border: 1px solid var(--template04-border-light);
+  transition: all 0.3s ease;
+}
+
+.template04-reference-item:hover {
+  border-color: var(--template04-accent);
+  transform: translateY(-2px);
+}
+
+.template04-reference-name {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--template04-accent);
+  margin: 0 0 6px 0;
+}
+
+.template04-reference-company {
+  font-weight: 600;
+  color: var(--template04-text-primary);
+  margin: 0 0 8px 0;
+  font-size: 1rem;
+}
+
+.template04-reference-contact {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.template04-reference-email,
+.template04-reference-phone {
+  font-size: 0.9rem;
+  color: var(--template04-text-muted);
+}
+
+/* Interests List */
+.template04-interests-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.template04-interest-tag {
+  background: linear-gradient(
+    135deg,
+    var(--template04-accent) 0%,
+    var(--template04-accent-secondary) 100%
+  );
+  padding: 8px 16px;
+  border-radius: 20px;
+  transition: all 0.3s ease;
+}
+
+.template04-interest-tag:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--template04-shadow);
+}
+
+.template04-interest-tag-text {
+  color: white;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+/* Attributes */
+.template04-attributes-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.template04-attribute-tag {
+  background: linear-gradient(
+    135deg,
+    var(--template04-primary) 0%,
+    var(--template04-primary-dark) 100%
+  );
+  padding: 8px 16px;
+  border-radius: 20px;
+  transition: all 0.3s ease;
+}
+
+.template04-attribute-tag:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--template04-shadow);
+}
+
+.template04-attribute-tag-text {
+  color: white;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+/* Bottom Section */
+.template04-bottom-section {
+  background: var(--template04-bg-secondary);
+  padding: 30px;
+  border-top: 1px solid var(--template04-border);
+}
+
+/* Experience Cards */
+.template04-experiences-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.template04-experience-card {
+  background: var(--template04-bg-card);
+  padding: 20px;
+  border-radius: 12px;
+  border: 1px solid var(--template04-border-light);
+  border-top: 4px solid var(--template04-accent);
+  transition: all 0.3s ease;
+}
+
+.template04-experience-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--template04-shadow-lg);
+  border-top-color: var(--template04-accent-light);
+}
+
+.template04-experience-card-title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--template04-accent);
+  margin: 0 0 12px 0;
+}
+
+.template04-experience-card-description {
+  color: var(--template04-text-secondary);
+  line-height: 1.6;
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .template04-wrapper {
+    padding: 10px;
+  }
+
+  .template04-container {
+    border-radius: 15px;
+  }
+
+  .template04-header {
+    padding: 25px;
+  }
+
+  .template04-header-content {
+    flex-direction: column;
+    text-align: center;
+    gap: 20px;
+  }
+
+  .template04-photo {
+    width: 100px;
+    height: 100px;
+  }
+
+  .template04-name {
+    font-size: 2rem;
+  }
+
+  .template04-main-content {
+    grid-template-columns: 1fr;
+  }
+
+  .template04-left-column,
+  .template04-right-column {
+    padding: 20px;
+  }
+
+  .template04-left-column {
+    border-right: none;
+    border-bottom: 1px solid var(--template04-border);
+  }
+
+  .template04-bottom-section {
+    padding: 20px;
+  }
+
+  .template04-experiences-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .template04-header {
+    padding: 20px;
+  }
+
+  .template04-name {
+    font-size: 1.8rem;
+  }
+
+  .template04-left-column,
+  .template04-right-column,
+  .template04-bottom-section {
+    padding: 15px;
+  }
+
+  .template04-section {
+    margin-bottom: 25px;
+  }
+
+  .template04-section-header {
+    margin-bottom: 15px;
+  }
+
+  .template04-section-title {
+    font-size: 1.2rem;
+  }
+}
+
+/* Print Styles */
+@media print {
+  .view-cv-header {
+    display: none !important;
+  }
+
+  .template04-wrapper {
+    background: white !important;
+    min-height: 100vh !important;
+    padding: 0 !important;
+  }
+
+  .template04-container {
+    background: white !important;
+    box-shadow: none !important;
+    border: 1px solid #ccc !important;
+    border-radius: 0 !important;
+    max-width: none !important;
+    width: 100% !important;
+  }
+
+  .template04-header {
+    background: #f8f9fa !important;
+    color: #000 !important;
+    padding: 20px !important;
+  }
+
+  .template04-header::before {
+    display: none !important;
+  }
+
+  .template04-name {
+    color: #000 !important;
+    text-shadow: none !important;
+  }
+
+  .template04-title {
+    color: #666 !important;
+  }
+
+  .template04-contact-text {
+    color: #333 !important;
+  }
+
+  .template04-main-content {
+    display: block !important;
+  }
+
+  .template04-left-column,
+  .template04-right-column {
+    background: white !important;
+    padding: 15px !important;
+    border: none !important;
+  }
+
+  .template04-section-title {
+    color: #000 !important;
+  }
+
+  .template04-section-content {
+    color: #333 !important;
+  }
+
+  .template04-experience-item,
+  .template04-education-item,
+  .template04-skill-item,
+  .template04-language-item,
+  .template04-reference-item,
+  .template04-experience-card {
+    background: #f8f9fa !important;
+    border: 1px solid #ddd !important;
+    box-shadow: none !important;
+    transform: none !important;
+  }
+
+  .template04-experience-title,
+  .template04-education-title,
+  .template04-language-name,
+  .template04-reference-name,
+  .template04-experience-card-title {
+    color: #000 !important;
+  }
+
+  .template04-skill-name {
+    color: #000 !important;
+  }
+
+  .template04-skill-dot {
+    width: 6pt !important;
+    height: 6pt !important;
+    border: 0.5pt solid #d1d5db !important;
+    border-radius: 50% !important;
+  }
+
+  .template04-skill-dot.filled {
+    background: #06b6d4 !important;
+    border: 0.5pt solid #06b6d4 !important;
+  }
+
+  .template04-skill-level {
+    gap: 1pt !important;
+  }
+
+  .template04-bottom-section {
+    background: white !important;
+    padding: 15px !important;
+    border-top: 1px solid #ddd !important;
+  }
+
+  .template04-interest-tag {
+    background: #f0f0f0 !important;
+    border: 1px solid #ccc !important;
+  }
+
+  .template04-interest-tag-text {
+    color: #000 !important;
+  }
+
+  .template04-attribute-tag {
+    background: #e0e0e0 !important;
+    border: 1px solid #999 !important;
+  }
+
+  .template04-attribute-tag-text {
+    color: #000 !important;
+  }
+
+  .template04-summary-text {
+    background: #f8f9fa !important;
+    color: #333 !important;
+  }
+}
