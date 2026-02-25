@@ -1,0 +1,79 @@
+.classified-ads-prefs-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 1.25rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  border: 1px solid #e9ecef;
+}
+
+.classified-ads-prefs-loading {
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.classified-ads-prefs-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.classified-ads-prefs-icon {
+  font-size: 1.5rem;
+}
+
+.classified-ads-prefs-header h4 {
+  margin: 0 0 0.25rem 0;
+  font-size: 1.1rem;
+  color: #232936;
+}
+
+.classified-ads-prefs-subtitle {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #6c757d;
+}
+
+.classified-ads-prefs-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.classified-ads-prefs-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+.classified-ads-prefs-label {
+  font-size: 0.95rem;
+  color: #333;
+}
+
+.classified-ads-prefs-toggle {
+  padding: 0.35rem 0.75rem;
+  border-radius: 6px;
+  border: 1px solid #dee2e6;
+  background: #f8f9fa;
+  font-size: 0.85rem;
+  cursor: pointer;
+  min-width: 48px;
+}
+
+.classified-ads-prefs-toggle:hover:not(:disabled) {
+  background: #e9ecef;
+}
+
+.classified-ads-prefs-toggle.on {
+  background: #288acd;
+  border-color: #288acd;
+  color: #fff;
+}
+
+.classified-ads-prefs-toggle:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}

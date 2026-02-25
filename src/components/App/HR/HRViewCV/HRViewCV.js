@@ -32,9 +32,9 @@ const HRViewCV = () => {
 
   // Dynamic values based on source
   const backRoute =
-    fromRoute === 'browse' ? '/app/hr-browse-cvs' : '/app/hr-dashboard';
+    fromRoute === 'browse' ? '/app/hr-browse-cvs' : fromRoute === 'enquiries' ? '/app/hr-classified-ads/enquiries' : '/app/hr-dashboard';
   const backText =
-    fromRoute === 'browse' ? '← Back to Browse CVs' : '← Back to HR Dashboard';
+    fromRoute === 'browse' ? '← Back to Browse CVs' : fromRoute === 'enquiries' ? '← Back to Applications' : '← Back to HR Dashboard';
   const headerTitle = isPreview ? 'Preview CV' : 'Saved CV';
   const headerSubtitle = isPreview
     ? 'Preview candidate profile before saving'

@@ -15,6 +15,10 @@ import {
   Provider as AdvertisementProvider,
   Context as AdvertisementContext,
 } from './context/AdvertisementContext';
+import {
+  Provider as ClassifiedAdsProvider,
+  Context as ClassifiedAdsContext,
+} from './context/ClassifiedAdsContext';
 import { Provider as NavProvider } from './context/NavContext';
 import { Provider as PersonalInfoProvider } from './context/PersonalInfoContext';
 import { Provider as ContactInfoProvider } from './context/ContactInfoContext';
@@ -55,10 +59,16 @@ import ViewCV from './components/App/ViewCV/ViewCV';
 import ShareCV from './components/App/ShareCV/ShareCV';
 import CVAccessRequests from './components/App/CVAccessRequests/CVAccessRequests';
 import SharedCVView from './components/App/SharedCVView/SharedCVView';
+import ViewApplicantCV from './components/App/ViewApplicantCV/ViewApplicantCV';
 import HRIntroduction from './components/HRIntroduction/HRIntroduction';
 import HRDashboard from './components/App/HR/HRDashboard/HRDashboard';
 import HRViewCV from './components/App/HR/HRViewCV/HRViewCV';
 import HRBrowseCVs from './components/App/HR/HRBrowseCVs/HRBrowseCVs';
+import HRClassifiedAds from './components/App/HR/HRClassifiedAds/HRClassifiedAds';
+import HRClassifiedAdForm from './components/App/HR/HRClassifiedAdForm/HRClassifiedAdForm';
+import HRClassifiedAdEnquiries from './components/App/HR/HRClassifiedAds/HRClassifiedAdEnquiries';
+import ClassifiedAdsListPage from './components/App/ClassifiedAds/ClassifiedAdsListPage';
+import ClassifiedAdDetailPage from './components/App/ClassifiedAds/ClassifiedAdDetailPage';
 import AdminPanel from './components/App/AdminPanel/AdminPanel';
 import EmailVerification from './components/Auth/EmailVerification/EmailVerification';
 import FirstImpressionDemo from './components/FirstImpressionDemo/FirstImpressionDemo';
@@ -137,6 +147,15 @@ const ProtectedRoute = ({ children }) => {
   );
 };
 
+// When classified ads feature is off, redirect to dashboard
+const ClassifiedAdsGuard = ({ children, redirectTo }) => {
+  const { state: { classifiedAdsActive } } = useContext(ClassifiedAdsContext);
+  if (!classifiedAdsActive) {
+    return <Navigate to={redirectTo} replace />;
+  }
+  return children;
+};
+
 // App Routes Component
 const AppRoutes = () => {
   const {
@@ -146,10 +165,12 @@ const AppRoutes = () => {
   } = useContext(AuthContext);
 
   const { fetchSystemSettings } = useContext(AdvertisementContext);
+  const { fetchClassifiedAdsSettings } = useContext(ClassifiedAdsContext);
 
   React.useEffect(() => {
     tryLocalSignin();
     fetchSystemSettings(); // Fetch system settings on app load
+    fetchClassifiedAdsSettings();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []); // Empty dependency array - only run once on mount
 
@@ -207,6 +228,7 @@ const AppRoutes = () => {
         <Route path="/first-impression-demo" element={<FirstImpressionDemo />} />
         <Route path="/email-verified/:id" element={<EmailVerification />} />
         <Route path="/view-shared-cv/:id" element={<SharedCVView />} />
+        <Route path="/view-applicant-cv/:enquiryId" element={<ViewApplicantCV />} />
         <Route
           path="/app/dashboard"
           element={
@@ -244,6 +266,78 @@ const AppRoutes = () => {
               <div className="app-container">
                 <HRBrowseCVs />
               </div>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/app/hr-classified-ads/enquiries"
+          element={
+            <ProtectedRoute>
+              <ClassifiedAdsGuard redirectTo="/app/hr-dashboard">
+                <div className="app-container">
+                  <HRClassifiedAdEnquiries />
+                </div>
+              </ClassifiedAdsGuard>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/app/hr-classified-ads/new"
+          element={
+            <ProtectedRoute>
+              <ClassifiedAdsGuard redirectTo="/app/hr-dashboard">
+                <div className="app-container">
+                  <HRClassifiedAdForm />
+                </div>
+              </ClassifiedAdsGuard>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/app/hr-classified-ads/:id/edit"
+          element={
+            <ProtectedRoute>
+              <ClassifiedAdsGuard redirectTo="/app/hr-dashboard">
+                <div className="app-container">
+                  <HRClassifiedAdForm />
+                </div>
+              </ClassifiedAdsGuard>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/app/hr-classified-ads"
+          element={
+            <ProtectedRoute>
+              <ClassifiedAdsGuard redirectTo="/app/hr-dashboard">
+                <div className="app-container">
+                  <HRClassifiedAds />
+                </div>
+              </ClassifiedAdsGuard>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/app/classified-ads/:id"
+          element={
+            <ProtectedRoute>
+              <ClassifiedAdsGuard redirectTo="/app/dashboard">
+                <div className="app-container">
+                  <ClassifiedAdDetailPage />
+                </div>
+              </ClassifiedAdsGuard>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/app/classified-ads"
+          element={
+            <ProtectedRoute>
+              <ClassifiedAdsGuard redirectTo="/app/dashboard">
+                <div className="app-container">
+                  <ClassifiedAdsListPage />
+                </div>
+              </ClassifiedAdsGuard>
             </ProtectedRoute>
           }
         />
@@ -332,7 +426,8 @@ function App() {
       <Router>
         <AuthProvider>
           <AdvertisementProvider>
-            <NavProvider>
+            <ClassifiedAdsProvider>
+              <NavProvider>
               <PersonalInfoProvider>
                 <ContactInfoProvider>
                   <PersonalSummaryProvider>
@@ -376,7 +471,8 @@ function App() {
                   </PersonalSummaryProvider>
                 </ContactInfoProvider>
               </PersonalInfoProvider>
-            </NavProvider>
+              </NavProvider>
+            </ClassifiedAdsProvider>
           </AdvertisementProvider>
         </AuthProvider>
       </Router>

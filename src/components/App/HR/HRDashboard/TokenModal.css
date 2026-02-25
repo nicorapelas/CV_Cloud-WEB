@@ -1,0 +1,90 @@
+.token-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.token-modal {
+  background: #fff;
+  border-radius: 12px;
+  max-width: 420px;
+  width: 90%;
+  max-height: 85vh;
+  overflow: auto;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+.token-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  border-bottom: 1px solid #eee;
+}
+
+.token-modal-header h2 {
+  margin: 0;
+  font-size: 1.25rem;
+}
+
+.token-modal-close {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #666;
+  line-height: 1;
+  padding: 0 4px;
+}
+
+.token-modal-close:hover {
+  color: #333;
+}
+
+.token-modal-body {
+  padding: 20px;
+}
+
+.token-modal-loading,
+.token-modal-error {
+  margin: 0;
+  color: #666;
+}
+
+.token-modal-error {
+  color: #c0392b;
+}
+
+.token-modal-balance {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.token-modal-balance-label {
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.token-modal-balance-value {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #288acd;
+}
+
+.token-modal-balance-unit {
+  font-size: 0.95rem;
+  color: #666;
+}
+
+.token-modal-hint {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #555;
+  line-height: 1.5;
+}

@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Context as AuthContext } from '../../../context/AuthContext';
 import { Context as NavContext } from '../../../context/NavContext';
+import { Context as ClassifiedAdsContext } from '../../../context/ClassifiedAdsContext';
 import { Context as PersonalInfoContext } from '../../../context/PersonalInfoContext';
 import { Context as PhotoContext } from '../../../context/PhotoContext';
 import FirstImpressionCard from './bitCards/FirstImpressionCard';
@@ -20,6 +21,7 @@ import PhotoCard from './bitCards/PhotoCard';
 import EmploymentHistoryCard from './bitCards/EmploymentHistoryCard';
 import CertificateCard from './bitCards/CertificateCard';
 import CVVisibilityCard from './bitCards/CVVisibilityCard';
+import ClassifiedAdsPreferencesCard from './bitCards/ClassifiedAdsPreferencesCard';
 import NotificationCenter from '../../common/NotificationCenter/NotificationCenter';
 import DashSwapLoader from '../../common/DashSwapLoader/DashSwapLoader';
 import DashboardFooter from './DashboardFooter';
@@ -58,6 +60,8 @@ const Dashboard = () => {
     state: { navTabSelected },
     setNavTabSelected,
   } = useContext(NavContext);
+
+  const { state: { classifiedAdsActive } } = useContext(ClassifiedAdsContext);
 
   const {
     state: { personalInfo },
@@ -218,6 +222,14 @@ const Dashboard = () => {
                     >
                       Share CV
                     </Link>
+                    {classifiedAdsActive && (
+                      <Link
+                        to="/app/classified-ads"
+                        className="dashboard-header-button"
+                      >
+                        Job listings
+                      </Link>
+                    )}
                   </>
                 ) : (
                   <>
@@ -258,13 +270,15 @@ const Dashboard = () => {
                     HR Dashboard
                   </div>
                 )}
-                <button
-                  type="button"
-                  className="dashboard-referrals-button"
-                  onClick={() => setShowReferralsModal(true)}
-                >
-                  Referrals
-                </button>
+                {classifiedAdsActive && (
+                  <button
+                    type="button"
+                    className="dashboard-referrals-button"
+                    onClick={() => setShowReferralsModal(true)}
+                  >
+                    Referrals
+                  </button>
+                )}
                 <button onClick={handleSignout} className="dashboard-signout">
                   Sign Out
                 </button>
@@ -309,6 +323,15 @@ const Dashboard = () => {
                 >
                   Share CV
                 </Link>
+                {classifiedAdsActive && (
+                  <Link
+                    to="/app/classified-ads"
+                    className="dashboard-mobile-nav-link"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    Job listings
+                  </Link>
+                )}
               </>
             ) : (
               <>
@@ -348,16 +371,18 @@ const Dashboard = () => {
                 HR Dashboard
               </button>
             )}
-            <button
-              type="button"
-              className="dashboard-mobile-nav-link referrals"
-              onClick={() => {
-                setIsMobileMenuOpen(false);
-                setShowReferralsModal(true);
-              }}
-            >
-              Referrals
-            </button>
+            {classifiedAdsActive && (
+              <button
+                type="button"
+                className="dashboard-mobile-nav-link referrals"
+                onClick={() => {
+                  setIsMobileMenuOpen(false);
+                  setShowReferralsModal(true);
+                }}
+              >
+                Referrals
+              </button>
+            )}
             <button
               onClick={() => {
                 setIsMobileMenuOpen(false);
@@ -381,6 +406,11 @@ const Dashboard = () => {
 
             {/* CV Visibility Settings */}
             <CVVisibilityCard />
+
+            {/* Job listings preferences (CV users only, when feature is on) */}
+            {user && user.HR !== true && classifiedAdsActive && (
+              <ClassifiedAdsPreferencesCard />
+            )}
 
             {/* Regular CV Sections */}
             <div className="dashboard-sections">
@@ -408,7 +438,7 @@ const Dashboard = () => {
         {/* Footer */}
         <DashboardFooter />
 
-        {showReferralsModal && (
+        {classifiedAdsActive && showReferralsModal && (
           <ReferralsModal onClose={() => setShowReferralsModal(false)} />
         )}
       </div>

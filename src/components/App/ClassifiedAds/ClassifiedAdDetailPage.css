@@ -1,0 +1,169 @@
+.classified-ad-detail-page {
+  min-height: 100vh;
+  background: #f5f5f5;
+  padding: 2rem 0;
+}
+
+.classified-ad-detail-container {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+.classified-ad-detail-back {
+  display: inline-block;
+  color: #288acd;
+  text-decoration: none;
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+}
+
+.classified-ad-detail-back:hover {
+  text-decoration: underline;
+}
+
+.classified-ad-detail-error {
+  color: #c00;
+  margin-bottom: 1rem;
+}
+
+.classified-ad-detail {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  border: 1px solid #e9ecef;
+}
+
+.classified-ad-detail-title {
+  margin: 0 0 0.35rem 0;
+  font-size: 1.5rem;
+  color: #232936;
+}
+
+.classified-ad-detail-meta {
+  margin: 0;
+  font-size: 1rem;
+  color: #495057;
+}
+
+.classified-ad-detail-tags {
+  margin: 0.25rem 0 0 0;
+  font-size: 0.9rem;
+  color: #6c757d;
+}
+
+.classified-ad-detail-date {
+  margin: 0.5rem 0 0 0;
+  font-size: 0.85rem;
+  color: #868e96;
+}
+
+.classified-ad-detail-description {
+  margin-top: 1.25rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid #eee;
+  white-space: pre-wrap;
+  line-height: 1.6;
+  color: #333;
+}
+
+.classified-ad-detail-contact {
+  margin-top: 1.25rem;
+  padding-top: 1rem;
+  border-top: 1px solid #eee;
+}
+
+.classified-ad-detail-contact h3 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1rem;
+  color: #232936;
+}
+
+.classified-ad-detail-contact p {
+  margin: 0;
+  white-space: pre-wrap;
+  color: #495057;
+}
+
+.classified-ad-detail-apply {
+  margin-top: 1.5rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid #eee;
+}
+
+.classified-ad-detail-apply h3 {
+  margin: 0 0 0.75rem 0;
+  font-size: 1rem;
+  color: #232936;
+}
+
+.classified-ad-detail-apply-label {
+  display: block;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 0.35rem;
+}
+
+.classified-ad-detail-apply-textarea {
+  width: 100%;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid #ced4da;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-family: inherit;
+  resize: vertical;
+  min-height: 100px;
+  margin-bottom: 0.75rem;
+}
+
+.classified-ad-detail-apply-checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  color: #333;
+  margin: 0.75rem 0 0 0;
+  cursor: pointer;
+}
+
+.classified-ad-detail-apply-checkbox {
+  width: 1.1rem;
+  height: 1.1rem;
+}
+
+.classified-ad-detail-apply-error {
+  color: #c00;
+  font-size: 0.9rem;
+  margin: 0 0 0.5rem 0;
+}
+
+.classified-ad-detail-apply-btn {
+  padding: 0.5rem 1.25rem;
+  background: #28a745;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+
+.classified-ad-detail-apply-btn:hover:not(:disabled) {
+  background: #218838;
+}
+
+.classified-ad-detail-apply-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.classified-ad-detail-apply-success {
+  margin: 0;
+  color: #155724;
+  background: #d4edda;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  font-size: 0.95rem;
+}

@@ -2,9 +2,11 @@ import React, { useState, useEffect, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Context as AuthContext } from '../../../../context/AuthContext';
 import { Context as SaveCVContext } from '../../../../context/SaveCVContext';
+import { Context as ClassifiedAdsContext } from '../../../../context/ClassifiedAdsContext';
 import hrLogo from '../../../../assets/images/logo-hr.png';
 import DashSwapLoader from '../../../common/DashSwapLoader/DashSwapLoader';
 import socketService from '../../../../services/socketService';
+import TokenModal from './TokenModal';
 import './HRDashboard.css';
 
 const HRDashboard = () => {
@@ -13,6 +15,7 @@ const HRDashboard = () => {
   const [sortBy, setSortBy] = useState('dateSaved');
   const [deleteConfirmId, setDeleteConfirmId] = useState(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [showTokenModal, setShowTokenModal] = useState(false);
 
   // Loader state
   const [showLoader, setShowLoader] = useState(false);
@@ -32,6 +35,8 @@ const HRDashboard = () => {
     deleteSavedCV,
     handleCVUpdated,
   } = useContext(SaveCVContext);
+
+  const { state: { classifiedAdsActive } } = useContext(ClassifiedAdsContext);
 
   // Auto-scroll to top when component mounts
   useEffect(() => {
@@ -207,6 +212,9 @@ const HRDashboard = () => {
 
   return (
     <>
+      {classifiedAdsActive && showTokenModal && (
+        <TokenModal onClose={() => setShowTokenModal(false)} />
+      )}
       <DashSwapLoader
         show={showLoader}
         switchingTo={switchingTo}
@@ -233,6 +241,23 @@ const HRDashboard = () => {
                 >
                   🔍 Browse CVs
                 </button>
+                {classifiedAdsActive && (
+                  <>
+                    <button
+                      onClick={() => setShowTokenModal(true)}
+                      className="hr-dashboard-browse-button"
+                      title="View token balance"
+                    >
+                      🪙 Tokens
+                    </button>
+                    <button
+                      onClick={() => navigate('/app/hr-classified-ads')}
+                      className="hr-dashboard-browse-button"
+                    >
+                      📋 My Ads
+                    </button>
+                  </>
+                )}
                 {user && user.isAdmin && (
                   <button
                     onClick={() => navigate('/app/admin')}
@@ -293,6 +318,28 @@ const HRDashboard = () => {
                   >
                     🔍 Browse CVs
                   </button>
+                  {classifiedAdsActive && (
+                    <>
+                      <button
+                        onClick={() => {
+                          setShowTokenModal(true);
+                          handleMobileMenuClose();
+                        }}
+                        className="hr-dashboard-mobile-nav-button"
+                      >
+                        🪙 Tokens
+                      </button>
+                      <button
+                        onClick={() => {
+                          navigate('/app/hr-classified-ads');
+                          handleMobileMenuClose();
+                        }}
+                        className="hr-dashboard-mobile-nav-button"
+                      >
+                        📋 My Ads
+                      </button>
+                    </>
+                  )}
                   {user && user.isAdmin && (
                     <button
                       onClick={() => {

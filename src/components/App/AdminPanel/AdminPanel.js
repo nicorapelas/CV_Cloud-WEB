@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Context as AuthContext } from '../../../context/AuthContext';
 import { Context as AdvertisementContext } from '../../../context/AdvertisementContext';
+import { Context as ClassifiedAdsContext } from '../../../context/ClassifiedAdsContext';
 import api from '../../../api/api';
 import { COUNTRIES } from '../../../utils/countryConfig';
 import './AdminPanel.css';
@@ -17,6 +18,11 @@ const AdminPanel = () => {
     state: { bannerAdStripShow },
     setBannerAdStripShow,
   } = useContext(AdvertisementContext);
+
+  const {
+    state: { classifiedAdsActive },
+    setClassifiedAdsActive,
+  } = useContext(ClassifiedAdsContext);
 
   const [users, setUsers] = useState([]);
   const [stats, setStats] = useState(null);
@@ -57,6 +63,11 @@ const AdminPanel = () => {
   const [affiliateInfoData, setAffiliateInfoData] = useState(null);
   const [affiliateInfoLoading, setAffiliateInfoLoading] = useState(false);
   const [affiliateInfoError, setAffiliateInfoError] = useState('');
+  // Classified Ads: credit tokens to HR user
+  const [tokenCreditUserId, setTokenCreditUserId] = useState('');
+  const [tokenCreditAmount, setTokenCreditAmount] = useState('');
+  const [tokenCreditSubmitting, setTokenCreditSubmitting] = useState(false);
+  const [tokenCreditMessage, setTokenCreditMessage] = useState('');
 
   const PROMO_MESSAGE_PRESETS = React.useMemo(
     () => ({
@@ -478,6 +489,47 @@ const AdminPanel = () => {
     }
   };
 
+  const handleToggleClassifiedAds = async () => {
+    const newValue = !classifiedAdsActive;
+    try {
+      await api.patch('/api/admin/settings', { classifiedAdsActive: newValue });
+      setClassifiedAdsActive(newValue);
+      setSuccess(`Job listings ${newValue ? 'enabled' : 'disabled'} globally`);
+      setTimeout(() => setSuccess(''), 3000);
+    } catch (err) {
+      setError(err.response?.data?.error || 'Failed to update job listings setting');
+      setTimeout(() => setError(''), 3000);
+    }
+  };
+
+  const handleCreditTokens = async (e) => {
+    e.preventDefault();
+    const userId = tokenCreditUserId.trim();
+    const amount = parseInt(tokenCreditAmount, 10);
+    if (!userId || !Number.isInteger(amount) || amount < 1) {
+      setTokenCreditMessage('Select an HR user and enter a positive number of tokens.');
+      setTimeout(() => setTokenCreditMessage(''), 4000);
+      return;
+    }
+    setTokenCreditMessage('');
+    setTokenCreditSubmitting(true);
+    try {
+      const { data } = await api.post('/api/classified-ads/tokens/credit', {
+        userId,
+        amount,
+        reason: 'admin_credit',
+      });
+      setTokenCreditMessage(`Credited ${amount} token(s). New balance: ${data.balance}`);
+      setTokenCreditAmount('');
+      setTimeout(() => setTokenCreditMessage(''), 5000);
+    } catch (err) {
+      setTokenCreditMessage(err.response?.data?.error || 'Failed to credit tokens');
+      setTimeout(() => setTokenCreditMessage(''), 5000);
+    } finally {
+      setTokenCreditSubmitting(false);
+    }
+  };
+
   // Calculate country distribution
   const countryStats = users.reduce((acc, u) => {
     const country = u.country || 'ZA';
@@ -550,6 +602,83 @@ const AdminPanel = () => {
         {/* Success/Error Messages */}
         {success && <div className="admin-success-message">{success}</div>}
         {error && <div className="admin-error-message">{error}</div>}
+
+        {/* Job listings / Classified ads feature toggle */}
+        <div className="admin-section">
+          <h2>📋 Job listings / Classified ads</h2>
+          <div className="admin-ad-controls">
+            <div className="admin-ad-status">
+              <span className="admin-ad-label">Feature:</span>
+              <span
+                className={`admin-ad-badge ${classifiedAdsActive ? 'active' : 'inactive'}`}
+              >
+                {classifiedAdsActive ? '✓ Enabled' : '✗ Disabled'}
+              </span>
+            </div>
+            <button onClick={handleToggleClassifiedAds} className="admin-btn-toggle-ads">
+              {classifiedAdsActive ? '🚫 Disable job listings' : '✅ Enable job listings'}
+            </button>
+            <div className="admin-ad-note">
+              When disabled, job listings, tokens, and My Ads are hidden in the web and mobile apps.
+            </div>
+          </div>
+        </div>
+
+        {/* Credit tokens (Classified Ads / Job listings) — only when feature is on */}
+        {classifiedAdsActive && (
+        <div className="admin-section">
+          <h2>🪙 Credit job listing tokens</h2>
+          <p className="admin-section-description">
+            Add tokens to an HR user so they can publish classified ads. One token = one day of visibility per ad.
+          </p>
+          <form onSubmit={handleCreditTokens} className="admin-token-credit-form">
+            <div className="admin-token-credit-row">
+              <label htmlFor="token-credit-user">HR user</label>
+              <select
+                id="token-credit-user"
+                value={tokenCreditUserId}
+                onChange={(e) => setTokenCreditUserId(e.target.value)}
+                required
+                className="admin-token-credit-select"
+              >
+                <option value="">Select HR user…</option>
+                {users.filter((u) => u.HR).map((u) => (
+                  <option key={u._id} value={u._id}>
+                    {u.email || u.username || u._id}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="admin-token-credit-row">
+              <label htmlFor="token-credit-amount">Amount (tokens)</label>
+              <input
+                id="token-credit-amount"
+                type="number"
+                min="1"
+                step="1"
+                value={tokenCreditAmount}
+                onChange={(e) => setTokenCreditAmount(e.target.value)}
+                placeholder="e.g. 10"
+                className="admin-token-credit-input"
+              />
+            </div>
+            <div className="admin-token-credit-row">
+              <button
+                type="submit"
+                className="admin-btn-primary"
+                disabled={tokenCreditSubmitting}
+              >
+                {tokenCreditSubmitting ? 'Crediting…' : 'Credit tokens'}
+              </button>
+            </div>
+            {tokenCreditMessage && (
+              <div className={tokenCreditMessage.startsWith('Credited') ? 'admin-token-credit-success' : 'admin-token-credit-error'}>
+                {tokenCreditMessage}
+              </div>
+            )}
+          </form>
+        </div>
+        )}
 
         {/* Platform Stats */}
         {platformStats && (
@@ -1146,7 +1275,7 @@ const AdminPanel = () => {
               </div>
               <div className="admin-affiliate-modal-body">
                 <p className="admin-affiliate-modal-hint">
-                  Assign a unique code (2–30 characters, letters, numbers, hyphens and underscores).
+                  Assign a unique code (2–30 characters, letters and numbers only; case insensitive).
                 </p>
                 <div className="admin-email-field">
                   <label htmlFor="affiliate-code">Affiliate code *</label>
@@ -1154,9 +1283,11 @@ const AdminPanel = () => {
                     id="affiliate-code"
                     type="text"
                     placeholder="e.g. partner1"
+                    maxLength={30}
                     value={affiliateCodeInput}
                     onChange={(e) => {
-                      setAffiliateCodeInput(e.target.value);
+                      const v = e.target.value.replace(/[^a-zA-Z0-9]/g, '').slice(0, 30);
+                      setAffiliateCodeInput(v);
                       setAffiliateModalError('');
                     }}
                     className="admin-email-input"

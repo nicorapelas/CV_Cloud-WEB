@@ -1,0 +1,121 @@
+/* Back link in header (same as shared CV view header) */
+.view-applicant-cv-back-link {
+  color: #288acd;
+  text-decoration: none;
+  font-size: 0.95rem;
+  margin-right: 12px;
+  white-space: nowrap;
+}
+.view-applicant-cv-back-link:hover {
+  color: #5aa8e0;
+  text-decoration: underline;
+}
+
+.view-applicant-cv-pin-section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 24px;
+}
+
+.view-applicant-cv-pin-card {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  padding: 32px;
+  max-width: 400px;
+  width: 100%;
+}
+
+.view-applicant-cv-pin-card h2 {
+  margin: 0 0 8px 0;
+  font-size: 1.5rem;
+  color: #232936;
+}
+
+.view-applicant-cv-pin-card p {
+  margin: 0 0 24px 0;
+  color: #5a6578;
+  font-size: 0.95rem;
+}
+
+.view-applicant-cv-pin-form label {
+  display: block;
+  font-weight: 600;
+  color: #232936;
+  margin-bottom: 6px;
+  font-size: 0.9rem;
+}
+
+.view-applicant-cv-pin-input {
+  width: 100%;
+  padding: 12px 14px;
+  border: 2px solid #e9ecef;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  letter-spacing: 2px;
+  box-sizing: border-box;
+}
+
+.view-applicant-cv-pin-input:focus {
+  outline: none;
+  border-color: #288acd;
+}
+
+.view-applicant-cv-error {
+  color: #c00;
+  font-size: 0.9rem;
+  margin: 10px 0 0 0;
+}
+
+.view-applicant-cv-pin-btn {
+  margin-top: 20px;
+  width: 100%;
+  padding: 12px 20px;
+  background: linear-gradient(135deg, #288acd 0%, #1e6ba8 100%);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.view-applicant-cv-pin-btn:hover:not(:disabled) {
+  opacity: 0.95;
+}
+
+.view-applicant-cv-pin-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.view-applicant-cv--loaded .view-applicant-cv-header {
+  background: #232936;
+  padding: 12px 24px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.view-applicant-cv-back {
+  color: #288acd;
+  text-decoration: none;
+  font-size: 0.95rem;
+}
+
+.view-applicant-cv-back:hover {
+  text-decoration: underline;
+}
+
+.view-applicant-cv-title {
+  color: #fff;
+  font-weight: 600;
+}
+
+.view-applicant-cv-content {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 24px;
+}
