@@ -413,6 +413,15 @@ const acceptTermsAndConditions = dispatch => async privacyAccepted => {
   }
 };
 
+// Credit affiliate when user reaches intro completion threshold (same as mobile apply-to-intro)
+const applyToIntro = dispatch => async () => {
+  try {
+    await api.patch('/auth/user/apply-to-intro');
+  } catch (err) {
+    // Silently ignore: backend returns error if CV not complete enough or already introComplete
+  }
+};
+
 export const { Context, Provider } = createDataContext(
   authReducer,
   {
@@ -437,6 +446,7 @@ export const { Context, Provider } = createDataContext(
     enableHRDashboard,
     setInitLoginDone,
     acceptTermsAndConditions,
+    applyToIntro,
   },
   {
     token: null,

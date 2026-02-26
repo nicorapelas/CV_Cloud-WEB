@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Context as AuthContext } from '../../../context/AuthContext';
 import { Context as SaveCVContext } from '../../../context/SaveCVContext';
 import Loader from '../../common/loader/Loader';
@@ -7,12 +7,14 @@ import TermsAndConditionsModal from '../../common/TermsAndConditionsModal/TermsA
 import './Signup.css';
 
 const Signup = () => {
+  const [searchParams] = useSearchParams();
+  const refFromUrl = searchParams.get('ref') || searchParams.get('introAffiliateCode') || '';
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',
     password: '',
     password2: '',
-    introAffiliateCode: '',
+    introAffiliateCode: refFromUrl.trim(),
     HRIntent: false,
     website: '', // Honeypot field
   });

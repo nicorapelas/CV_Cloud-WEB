@@ -13,6 +13,7 @@ import './ShareCV.css';
 const ShareCV = () => {
   const {
     state: { user },
+    applyToIntro,
   } = useContext(AuthContext);
 
   const {
@@ -277,6 +278,7 @@ ${fullName}`;
     try {
       await createShareCV(shareData);
       setSentMessage(true);
+      applyToIntro();
     } catch (error) {
       console.error('Error sending CV:', error);
     }

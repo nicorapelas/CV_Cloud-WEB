@@ -44,6 +44,7 @@ const Dashboard = () => {
     state: { user, initLoginDone, loading },
     signout,
     setInitLoginDone,
+    applyToIntro,
   } = useContext(AuthContext);
 
   const navigate = useNavigate();
@@ -112,6 +113,13 @@ const Dashboard = () => {
     fetchPersonalInfo();
     fetchAssignedPhoto();
   }, [fetchPersonalInfo, fetchAssignedPhoto]);
+
+  // Credit affiliate when CV user reaches intro completion threshold (same as mobile)
+  useEffect(() => {
+    if (user && user.HR !== true) {
+      applyToIntro();
+    }
+  }, [user, applyToIntro]);
 
   const handleSignout = () => {
     signout();
