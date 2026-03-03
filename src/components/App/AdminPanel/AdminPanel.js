@@ -1369,6 +1369,12 @@ const AdminPanel = () => {
                       </span>
                     </div>
                     <div className="admin-affiliate-info-row">
+                      <span className="admin-affiliate-info-label">First Impressions</span>
+                      <span className="admin-affiliate-info-value">
+                        {affiliateInfoData.firstImpressions ?? 0}
+                      </span>
+                    </div>
+                    <div className="admin-affiliate-info-row">
                       <span className="admin-affiliate-info-label">Name</span>
                       <span className="admin-affiliate-info-value">
                         {affiliateInfoData.name || '—'}

@@ -43,6 +43,7 @@ const ReferralsModal = ({ onClose }) => {
                 <strong>Your referral code</strong>
                 <code className="referrals-code">{info.code}</code>
                 <p className="referrals-intros-count">Introductions: {info.introductions ?? 0}</p>
+                <p className="referrals-intros-count">First Impressions: {info.firstImpressions ?? 0}</p>
               </div>
               {introList.length > 0 && (
                 <div className="referrals-intros">
