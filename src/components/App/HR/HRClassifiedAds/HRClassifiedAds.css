@@ -1,16 +1,22 @@
 .hr-classified-ads-page {
   min-height: 100vh;
-  background: #f5f5f5;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+  background: white;
+  font-family:
+    -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu',
+    'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 .hr-classified-ads-main {
   padding: 2rem 0;
-  min-height: calc(100vh - 80px);
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding-bottom: 110px; /* prevent gap above ad banner */
+  min-height: 100vh;
 }
 
 .hr-classified-ads-container {
-  max-width: 900px;
+  max-width: 1200px;
   margin: 0 auto;
   padding: 0 1.5rem;
 }
@@ -22,12 +28,59 @@
   margin-bottom: 1.5rem;
   flex-wrap: wrap;
   gap: 1rem;
+  padding: 0.9rem 1rem;
+  border-radius: 12px;
+  background: rgba(35, 41, 54, 0.22);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  backdrop-filter: blur(10px);
+}
+
+.hr-classified-ads-title-left {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  flex: 1;
+  min-width: 0;
+}
+
+.hr-classified-ads-title-actions {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  flex-wrap: wrap;
+  flex: 1;
+  justify-content: flex-end;
+  min-width: 0;
 }
 
 .hr-classified-ads-title {
   margin: 0;
   font-size: 1.75rem;
-  color: #232936;
+  color: white;
+  letter-spacing: 0.2px;
+  flex-shrink: 0;
+  text-align: center;
+}
+
+.hr-classified-ads-back-btn {
+  background: rgba(255, 255, 255, 0.14);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  padding: 0.45rem 0.9rem;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.hr-classified-ads-back-btn:hover {
+  background: rgba(255, 255, 255, 0.22);
+  transform: translateY(-1px);
+  color: white;
 }
 
 .hr-classified-ads-new-btn {
@@ -48,8 +101,9 @@
 }
 
 .hr-classified-ads-error {
-  background: #fee;
-  color: #c00;
+  background: rgba(248, 215, 218, 0.98);
+  color: #721c24;
+  border: 1px solid rgba(245, 198, 203, 0.9);
   padding: 1rem;
   border-radius: 8px;
   margin-bottom: 1rem;
@@ -62,6 +116,7 @@
   border-radius: 12px;
   text-align: center;
   color: #666;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
 }
 
 .hr-classified-ads-empty .hr-classified-ads-new-btn {
@@ -81,8 +136,72 @@
   background: white;
   border-radius: 12px;
   padding: 1.25rem 1.5rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.14);
   border: 1px solid #e9ecef;
+  cursor: pointer;
+  transition: box-shadow 0.2s ease;
+}
+
+.hr-classified-ads-card:hover {
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.18);
+}
+
+.hr-classified-ads-card-summary {
+  outline: none;
+}
+
+.hr-classified-ads-card-tags {
+  margin: 0 0 0.25rem 0;
+  font-size: 0.85rem;
+  color: #6c757d;
+}
+
+.hr-classified-ads-card-expand-hint {
+  margin: 0.5rem 0 0 0;
+  font-size: 0.8rem;
+  color: #868e96;
+  font-style: italic;
+}
+
+.hr-classified-ads-card-detail {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid #eee;
+}
+
+.hr-classified-ads-card-detail-section {
+  margin-bottom: 1rem;
+}
+
+.hr-classified-ads-card-detail-section:last-child {
+  margin-bottom: 0;
+}
+
+.hr-classified-ads-card-detail-label {
+  margin: 0 0 0.35rem 0;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: #495057;
+}
+
+.hr-classified-ads-card-detail-content {
+  font-size: 0.95rem;
+  line-height: 1.55;
+  color: #232936;
+  white-space: pre-wrap;
+}
+
+.hr-classified-ads-card-publish-days {
+  margin: 0;
+  padding-left: 1.25rem;
+  font-size: 0.9rem;
+  color: #495057;
+}
+
+.hr-classified-ads-card-publish-days li {
+  margin-bottom: 0.25rem;
 }
 
 .hr-classified-ads-card-header {
@@ -153,12 +272,12 @@
   padding: 0.4rem 0.75rem;
   border-radius: 6px;
   font-size: 0.85rem;
-  font-weight: 500;
+  font-weight: 600;
   border: none;
   cursor: pointer;
   text-decoration: none;
   display: inline-block;
-  transition: opacity 0.2s;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
 }
 
 .hr-classified-ads-btn:disabled {
@@ -167,30 +286,37 @@
 }
 
 .hr-classified-ads-btn.primary {
-  background: #288acd;
-  color: white;
+  background: linear-gradient(135deg, #288acd 0%, #1e6ba8 100%);
+  color: #fff;
+  box-shadow: 0 2px 10px rgba(40, 138, 205, 0.25);
 }
 
 .hr-classified-ads-btn.primary:hover:not(:disabled) {
-  background: #1e6ba8;
+  background: linear-gradient(135deg, #2a9ce0 0%, #1f78bf 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(40, 138, 205, 0.35);
 }
 
 .hr-classified-ads-btn.secondary {
-  background: #e9ecef;
-  color: #495057;
+  background: rgba(35, 41, 54, 0.06);
+  color: #232936;
+  border: 1px solid rgba(35, 41, 54, 0.12);
 }
 
 .hr-classified-ads-btn.secondary:hover:not(:disabled) {
-  background: #dee2e6;
+  background: rgba(35, 41, 54, 0.1);
+  transform: translateY(-1px);
 }
 
 .hr-classified-ads-btn.delete {
-  background: #f8d7da;
+  background: rgba(220, 53, 69, 0.12);
   color: #721c24;
+  border: 1px solid rgba(220, 53, 69, 0.22);
 }
 
 .hr-classified-ads-btn.delete:hover:not(:disabled) {
-  background: #f5c6cb;
+  background: rgba(220, 53, 69, 0.18);
+  transform: translateY(-1px);
 }
 
 .hr-classified-ads-enquiry-cv-status {
@@ -221,4 +347,11 @@
   white-space: pre-wrap;
   border-top: 1px solid #eee;
   padding-top: 0.5rem;
+}
+
+/* Mobile: match HR dashboard bottom padding */
+@media (max-width: 768px) {
+  .hr-classified-ads-main {
+    padding-bottom: 80px;
+  }
 }

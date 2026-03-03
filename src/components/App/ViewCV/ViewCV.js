@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext, useMemo, useRef } from 'react';
-import { Link, useSearchParams } from 'react-router-dom';
+import { Link, useSearchParams, useNavigate } from 'react-router-dom';
 import { Context as AuthContext } from '../../../context/AuthContext';
 import { Context as PersonalInfoContext } from '../../../context/PersonalInfoContext';
 import { Context as ContactInfoContext } from '../../../context/ContactInfoContext';
@@ -34,7 +34,16 @@ const DEFAULT_TEMPLATE = 'template01'; // Modern template
 
 const ViewCV = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  
+  const navigate = useNavigate();
+
+  const handleBack = () => {
+    if (window.history.length > 1) {
+      navigate(-1);
+    } else {
+      navigate('/app/dashboard');
+    }
+  };
+
   const {
     state: { user },
   } = useContext(AuthContext);
@@ -428,64 +437,66 @@ const ViewCV = () => {
     <div
       className={`view-cv-container ${printMode === 'ink-friendly' ? 'ink-friendly-mode' : ''}`}
     >
-      <div className="view-cv-header">
-        <div className="view-cv-header-left">
-          <Link to="/app/dashboard" className="view-cv-back">
-            ← Back to Dashboard
-          </Link>
-        </div>
-        <div className="view-cv-header-center">
-          <div className="view-cv-header-icon">📄</div>
-          <div className="view-cv-header-content">
-            <h1>Your CV</h1>
-            <p>Preview and manage your CV templates</p>
+      <div className="view-cv-inner">
+        <div className="view-cv-header">
+          <div className="view-cv-header-left">
+            <button type="button" onClick={handleBack} className="view-cv-back">
+              ← Back
+            </button>
           </div>
-        </div>
-        <div className="view-cv-header-actions">
-          <NotificationCenter />
-          <Link
-            to="/app/share-cv"
-            className="view-cv-share-button"
-            title="Share CV"
-          >
-            📤 Share CV
-          </Link>
-          <button
-            className="view-cv-print-button"
-            onClick={handlePrint}
-            title="Print CV"
-          >
-            🖨️ Print CV
-          </button>
-          <div className="template-selector">
-            <label htmlFor="template-select">Template:</label>
-            <select
-              id="template-select"
-              value={cvTemplateSelected}
-              onChange={e => setCVTemplateSelected(e.target.value)}
+          <div className="view-cv-header-center">
+            <div className="view-cv-header-icon">📄</div>
+            <div className="view-cv-header-content">
+              <h1>Your CV</h1>
+              <p>Preview and manage your CV templates</p>
+            </div>
+          </div>
+          <div className="view-cv-header-actions">
+            <NotificationCenter />
+            <Link
+              to="/app/share-cv"
+              className="view-cv-share-button"
+              title="Share CV"
             >
-              <option value="template01">Modern</option>
-              <option value="template02">Clean</option>
-              <option value="template03">Creative</option>
-              <option value="template04">Dark</option>
-              <option value="template05">Tech</option>
-              <option value="template06">Newspaper</option>
-              <option value="template07">Finance</option>
-              <option value="template08">Menu</option>
-              <option value="template09">Industrial</option>
-              <option value="template10">Agriculture</option>
-              {/* Future templates will be added here */}
-            </select>
+              📤 Share CV
+            </Link>
+            <button
+              className="view-cv-print-button"
+              onClick={handlePrint}
+              title="Print CV"
+            >
+              🖨️ Print CV
+            </button>
+            <div className="template-selector">
+              <label htmlFor="template-select">Template:</label>
+              <select
+                id="template-select"
+                value={cvTemplateSelected}
+                onChange={e => setCVTemplateSelected(e.target.value)}
+              >
+                <option value="template01">Modern</option>
+                <option value="template02">Clean</option>
+                <option value="template03">Creative</option>
+                <option value="template04">Dark</option>
+                <option value="template05">Tech</option>
+                <option value="template06">Newspaper</option>
+                <option value="template07">Finance</option>
+                <option value="template08">Menu</option>
+                <option value="template09">Industrial</option>
+                <option value="template10">Agriculture</option>
+                {/* Future templates will be added here */}
+              </select>
+            </div>
           </div>
         </div>
-      </div>
 
-      <div className="cv-preview-container">
-        {printMode === 'ink-friendly' ? (
-          <InkFriendlyTemplate cvData={cvData} />
-        ) : (
-          renderTemplate()
-        )}
+        <div className="cv-preview-container">
+          {printMode === 'ink-friendly' ? (
+            <InkFriendlyTemplate cvData={cvData} />
+          ) : (
+            renderTemplate()
+          )}
+        </div>
       </div>
 
       {/* Print Options Modal */}

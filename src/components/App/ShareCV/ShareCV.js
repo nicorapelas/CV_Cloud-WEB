@@ -250,17 +250,24 @@ ${fullName}`;
     }
   };
 
-  // Handle back navigation
-  const handleBack = () => {
+  // Handle back navigation within Share CV steps
+  const handleBackStep = () => {
     if (currentStep === 2) {
       setCurrentStep(1);
     } else if (currentStep === 3 && showPreview) {
-      // If we're on preview, go back to recipients step
       setShowPreview(false);
       setCurrentStep(3);
     } else if (currentStep === 3) {
-      // If we're on recipients step without preview, go back to message
       setCurrentStep(2);
+    }
+  };
+
+  // Handle back from Share CV page (header back button)
+  const handleBackToPrevious = () => {
+    if (window.history.length > 1) {
+      navigate(-1);
+    } else {
+      navigate('/app/dashboard');
     }
   };
 
@@ -298,49 +305,50 @@ ${fullName}`;
 
   return (
     <div className="share-cv" ref={formTopRef}>
-      <header className="share-cv-header">
-        <div className="share-cv-header-left">
-          <Link to="/app/dashboard" className="share-cv-back">
-            ← Back to Dashboard
-          </Link>
-        </div>
-        <div className="share-cv-header-center">
-          <div className="share-cv-header-icon">📤</div>
-          <div className="share-cv-header-content">
-            <h1>Share CV</h1>
-            <p>Send your CV to potential employers</p>
+      <div className="share-cv-inner">
+        <header className="share-cv-header">
+          <div className="share-cv-header-left">
+            <button type="button" onClick={handleBackToPrevious} className="share-cv-back">
+              ← Back
+            </button>
           </div>
-        </div>
-        <div className="share-cv-header-right"></div>
-      </header>
-
-      {/* Success Message */}
-      {sentMessage && (
-        <div className="share-cv-success">
-          <div className="share-cv-success-content">
-            <div className="share-cv-success-icon">✅</div>
-            <h2>Your CV has been sent!</h2>
-            <p>Good luck with your applications!</p>
-          </div>
-        </div>
-      )}
-
-      {/* Error Messages */}
-      {error && (
-        <div className="share-cv-errors">
-          {Object.entries(error).map(([key, value]) => (
-            <div key={key} className="share-cv-error-message">
-              {value}
+          <div className="share-cv-header-center">
+            <div className="share-cv-header-icon">📤</div>
+            <div className="share-cv-header-content">
+              <h1>Share CV</h1>
+              <p>Send your CV to potential employers</p>
             </div>
-          ))}
-        </div>
-      )}
+          </div>
+          <div className="share-cv-header-right"></div>
+        </header>
 
-      {/* Form Steps */}
-      {!sentMessage && (
-        <main className="share-cv-main">
-          <div className="share-cv-container">
-            <form onSubmit={handleSubmit} className="share-cv-form">
+        {/* Success Message */}
+        {sentMessage && (
+          <div className="share-cv-success">
+            <div className="share-cv-success-content">
+              <div className="share-cv-success-icon">✅</div>
+              <h2>Your CV has been sent!</h2>
+              <p>Good luck with your applications!</p>
+            </div>
+          </div>
+        )}
+
+        {/* Error Messages */}
+        {error && (
+          <div className="share-cv-errors">
+            {Object.entries(error).map(([key, value]) => (
+              <div key={key} className="share-cv-error-message">
+                {value}
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* Form Steps */}
+        {!sentMessage && (
+          <main className="share-cv-main">
+            <div className="share-cv-container">
+              <form onSubmit={handleSubmit} className="share-cv-form">
               {/* Step 1: Subject */}
               {currentStep === 1 && (
                 <div className="share-cv-step">
@@ -400,7 +408,7 @@ ${fullName}`;
                   <div className="share-cv-navigation">
                     <button
                       type="button"
-                      onClick={handleBack}
+                      onClick={handleBackStep}
                       className="btn btn-secondary"
                     >
                       ← Back
@@ -471,7 +479,7 @@ ${fullName}`;
                   <div className="share-cv-navigation">
                     <button
                       type="button"
-                      onClick={handleBack}
+                      onClick={handleBackStep}
                       className="btn btn-secondary"
                     >
                       ← Back
@@ -534,7 +542,7 @@ ${fullName}`;
                   <div className="share-cv-navigation">
                     <button
                       type="button"
-                      onClick={handleBack}
+                      onClick={handleBackStep}
                       className="btn btn-secondary"
                     >
                       ← Edit
@@ -549,10 +557,11 @@ ${fullName}`;
                   </div>
                 </div>
               )}
-            </form>
-          </div>
-        </main>
-      )}
+              </form>
+            </div>
+          </main>
+        )}
+      </div>
     </div>
   );
 };

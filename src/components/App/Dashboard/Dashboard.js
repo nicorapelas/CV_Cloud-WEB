@@ -23,9 +23,8 @@ import CertificateCard from './bitCards/CertificateCard';
 import CVVisibilityCard from './bitCards/CVVisibilityCard';
 import ClassifiedAdsPreferencesCard from './bitCards/ClassifiedAdsPreferencesCard';
 import NotificationCenter from '../../common/NotificationCenter/NotificationCenter';
-import DashSwapLoader from '../../common/DashSwapLoader/DashSwapLoader';
 import DashboardFooter from './DashboardFooter';
-import ReferralsModal from './ReferralsModal';
+import DashboardHeader from './DashboardHeader';
 import { getInitials, getAvatarStyle } from '../../../utils/avatarUtils';
 import './Dashboard.css';
 
@@ -48,14 +47,6 @@ const Dashboard = () => {
   } = useContext(AuthContext);
 
   const navigate = useNavigate();
-
-  // Loader state
-  const [showLoader, setShowLoader] = useState(false);
-  const [switchingTo, setSwitchingTo] = useState('dashboard');
-
-  // Mobile menu state
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [showReferralsModal, setShowReferralsModal] = useState(false);
 
   const {
     state: { navTabSelected },
@@ -121,289 +112,10 @@ const Dashboard = () => {
     }
   }, [user, applyToIntro]);
 
-  const handleSignout = () => {
-    signout();
-  };
-
-  const handleSwitchDashboard = () => {
-    const { HR } = user;
-
-    // Show loader first
-    if (HR) {
-      setSwitchingTo('hr-dashboard');
-      setShowLoader(true);
-
-      // Navigate after 3 seconds
-      setTimeout(() => {
-        navigate('/app/hr-dashboard');
-        setShowLoader(false);
-      }, 3000);
-    } else {
-      setSwitchingTo('dashboard');
-      setShowLoader(true);
-
-      // Navigate after 3 seconds
-      setTimeout(() => {
-        navigate('/hr-introduction');
-        setShowLoader(false);
-      }, 3000);
-    }
-  };
-
   return (
-    <>
-      <DashSwapLoader
-        show={showLoader}
-        switchingTo={switchingTo}
-        delay={3000}
-      />
-      <div className="dashboard">
-        <header className="dashboard-header">
-          <div className="dashboard-header-content">
-            <div className="dashboard-logo">
-              <img
-                src="/logo-h79.png"
-                alt="CV Cloud Logo"
-                className="dashboard-logo-image"
-              />
-            </div>
-            <div className="dashboard-user-info">
-              {personalInfo &&
-                personalInfo.length > 0 &&
-                personalInfo[0].fullName && (
-                  <div className="dashboard-user-welcome">
-                    <div
-                      className="dashboard-user-avatar"
-                      style={
-                        assignedPhotoUrl &&
-                        assignedPhotoUrl !== 'noneAssigned' &&
-                        assignedPhotoUrl.trim() !== ''
-                          ? {}
-                          : getAvatarStyle(personalInfo[0].fullName, 36)
-                      }
-                    >
-                      {assignedPhotoUrl &&
-                      assignedPhotoUrl !== 'noneAssigned' &&
-                      assignedPhotoUrl.trim() !== '' ? (
-                        <>
-                          <img
-                            src={assignedPhotoUrl}
-                            alt={personalInfo[0].fullName}
-                            className="dashboard-user-avatar-image"
-                            onError={e => {
-                              // Fallback to initials if image fails to load
-                              e.target.style.display = 'none';
-                              const initialsSpan = e.target.nextSibling;
-                              if (initialsSpan) {
-                                initialsSpan.style.display = 'flex';
-                              }
-                            }}
-                          />
-                          <span
-                            className="dashboard-user-avatar-initials"
-                            style={{ display: 'none' }}
-                          >
-                            {getInitials(personalInfo[0].fullName)}
-                          </span>
-                        </>
-                      ) : (
-                        <span className="dashboard-user-avatar-initials">
-                          {getInitials(personalInfo[0].fullName)}
-                        </span>
-                      )}
-                    </div>
-                    <span>Welcome, {personalInfo[0].fullName}</span>
-                  </div>
-                )}
-              <div className="dashboard-header-actions">
-                <NotificationCenter />
-                {personalInfo &&
-                personalInfo.length > 0 &&
-                personalInfo[0].fullName ? (
-                  <>
-                    <Link to="/app/view-cv" className="dashboard-header-button">
-                      View CV
-                    </Link>
-                    <Link
-                      to="/app/share-cv"
-                      className="dashboard-header-button"
-                    >
-                      Share CV
-                    </Link>
-                    {classifiedAdsActive && (
-                      <Link
-                        to="/app/classified-ads"
-                        className="dashboard-header-button"
-                      >
-                        Job listings
-                      </Link>
-                    )}
-                  </>
-                ) : (
-                  <>
-                    <button
-                      className="dashboard-header-button disabled"
-                      disabled
-                      title="Please add your full name first"
-                    >
-                      View CV
-                    </button>
-                    <button
-                      className="dashboard-header-button disabled"
-                      disabled
-                      title="Please add your full name first"
-                    >
-                      Share CV
-                    </button>
-                  </>
-                )}
-                {user && user.isAdmin && (
-                  <Link
-                    to="/app/admin"
-                    className="dashboard-switch-button"
-                    style={{
-                      background:
-                        'linear-gradient(135deg, #ffc107 0%, #ff9800 100%)',
-                      textDecoration: 'none',
-                    }}
-                  >
-                    👑 Admin Panel
-                  </Link>
-                )}
-                {user && user.HR && (
-                  <div
-                    className="dashboard-switch-button"
-                    onClick={handleSwitchDashboard}
-                  >
-                    HR Dashboard
-                  </div>
-                )}
-                {classifiedAdsActive && (
-                  <button
-                    type="button"
-                    className="dashboard-referrals-button"
-                    onClick={() => setShowReferralsModal(true)}
-                  >
-                    Referrals
-                  </button>
-                )}
-                <button onClick={handleSignout} className="dashboard-signout">
-                  Sign Out
-                </button>
-              </div>
-            </div>
-            {/* Mobile Menu Button */}
-            <button
-              className="dashboard-mobile-menu-button"
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              aria-label="Toggle mobile menu"
-            >
-              <span
-                className={`dashboard-hamburger ${isMobileMenuOpen ? 'active' : ''}`}
-              >
-                <span></span>
-                <span></span>
-                <span></span>
-              </span>
-            </button>
-          </div>
-
-          {/* Mobile Menu */}
-          <div
-            className={`dashboard-mobile-menu ${isMobileMenuOpen ? 'active' : ''}`}
-          >
-            <NotificationCenter />
-            {personalInfo &&
-            personalInfo.length > 0 &&
-            personalInfo[0].fullName ? (
-              <>
-                <Link
-                  to="/app/view-cv"
-                  className="dashboard-mobile-nav-link"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                >
-                  View CV
-                </Link>
-                <Link
-                  to="/app/share-cv"
-                  className="dashboard-mobile-nav-link"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                >
-                  Share CV
-                </Link>
-                {classifiedAdsActive && (
-                  <Link
-                    to="/app/classified-ads"
-                    className="dashboard-mobile-nav-link"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                  >
-                    Job listings
-                  </Link>
-                )}
-              </>
-            ) : (
-              <>
-                <button
-                  className="dashboard-mobile-nav-link disabled"
-                  disabled
-                  title="Please add your full name first"
-                >
-                  View CV
-                </button>
-                <button
-                  className="dashboard-mobile-nav-link disabled"
-                  disabled
-                  title="Please add your full name first"
-                >
-                  Share CV
-                </button>
-              </>
-            )}
-            {user && user.isAdmin && (
-              <Link
-                to="/app/admin"
-                className="dashboard-mobile-nav-link admin"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                👑 Admin Panel
-              </Link>
-            )}
-            {user && user.HR && (
-              <button
-                className="dashboard-mobile-nav-link hr"
-                onClick={() => {
-                  setIsMobileMenuOpen(false);
-                  handleSwitchDashboard();
-                }}
-              >
-                HR Dashboard
-              </button>
-            )}
-            {classifiedAdsActive && (
-              <button
-                type="button"
-                className="dashboard-mobile-nav-link referrals"
-                onClick={() => {
-                  setIsMobileMenuOpen(false);
-                  setShowReferralsModal(true);
-                }}
-              >
-                Referrals
-              </button>
-            )}
-            <button
-              onClick={() => {
-                setIsMobileMenuOpen(false);
-                handleSignout();
-              }}
-              className="dashboard-mobile-nav-link signout"
-            >
-              Sign Out
-            </button>
-          </div>
-        </header>
-
-        <main className="dashboard-main">
+    <div className="dashboard">
+      <DashboardHeader showSecondaryRow />
+      <main className="dashboard-main">
           <div className="dashboard-container">
             <h3 className="dashboard-sections-title">
               Create a professional CV that stands out from the crowd. Start
@@ -441,16 +153,11 @@ const Dashboard = () => {
             </div>
             <div className="dashboard-actions"></div>
           </div>
-        </main>
+      </main>
 
-        {/* Footer */}
-        <DashboardFooter />
-
-        {classifiedAdsActive && showReferralsModal && (
-          <ReferralsModal onClose={() => setShowReferralsModal(false)} />
-        )}
-      </div>
-    </>
+      {/* Footer */}
+      <DashboardFooter />
+    </div>
   );
 };
 

@@ -1,25 +1,95 @@
 .classified-ad-detail-page {
   min-height: 100vh;
-  background: #f5f5f5;
-  padding: 2rem 0;
+  padding: 2rem 0 110px;
+  background: linear-gradient(135deg, #288acd 0%, #1e6ba8 100%);
+  font-family:
+    -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu',
+    'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 .classified-ad-detail-container {
-  max-width: 720px;
+  max-width: 1200px;
   margin: 0 auto;
   padding: 0 1.5rem;
 }
 
-.classified-ad-detail-back {
-  display: inline-block;
-  color: #288acd;
-  text-decoration: none;
-  font-size: 0.9rem;
-  margin-bottom: 1rem;
+.classified-ad-detail-header {
+  margin-bottom: 1.5rem;
+  padding: 0.9rem 1rem;
+  border-radius: 12px;
+  background: rgba(35, 41, 54, 0.22);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
 }
 
-.classified-ad-detail-back:hover {
-  text-decoration: underline;
+.classified-ad-detail-back-btn {
+  background: rgba(255, 255, 255, 0.14);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  padding: 0.45rem 0.9rem;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+  min-width: 80px;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.classified-ad-detail-back-btn:hover {
+  background: rgba(255, 255, 255, 0.22);
+  transform: translateY(-1px);
+  color: white;
+}
+
+.classified-ad-detail-header-title-wrap {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.classified-ad-detail-header-title {
+  margin: 0 0 0.25rem 0;
+  font-size: 1.75rem;
+  color: white;
+  letter-spacing: 0.2px;
+}
+
+.classified-ad-detail-header-subtitle {
+  margin: 0;
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.88);
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.classified-ad-detail-header-spacer {
+  flex-shrink: 0;
+  min-width: 80px;
+}
+
+.classified-ad-detail-loading-card {
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  text-align: center;
+  color: #666;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.14);
+  border: 1px solid #e9ecef;
 }
 
 .classified-ad-detail-error {
@@ -27,11 +97,23 @@
   margin-bottom: 1rem;
 }
 
+.classified-ad-detail-cta-link {
+  display: inline-block;
+  color: #288acd;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.classified-ad-detail-cta-link:hover {
+  text-decoration: underline;
+}
+
 .classified-ad-detail {
   background: white;
   padding: 1.5rem;
   border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.14);
   border: 1px solid #e9ecef;
 }
 
@@ -116,6 +198,13 @@
   resize: vertical;
   min-height: 100px;
   margin-bottom: 0.75rem;
+  box-sizing: border-box;
+}
+
+.classified-ad-detail-apply-textarea:focus {
+  outline: none;
+  border-color: #288acd;
+  box-shadow: 0 0 0 3px rgba(40, 138, 205, 0.1);
 }
 
 .classified-ad-detail-apply-checkbox-label {
@@ -141,17 +230,22 @@
 
 .classified-ad-detail-apply-btn {
   padding: 0.5rem 1.25rem;
-  background: #28a745;
+  margin-top: 1rem;
+  background: linear-gradient(135deg, #288acd 0%, #1e6ba8 100%);
   color: white;
   border: none;
-  border-radius: 6px;
+  border-radius: 8px;
   font-weight: 600;
   font-size: 0.95rem;
   cursor: pointer;
+  box-shadow: 0 2px 8px rgba(40, 138, 205, 0.3);
+  transition: all 0.2s ease;
 }
 
 .classified-ad-detail-apply-btn:hover:not(:disabled) {
-  background: #218838;
+  background: linear-gradient(135deg, #1e6ba8 0%, #288acd 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(40, 138, 205, 0.4);
 }
 
 .classified-ad-detail-apply-btn:disabled {
@@ -166,4 +260,19 @@
   padding: 0.75rem 1rem;
   border-radius: 8px;
   font-size: 0.95rem;
+}
+
+@media (max-width: 768px) {
+  .classified-ad-detail-page {
+    padding-bottom: 80px;
+  }
+
+  .classified-ad-detail-container {
+    padding: 0 1rem;
+  }
+
+  .classified-ad-detail-header-subtitle {
+    white-space: normal;
+    text-overflow: unset;
+  }
 }

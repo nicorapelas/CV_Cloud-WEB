@@ -16,6 +16,7 @@ const HRClassifiedAds = () => {
   const [showTokenModal, setShowTokenModal] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [actionLoading, setActionLoading] = useState(null); // id of ad being published/closed/deleted
+  const [expandedCardId, setExpandedCardId] = useState(null); // ad._id when card is expanded
 
   const { state: { user }, signout } = useContext(AuthContext);
   const navigate = useNavigate();
@@ -88,6 +89,12 @@ const HRClassifiedAds = () => {
   };
 
   const formatDate = (d) => (d ? new Date(d).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) : '');
+  const formatPublishDay = (d) => (d ? new Date(d).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' }) : '');
+
+  const handleCardClick = (e, adId) => {
+    if (e.target.closest('.hr-classified-ads-card-actions') || e.target.closest('a') || e.target.closest('button')) return;
+    setExpandedCardId((prev) => (prev === adId ? null : adId));
+  };
 
   return (
     <div className="hr-classified-ads-page">
@@ -132,10 +139,26 @@ const HRClassifiedAds = () => {
       <main className="hr-classified-ads-main">
         <div className="hr-classified-ads-container">
           <div className="hr-classified-ads-title-row">
+            <div className="hr-classified-ads-title-left">
+              <button
+                type="button"
+                className="hr-classified-ads-back-btn"
+                onClick={() => navigate('/app/hr-dashboard')}
+              >
+                ← Back
+              </button>
+            </div>
             <h1 className="hr-classified-ads-title">My Classified Ads</h1>
-            <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
-              <Link to="/app/hr-classified-ads/enquiries" className="hr-classified-ads-btn secondary">View applications</Link>
-              <Link to="/app/hr-classified-ads/new" className="hr-classified-ads-new-btn">+ New Ad</Link>
+            <div className="hr-classified-ads-title-actions">
+              <Link
+                to="/app/hr-classified-ads/enquiries"
+                className="hr-classified-ads-back-btn"
+              >
+                View applications
+              </Link>
+              <Link to="/app/hr-classified-ads/new" className="hr-classified-ads-new-btn">
+                + New Ad
+              </Link>
             </div>
           </div>
 
@@ -150,13 +173,55 @@ const HRClassifiedAds = () => {
           ) : (
             <ul className="hr-classified-ads-list">
               {ads.map((ad) => (
-                <li key={ad._id} className="hr-classified-ads-card">
-                  <div className="hr-classified-ads-card-header">
-                    <h2 className="hr-classified-ads-card-title">{ad.title}</h2>
-                    <span className={`hr-classified-ads-status ${STATUS_CLASS[ad.status] || ''}`}>{STATUS_LABELS[ad.status] || ad.status}</span>
+                <li
+                  key={ad._id}
+                  className={`hr-classified-ads-card ${expandedCardId === ad._id ? 'hr-classified-ads-card-expanded' : ''}`}
+                  onClick={(e) => handleCardClick(e, ad._id)}
+                  role="button"
+                  tabIndex={0}
+                  onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleCardClick(e, ad._id); } }}
+                  aria-expanded={expandedCardId === ad._id}
+                >
+                  <div className="hr-classified-ads-card-summary">
+                    <div className="hr-classified-ads-card-header">
+                      <h2 className="hr-classified-ads-card-title">{ad.title}</h2>
+                      <span className={`hr-classified-ads-status ${STATUS_CLASS[ad.status] || ''}`}>{STATUS_LABELS[ad.status] || ad.status}</span>
+                    </div>
+                    <p className="hr-classified-ads-card-meta">{ad.companyName}{ad.location ? ` · ${ad.location}` : ''}</p>
+                    {(ad.jobType || ad.category) && (
+                      <p className="hr-classified-ads-card-tags">{[ad.jobType, ad.category].filter(Boolean).join(' · ')}</p>
+                    )}
+                    {ad.publishedAt && <p className="hr-classified-ads-card-date">Published {formatDate(ad.publishedAt)} · {ad.tokenCost} token{ad.tokenCost !== 1 ? 's' : ''}</p>}
+                    {expandedCardId !== ad._id && (
+                      <p className="hr-classified-ads-card-expand-hint">Click to see more</p>
+                    )}
                   </div>
-                  <p className="hr-classified-ads-card-meta">{ad.companyName}{ad.location ? ` · ${ad.location}` : ''}</p>
-                  {ad.publishedAt && <p className="hr-classified-ads-card-date">Published {formatDate(ad.publishedAt)} · {ad.tokenCost} token{ad.tokenCost !== 1 ? 's' : ''}</p>}
+                  {expandedCardId === ad._id && (
+                    <div className="hr-classified-ads-card-detail">
+                      {ad.description && (
+                        <div className="hr-classified-ads-card-detail-section">
+                          <h4 className="hr-classified-ads-card-detail-label">Description</h4>
+                          <div className="hr-classified-ads-card-detail-content">{ad.description}</div>
+                        </div>
+                      )}
+                      {ad.contactInstructions && (
+                        <div className="hr-classified-ads-card-detail-section">
+                          <h4 className="hr-classified-ads-card-detail-label">How to apply</h4>
+                          <div className="hr-classified-ads-card-detail-content">{ad.contactInstructions}</div>
+                        </div>
+                      )}
+                      {ad.publishDays && ad.publishDays.length > 0 && (
+                        <div className="hr-classified-ads-card-detail-section">
+                          <h4 className="hr-classified-ads-card-detail-label">Scheduled days</h4>
+                          <ul className="hr-classified-ads-card-publish-days">
+                            {ad.publishDays.map((day, i) => (
+                              <li key={i}>{formatPublishDay(day)}</li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
+                    </div>
+                  )}
                   <div className="hr-classified-ads-card-actions">
                     {ad.status === 'draft' && (
                       <>

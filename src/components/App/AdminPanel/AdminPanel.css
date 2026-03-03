@@ -762,6 +762,10 @@
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
 }
 
+.admin-affiliate-info-modal {
+  padding: 25px;
+}
+
 .admin-fi-modal-header {
   display: flex;
   align-items: center;

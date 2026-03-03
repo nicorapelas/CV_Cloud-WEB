@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import api from '../../../api/api';
+import DashboardHeader from '../Dashboard/DashboardHeader';
+import '../Dashboard/Dashboard.css';
 import './ClassifiedAdsListPage.css';
 
 const ClassifiedAdsListPage = () => {
+  const navigate = useNavigate();
   const [ads, setAds] = useState([]);
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -45,10 +48,24 @@ const ClassifiedAdsListPage = () => {
   const totalPages = Math.ceil(total / limit) || 1;
 
   return (
-    <div className="classified-ads-list-page">
-      <div className="classified-ads-list-container">
-        <h1 className="classified-ads-list-title">Job listings</h1>
-        <p className="classified-ads-list-subtitle">Classified ads from employers. Tap an ad to view details and apply.</p>
+    <div className="dashboard">
+      <DashboardHeader />
+      <main className="classified-ads-list-page">
+        <div className="classified-ads-list-container">
+        <div className="classified-ads-list-header">
+          <button
+            type="button"
+            className="classified-ads-list-back-btn"
+            onClick={() => navigate('/app/dashboard')}
+          >
+            ← Back
+          </button>
+          <div className="classified-ads-list-header-title-wrap">
+            <h1 className="classified-ads-list-title">Job listings</h1>
+            <p className="classified-ads-list-subtitle">Classified ads from employers. Tap an ad to view details and apply.</p>
+          </div>
+          <div className="classified-ads-list-header-spacer" aria-hidden="true" />
+        </div>
 
         <div className="classified-ads-filters">
           <input
@@ -121,7 +138,8 @@ const ClassifiedAdsListPage = () => {
             )}
           </>
         )}
-      </div>
+        </div>
+      </main>
     </div>
   );
 };

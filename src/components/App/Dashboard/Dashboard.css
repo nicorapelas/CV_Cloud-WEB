@@ -30,18 +30,132 @@
 .dashboard-header {
   background: #232936;
   color: white;
-  padding: 1rem 0;
+  padding: 1rem 0 0;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  border-bottom: 4px solid #288acd;
 }
 
 .dashboard-header-content {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 2rem;
+  padding: 0 2rem 1rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+/* Second row: Job listings & Referrals (blue bar, same as former header hr) */
+.dashboard-header-secondary-row {
+  background: #288acd;
+  width: 100%;
+  padding: 0.3rem 0 0.2rem 0;
+  border-bottom: 2px solid rgba(0, 0, 0, 0.1);
+}
+
+.dashboard-header-secondary-row-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.dashboard-header-secondary-quote-wrap {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.dashboard-header-secondary-quote-text {
+  color: #ffffff;
+  font-size: 0.9rem;
+  line-height: 1.4;
+  display: inline;
+  max-width: 100%;
+}
+
+.dashboard-header-secondary-quote-cursor {
+  opacity: 0;
+  transition: opacity 0.1s;
+}
+
+.dashboard-header-secondary-quote-cursor.visible {
+  opacity: 1;
+}
+
+.dashboard-header-secondary-quote-arrow {
+  color: #ffffff;
+  margin-left: 0.35rem;
+  flex-shrink: 0;
+  display: inline-block;
+  font-size: 1.1rem;
+  animation: dashboard-arrow-blink 1s ease-in-out infinite;
+}
+
+@keyframes dashboard-arrow-blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.35;
+  }
+}
+
+.dashboard-header-secondary-buttons {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-shrink: 0;
+}
+
+.dashboard-header-secondary-btn {
+  background: #f9b600;
+  color: #333;
+  text-decoration: none;
+  padding: 0.5rem 1.25rem;
+  width: 130px;
+  min-height: 36px;
+  box-sizing: border-box;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dashboard-header-secondary-btn:hover {
+  background: #e5a800;
+  color: #333;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.dashboard-header-secondary-btn-referrals {
+  background: #f9b600;
+  color: #333;
+}
+
+.dashboard-header-secondary-btn-referrals:hover {
+  background: #e5a800;
+  color: #333;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.dashboard-header-secondary-btn.disabled {
+  background: rgba(249, 182, 0, 0.6);
+  color: #333;
+  cursor: not-allowed;
+  opacity: 0.9;
+}
+
+.dashboard-header-secondary-btn.disabled:hover {
+  box-shadow: none;
 }
 
 .dashboard-logo {
@@ -144,6 +258,11 @@
   background: linear-gradient(135deg, #2a9ce0 0%, #1f78bf 100%);
   transform: translateY(-1px);
   box-shadow: 0 4px 12px rgba(40, 138, 205, 0.4);
+}
+
+.dashboard-header-button.active {
+  background: linear-gradient(135deg, #2a9ce0 0%, #1f78bf 100%);
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.5);
 }
 
 .dashboard-header-button.disabled {
@@ -348,6 +467,11 @@
 
 .dashboard-mobile-nav-link:hover {
   background: linear-gradient(135deg, #2a9ce0 0%, #1f78bf 100%);
+}
+
+.dashboard-mobile-nav-link.active {
+  background: linear-gradient(135deg, #2a9ce0 0%, #1f78bf 100%);
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.4);
 }
 
 .dashboard-mobile-nav-link.admin {
