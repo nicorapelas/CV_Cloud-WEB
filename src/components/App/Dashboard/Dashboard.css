@@ -321,16 +321,28 @@
 .dashboard-referrals-button {
   background: linear-gradient(135deg, #2e7d32 0%, #1b5e20 100%);
   color: white;
-  border: none;
-  padding: 0.5rem 1rem;
+  text-decoration: none;
+  padding: 0.7rem 1rem;
   border-radius: 6px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  transition: all 0.3s ease;
+  border: none;
+  box-shadow: 0 2px 8px rgba(46, 125, 50, 0.3);
+  min-width: 80px;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
   cursor: pointer;
-  font-size: 0.9rem;
 }
 
 .dashboard-referrals-button:hover {
   background: linear-gradient(135deg, #388e3c 0%, #2e7d32 100%);
   color: white;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(46, 125, 50, 0.4);
 }
 
 .dashboard-switch-button::before {

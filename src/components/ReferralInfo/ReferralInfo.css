@@ -1,0 +1,235 @@
+/* Referral info page – mobile-first, readable on small screens */
+
+.referral-info-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: #f8f9fa;
+  color: #1a1a1a;
+}
+
+/* Header: sticky on scroll, comfortable tap targets */
+.referral-info-header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: #fff;
+  border-bottom: 1px solid #e0e0e0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+
+.referral-info-header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  max-width: 42rem;
+  margin: 0 auto;
+}
+
+.referral-info-logo-link {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  min-width: 44px;
+}
+
+.referral-info-logo {
+  height: 36px;
+  width: auto;
+  display: block;
+}
+
+.referral-info-title {
+  flex: 1;
+  margin: 0;
+  font-size: 1.125rem;
+  font-weight: 600;
+  line-height: 1.3;
+  text-align: center;
+}
+
+.referral-info-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 0.5rem 1rem;
+  background: #2563eb;
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.9375rem;
+  text-decoration: none;
+  border-radius: 8px;
+  white-space: nowrap;
+}
+
+.referral-info-cta:hover,
+.referral-info-cta:focus {
+  background: #1d4ed8;
+  color: #fff;
+}
+
+/* Main content */
+.referral-info-main {
+  flex: 1;
+  padding: 1.25rem 1rem 2rem;
+  max-width: 42rem;
+  margin: 0 auto;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.referral-info-loading,
+.referral-info-error {
+  text-align: center;
+  padding: 2rem 1rem;
+  font-size: 1rem;
+}
+
+.referral-info-error a {
+  display: inline-block;
+  margin-top: 0.75rem;
+  color: #2563eb;
+  font-weight: 500;
+}
+
+/* Markdown content – mobile-first typography */
+.referral-info-content {
+  font-size: 1rem;
+  line-height: 1.6;
+  word-wrap: break-word;
+}
+
+.referral-info-content h1,
+.referral-info-content h2,
+.referral-info-content h3 {
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+  line-height: 1.3;
+  font-weight: 600;
+}
+
+.referral-info-content h1 {
+  font-size: 1.5rem;
+  margin-top: 0;
+}
+
+.referral-info-content h2 {
+  font-size: 1.25rem;
+}
+
+.referral-info-content h3 {
+  font-size: 1.0625rem;
+}
+
+.referral-info-content p {
+  margin: 0 0 1rem;
+}
+
+.referral-info-content ul {
+  margin: 0 0 1rem;
+  padding-left: 1.5rem;
+}
+
+.referral-info-content li {
+  margin-bottom: 0.5rem;
+}
+
+.referral-info-content li:last-child {
+  margin-bottom: 0;
+}
+
+.referral-info-content code {
+  font-size: 0.9em;
+  background: #e5e7eb;
+  padding: 0.2em 0.4em;
+  border-radius: 4px;
+  word-break: break-all;
+}
+
+.referral-info-content pre {
+  margin: 0 0 1rem;
+  padding: 1rem;
+  background: #e5e7eb;
+  border-radius: 8px;
+  overflow-x: auto;
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+.referral-info-content pre code {
+  background: none;
+  padding: 0;
+}
+
+.referral-info-content hr {
+  border: none;
+  border-top: 1px solid #e0e0e0;
+  margin: 1.5rem 0;
+}
+
+.referral-info-content strong {
+  font-weight: 600;
+}
+
+.referral-info-content a {
+  color: #2563eb;
+  text-decoration: underline;
+}
+
+.referral-info-content a:hover,
+.referral-info-content a:focus {
+  color: #1d4ed8;
+}
+
+/* Footer CTA */
+.referral-info-footer {
+  padding: 1.25rem 1rem;
+  background: #fff;
+  border-top: 1px solid #e0e0e0;
+}
+
+.referral-info-footer-link {
+  display: block;
+  text-align: center;
+  min-height: 44px;
+  line-height: 44px;
+  font-weight: 600;
+  font-size: 1rem;
+  color: #2563eb;
+  text-decoration: none;
+}
+
+.referral-info-footer-link:hover,
+.referral-info-footer-link:focus {
+  color: #1d4ed8;
+}
+
+/* Slightly larger touch and text on very small screens if needed */
+@media (max-width: 360px) {
+  .referral-info-header-inner {
+    padding: 0.5rem 0.75rem;
+  }
+
+  .referral-info-cta {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
+  }
+}
+
+/* Optional: slightly nicer on larger screens */
+@media (min-width: 600px) {
+  .referral-info-main {
+    padding: 1.5rem 1.5rem 2.5rem;
+  }
+
+  .referral-info-content h1 {
+    font-size: 1.75rem;
+  }
+
+  .referral-info-content h2 {
+    font-size: 1.375rem;
+  }
+}

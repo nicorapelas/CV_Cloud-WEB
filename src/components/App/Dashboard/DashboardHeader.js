@@ -59,7 +59,7 @@ const DashboardHeader = ({ showSecondaryRow = false }) => {
   return (
     <>
       <DashSwapLoader show={showLoader} switchingTo={switchingTo} delay={3000} />
-      {classifiedAdsActive && showReferralsModal && (
+      {showReferralsModal && (
         <ReferralsModal onClose={() => setShowReferralsModal(false)} />
       )}
       <header className="dashboard-header">
@@ -126,6 +126,9 @@ const DashboardHeader = ({ showSecondaryRow = false }) => {
               {user && user.HR && (
                 <div className="dashboard-switch-button" onClick={handleSwitchDashboard}>HR Dashboard</div>
               )}
+              {user && user.affiliate && (
+                <button type="button" className="dashboard-referrals-button" onClick={(e) => { e.stopPropagation(); setShowReferralsModal(true); }}>Referrals</button>
+              )}
               <button onClick={signout} className="dashboard-signout">Sign Out</button>
             </div>
           </div>
@@ -158,6 +161,9 @@ const DashboardHeader = ({ showSecondaryRow = false }) => {
           )}
           {user && user.HR && (
             <button type="button" className="dashboard-mobile-nav-link hr" onClick={() => { setIsMobileMenuOpen(false); handleSwitchDashboard(); }}>HR Dashboard</button>
+          )}
+          {user && user.affiliate && (
+            <button type="button" className="dashboard-mobile-nav-link referrals" onClick={() => { setIsMobileMenuOpen(false); setShowReferralsModal(true); }}>Referrals</button>
           )}
           <button type="button" className="dashboard-mobile-nav-link signout" onClick={() => { setIsMobileMenuOpen(false); signout(); }}>Sign Out</button>
         </div>

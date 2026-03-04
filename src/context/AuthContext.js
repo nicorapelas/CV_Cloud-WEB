@@ -338,12 +338,11 @@ const setIntroAffiliateCode = dispatch => code => {
 };
 
 const addAffiliateInfo = dispatch => async () => {
-  dispatch({ type: 'LOADING' });
   try {
     const response = await api.get('/api/affiliate/info');
     dispatch({ type: 'ADD_AFFILIATE_INFO', payload: response.data });
   } catch (err) {
-    dispatch({ type: 'STOP_LOADING' });
+    dispatch({ type: 'ADD_AFFILIATE_INFO', payload: null });
   }
 };
 
@@ -353,12 +352,10 @@ const clearAffiliateInfo = dispatch => () => {
 
 // Fetches users who signed up with the current user's affiliate code (intros)
 const addAffiliates = dispatch => async () => {
-  dispatch({ type: 'LOADING' });
   try {
     const response = await api.get('/api/affiliate/intros');
     dispatch({ type: 'ADD_AFFILIATES', payload: response.data || [] });
   } catch (err) {
-    dispatch({ type: 'STOP_LOADING' });
     dispatch({ type: 'ADD_AFFILIATES', payload: [] });
   }
 };

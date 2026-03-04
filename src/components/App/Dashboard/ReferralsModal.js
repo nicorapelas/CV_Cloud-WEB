@@ -1,11 +1,12 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useContext } from 'react';
 import { Context as AuthContext } from '../../../context/AuthContext';
 import './ReferralsModal.css';
 
 const ReferralsModal = ({ onClose }) => {
+  const [localLoading, setLocalLoading] = useState(true);
   const {
-    state: { affiliateInfo, affiliates, loading },
+    state: { affiliateInfo, affiliates },
     addAffiliateInfo,
     addAffiliates,
     clearAffiliateInfo,
@@ -13,8 +14,10 @@ const ReferralsModal = ({ onClose }) => {
   } = useContext(AuthContext);
 
   useEffect(() => {
-    addAffiliateInfo();
-    addAffiliates();
+    setLocalLoading(true);
+    Promise.all([addAffiliateInfo(), addAffiliates()]).finally(() => {
+      setLocalLoading(false);
+    });
     return () => {
       clearAffiliateInfo();
       clearAffiliates();
@@ -35,7 +38,7 @@ const ReferralsModal = ({ onClose }) => {
           </button>
         </div>
         <div className="referrals-modal-body">
-          {loading && !info && introList.length === 0 ? (
+          {localLoading && !info && introList.length === 0 ? (
             <p className="referrals-loading">Loading…</p>
           ) : info ? (
             <>

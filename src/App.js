@@ -72,6 +72,7 @@ import ClassifiedAdDetailPage from './components/App/ClassifiedAds/ClassifiedAdD
 import AdminPanel from './components/App/AdminPanel/AdminPanel';
 import EmailVerification from './components/Auth/EmailVerification/EmailVerification';
 import FirstImpressionDemo from './components/FirstImpressionDemo/FirstImpressionDemo';
+import ReferralInfo from './components/ReferralInfo/ReferralInfo';
 
 // Common Components
 import Loader from './components/common/loader/Loader';
@@ -226,6 +227,7 @@ const AppRoutes = () => {
         <Route path="/reset-password/:token" element={<ResetPassword />} />
         <Route path="/hr-introduction" element={<HRIntroduction />} />
         <Route path="/first-impression-demo" element={<FirstImpressionDemo />} />
+        <Route path="/referral-info" element={<ReferralInfo />} />
         <Route path="/email-verified/:id" element={<EmailVerification />} />
         <Route path="/view-shared-cv/:id" element={<SharedCVView />} />
         <Route path="/view-applicant-cv/:enquiryId" element={<ViewApplicantCV />} />
