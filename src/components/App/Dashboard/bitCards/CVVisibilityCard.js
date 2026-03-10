@@ -153,14 +153,15 @@ const CVVisibilityCard = () => {
         </div>
 
         {/* Stats Section */}
-        {isListed && publicCV && publicCV.viewCount > 0 && (
+        {isListed && publicCV && (publicCV.saveCount ?? publicCV.viewCount ?? 0) > 0 && (
           <div className="cv-visibility-stats">
             <div className="visibility-stat">
-              <span className="stat-icon">👁️</span>
-              <span className="stat-value">{publicCV.viewCount}</span>
+              <span className="stat-icon">💾</span>
+              <span className="stat-value">{publicCV.saveCount ?? publicCV.viewCount}</span>
               <span className="stat-label">
-                {publicCV.viewCount === 1 ? 'Total save' : 'Total saves'}
+                {(publicCV.saveCount ?? publicCV.viewCount) === 1 ? 'Time saved' : 'Times saved'}
               </span>
+              <span className="stat-description">Each time an HR saved your CV</span>
             </div>
             {publicCV.hrViews && publicCV.hrViews.length > 0 && (
               <div className="visibility-stat">
@@ -171,6 +172,7 @@ const CVVisibilityCard = () => {
                     ? 'Unique HR professional'
                     : 'Unique HR professionals'}
                 </span>
+                <span className="stat-description">Different people who saved your CV</span>
               </div>
             )}
           </div>

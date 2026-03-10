@@ -512,9 +512,9 @@ const FirstImpressionRecordUpload = ({ onUploadingChange }) => {
       await fetchFirsImpressionStatus();
       await fetchFirstImpression();
       setUploadProgress('Upload completed successfully!');
-      // Navigate back to dashboard after success
+      // Navigate back to CV Dashboard after success (state tells Dashboard not to redirect HR users to HRDashboard)
       setTimeout(() => {
-        navigate('/app/dashboard');
+        navigate('/app/dashboard', { state: { fromCVBuilder: true } });
       }, 2000);
     } catch (err) {
       setError(err.message || 'Upload failed. Please try again.');

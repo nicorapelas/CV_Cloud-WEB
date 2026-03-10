@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Context as AuthContext } from '../../../context/AuthContext';
 import { Context as NavContext } from '../../../context/NavContext';
 import { Context as ClassifiedAdsContext } from '../../../context/ClassifiedAdsContext';
@@ -47,6 +47,7 @@ const Dashboard = () => {
   } = useContext(AuthContext);
 
   const navigate = useNavigate();
+  const location = useLocation();
 
   const {
     state: { navTabSelected },
@@ -88,17 +89,23 @@ const Dashboard = () => {
       // Check if user data is completely loaded (including HR property)
       if (isUserDataComplete(user)) {
         const { HR } = user;
+        const fromCVBuilder = location.state?.fromCVBuilder === true;
 
         if (HR === true) {
-          navigate('/app/hr-dashboard');
-          setInitLoginDone(true);
+          // If user came from CV builder (e.g. First Impression upload), keep them on CV Dashboard
+          if (fromCVBuilder) {
+            setInitLoginDone(true);
+          } else {
+            navigate('/app/hr-dashboard');
+            setInitLoginDone(true);
+          }
         } else if (HR === false) {
           navigate('/app/dashboard');
           setInitLoginDone(true);
         }
       }
     }
-  }, [initLoginDone, user, loading, navigate]);
+  }, [initLoginDone, user, loading, navigate, location.state]);
 
   useEffect(() => {
     fetchPersonalInfo();

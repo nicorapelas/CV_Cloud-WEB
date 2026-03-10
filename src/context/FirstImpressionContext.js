@@ -39,6 +39,7 @@ const FirstImpressionReducer = (state, action) => {
       return {
         ...state,
         firstImpression: action.payload,
+        firstImpressionStatus: action.payload == null ? 0 : state.firstImpressionStatus,
         firstImpressionStatusInitFetchDone: false,
         loading: false,
       };
