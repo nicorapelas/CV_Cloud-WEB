@@ -13,8 +13,12 @@ import './Dashboard.css';
  * @param {function} [props.onOpenReferrals] - Called when Referrals is clicked (e.g. to open modal)
  */
 const DashboardHeaderSecondaryRow = ({ onOpenReferrals }) => {
-  const { state: { classifiedAdsActive } } = useContext(ClassifiedAdsContext);
-  const { state: { personalInfo } } = useContext(PersonalInfoContext);
+  const {
+    state: { classifiedAdsActive },
+  } = useContext(ClassifiedAdsContext);
+  const {
+    state: { personalInfo },
+  } = useContext(PersonalInfoContext);
 
   const [quoteIndex, setQuoteIndex] = useState(0);
   const [quoteDisplay, setQuoteDisplay] = useState('');
@@ -50,13 +54,17 @@ const DashboardHeaderSecondaryRow = ({ onOpenReferrals }) => {
 
   useEffect(() => {
     if (!classifiedAdsActive) return;
-    const cursorInterval = setInterval(() => setQuoteCursor(prev => !prev), 500);
+    const cursorInterval = setInterval(
+      () => setQuoteCursor(prev => !prev),
+      500
+    );
     return () => clearInterval(cursorInterval);
   }, [classifiedAdsActive]);
 
   if (!classifiedAdsActive) return null;
 
-  const hasFullName = personalInfo && personalInfo.length > 0 && personalInfo[0].fullName;
+  const hasFullName =
+    personalInfo && personalInfo.length > 0 && personalInfo[0].fullName;
 
   return (
     <div className="dashboard-header-secondary-row">
@@ -64,25 +72,38 @@ const DashboardHeaderSecondaryRow = ({ onOpenReferrals }) => {
         <div className="dashboard-header-secondary-quote-wrap">
           <span className="dashboard-header-secondary-quote-text">
             {quoteDisplay}
-            <span className={`dashboard-header-secondary-quote-cursor ${quoteCursor ? 'visible' : ''}`} aria-hidden="true">|</span>
+            <span
+              className={`dashboard-header-secondary-quote-cursor ${quoteCursor ? 'visible' : ''}`}
+              aria-hidden="true"
+            >
+              |
+            </span>
           </span>
           {quoteDisplay.length === dashboardJobQuotes[quoteIndex]?.length && (
-            <span className="dashboard-header-secondary-quote-arrow" aria-hidden="true">→</span>
+            <span
+              className="dashboard-header-secondary-quote-arrow"
+              aria-hidden="true"
+            >
+              →
+            </span>
           )}
         </div>
         <div className="dashboard-header-secondary-buttons">
           {hasFullName ? (
-            <Link to="/app/classified-ads" className="dashboard-header-secondary-btn">Job listings</Link>
+            <Link
+              to="/app/classified-ads"
+              className="dashboard-header-secondary-btn job-listings-shimmer"
+            >
+              <span>Job listings</span>
+            </Link>
           ) : (
-            <span className="dashboard-header-secondary-btn disabled" title="Please add your full name first">Job listings</span>
+            <span
+              className="dashboard-header-secondary-btn disabled"
+              title="Please add your full name first"
+            >
+              Job listings
+            </span>
           )}
-          <button
-            type="button"
-            className="dashboard-header-secondary-btn dashboard-header-secondary-btn-referrals"
-            onClick={() => onOpenReferrals?.()}
-          >
-            Referrals
-          </button>
         </div>
       </div>
     </div>

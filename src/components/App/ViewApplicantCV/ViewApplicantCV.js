@@ -138,15 +138,19 @@ const ViewApplicantCV = () => {
   const handleMobileMenuToggle = () => setIsMobileMenuOpen(!isMobileMenuOpen);
   const handleMobileMenuClose = () => setIsMobileMenuOpen(false);
 
+  const fullNameFromPayload =
+    cvPayload?.curriculumVitae?.[0]?._personalInfo?.[0]?.fullName ||
+    (cvPayload?.curriculumVitae?.[0]?._personalInfo?.[0]?.firstName &&
+    cvPayload?.curriculumVitae?.[0]?._personalInfo?.[0]?.lastName
+      ? `${cvPayload.curriculumVitae[0]._personalInfo[0].firstName} ${cvPayload.curriculumVitae[0]._personalInfo[0].lastName}`
+      : null) ||
+    cvPayload?.curriculumVitae?.[0]?._personalInfo?.[0]?.name;
+
   const handleSave = async () => {
     const cv = cvPayload?.curriculumVitae?.[0];
-    const personalInfo = cv?._personalInfo?.[0];
     const fullName =
-      personalInfo?.fullName ||
-      (personalInfo?.firstName && personalInfo?.lastName
-        ? `${personalInfo.firstName} ${personalInfo.lastName}`
-        : null) ||
-      personalInfo?.name;
+      fullNameFromPayload ||
+      fullNameForModals;
     if (!cv?._id || !fullName) {
       alert('Unable to save: CV data missing.');
       return;

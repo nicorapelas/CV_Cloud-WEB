@@ -63,6 +63,32 @@
   text-align: center;
 }
 
+/* Enquiries page: center the header title, keep back link on left */
+.hr-classified-ads-title-row-enquiries {
+  position: relative;
+  justify-content: center;
+}
+
+.hr-classified-ads-title-row-enquiries .hr-classified-ads-back-link-enquiries {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255, 255, 255, 0.14);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  padding: 0.45rem 0.9rem;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+
+.hr-classified-ads-title-row-enquiries
+  .hr-classified-ads-back-link-enquiries:hover {
+  background: rgba(255, 255, 255, 0.22);
+  color: white;
+}
+
 .hr-classified-ads-back-btn {
   background: rgba(255, 255, 255, 0.14);
   color: white;
@@ -91,7 +117,9 @@
   font-weight: 600;
   text-decoration: none;
   display: inline-block;
-  transition: transform 0.2s, box-shadow 0.2s;
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s;
 }
 
 .hr-classified-ads-new-btn:hover {
@@ -123,12 +151,57 @@
   margin-top: 1rem;
 }
 
+.hr-classified-ads-sections {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.hr-classified-ads-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.hr-classified-ads-section-title {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.95);
+  letter-spacing: 0.02em;
+}
+
+.hr-classified-ads-view-expired-btn {
+  align-self: flex-start;
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.hr-classified-ads-view-expired-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+.hr-classified-ads-expired-section .hr-classified-ads-list {
+  margin-top: 0.5rem;
+}
+
 .hr-classified-ads-list {
   list-style: none;
   margin: 0;
   padding: 0;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  flex-wrap: wrap;
   gap: 1rem;
 }
 
@@ -140,14 +213,31 @@
   border: 1px solid #e9ecef;
   cursor: pointer;
   transition: box-shadow 0.2s ease;
+  width: 250px;
+  min-height: 200px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
 }
 
 .hr-classified-ads-card:hover {
   box-shadow: 0 10px 28px rgba(0, 0, 0, 0.18);
 }
 
+.hr-classified-ads-card-expanded {
+  width: 100%;
+  min-width: 280px;
+  aspect-ratio: auto;
+  min-height: 0;
+}
+
 .hr-classified-ads-card-summary {
   outline: none;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 .hr-classified-ads-card-tags {
@@ -202,6 +292,10 @@
 
 .hr-classified-ads-card-publish-days li {
   margin-bottom: 0.25rem;
+}
+
+.hr-classified-ads-card-status-row {
+  margin-bottom: 0.4rem;
 }
 
 .hr-classified-ads-card-header {
@@ -277,7 +371,10 @@
   cursor: pointer;
   text-decoration: none;
   display: inline-block;
-  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease;
 }
 
 .hr-classified-ads-btn:disabled {
@@ -298,25 +395,81 @@
 }
 
 .hr-classified-ads-btn.secondary {
-  background: rgba(35, 41, 54, 0.06);
-  color: #232936;
-  border: 1px solid rgba(35, 41, 54, 0.12);
+  background: linear-gradient(
+    135deg,
+    rgba(102, 126, 234, 0.207) 0%,
+    rgba(118, 75, 162, 0.249) 100%
+  );
+  color: #614a68;
+  border: 1px solid rgba(102, 126, 234, 0.25);
 }
 
 .hr-classified-ads-btn.secondary:hover:not(:disabled) {
-  background: rgba(35, 41, 54, 0.1);
+  background: linear-gradient(
+    135deg,
+    rgba(102, 126, 234, 0.18) 0%,
+    rgba(118, 75, 162, 0.18) 100%
+  );
+  color: #2d3748;
+  border-color: rgba(102, 126, 234, 0.4);
   transform: translateY(-1px);
+  box-shadow: 0 3px 10px rgba(102, 126, 234, 0.15);
+}
+
+.hr-classified-ads-card-applicants-row {
+  margin-top: 0.5rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid #eee;
+}
+
+.hr-classified-ads-btn.applicants {
+  background: linear-gradient(135deg, rgba(21, 87, 36, 0.12) 0%, rgba(40, 167, 69, 0.12) 100%);
+  color: #155724;
+  border: 1px solid rgba(40, 167, 69, 0.3);
+  width: 100%;
+  text-align: center;
+}
+
+.hr-classified-ads-btn.applicants:hover:not(:disabled) {
+  background: linear-gradient(135deg, rgba(21, 87, 36, 0.2) 0%, rgba(40, 167, 69, 0.2) 100%);
+  border-color: rgba(40, 167, 69, 0.5);
+  transform: translateY(-1px);
+  box-shadow: 0 3px 10px rgba(40, 167, 69, 0.15);
+  animation: none;
+}
+
+.hr-classified-ads-btn.applicants-pulse {
+  animation: applicants-pulse 2.5s ease-in-out infinite;
+}
+
+@keyframes applicants-pulse {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(40, 167, 69, 0.25);
+  }
+  50% {
+    box-shadow: 0 0 0 6px rgba(40, 167, 69, 0);
+  }
 }
 
 .hr-classified-ads-btn.delete {
-  background: rgba(220, 53, 69, 0.12);
-  color: #721c24;
-  border: 1px solid rgba(220, 53, 69, 0.22);
+  background: linear-gradient(
+    135deg,
+    rgba(220, 53, 69, 0.1) 0%,
+    rgba(185, 28, 28, 0.1) 100%
+  );
+  color: #9b2c2c;
+  border: 1px solid rgba(220, 53, 69, 0.25);
 }
 
 .hr-classified-ads-btn.delete:hover:not(:disabled) {
-  background: rgba(220, 53, 69, 0.18);
+  background: linear-gradient(
+    135deg,
+    rgba(220, 53, 69, 0.18) 0%,
+    rgba(185, 28, 28, 0.18) 100%
+  );
+  border-color: rgba(220, 53, 69, 0.4);
   transform: translateY(-1px);
+  box-shadow: 0 3px 10px rgba(220, 53, 69, 0.15);
 }
 
 .hr-classified-ads-enquiry-cv-status {
@@ -340,13 +493,239 @@
   letter-spacing: 1px;
 }
 
+/* Enquiry list: full-width stacked cards (not square grid) */
+.hr-classified-ads-list:has(.hr-classified-ads-enquiry-card) {
+  flex-direction: column;
+}
+
+/* Enquiry card: full width, auto height, all content inside */
+.hr-classified-ads-enquiry-card {
+  width: 100%;
+  min-height: 0;
+  aspect-ratio: auto;
+  cursor: default;
+  display: block;
+}
+
+.hr-classified-ads-enquiry-card .hr-classified-ads-enquiry-card-inner {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.hr-classified-ads-enquiry-photo-wrap {
+  flex-shrink: 0;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: #e9ecef;
+}
+
+.hr-classified-ads-enquiry-photo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.hr-classified-ads-enquiry-photo-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #6c757d;
+  background: #dee2e6;
+}
+
+.hr-classified-ads-enquiry-content {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.hr-classified-ads-enquiry-card .hr-classified-ads-card-header {
+  margin-bottom: 0;
+  gap: 0.75rem;
+}
+
+.hr-classified-ads-enquiry-card .hr-classified-ads-card-title {
+  margin: 0;
+}
+
+.hr-classified-ads-enquiry-card .hr-classified-ads-card-date {
+  margin: 0;
+  flex-shrink: 0;
+  font-size: 0.8rem;
+  color: #868e96;
+}
+
+.hr-classified-ads-enquiry-card .hr-classified-ads-card-meta {
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.hr-classified-ads-enquiry-card .hr-classified-ads-enquiry-cv-status {
+  margin: 0;
+  font-size: 0.875rem;
+}
+
+.hr-classified-ads-enquiry-position {
+  margin: 0.15rem 0 0 0;
+  font-size: 0.88rem;
+  color: #5a6578;
+}
+
+.hr-classified-ads-enquiry-position strong {
+  color: #232936;
+  font-weight: 600;
+}
+
+.hr-classified-ads-enquiry-message-wrap {
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid #eee;
+}
+
+.hr-classified-ads-enquiry-message-label {
+  margin: 0 0 0.35rem 0;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: #6c757d;
+}
+
 .hr-classified-ads-enquiry-message {
-  margin: 0.5rem 0 0 0;
+  margin: 0;
   font-size: 0.95rem;
   color: #333;
   white-space: pre-wrap;
+  line-height: 1.5;
+}
+
+/* Ad detail modal */
+.hr-ad-detail-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+}
+
+.hr-ad-detail-modal {
+  background: #fff;
+  border-radius: 12px;
+  max-width: 520px;
+  width: 100%;
+  max-height: 90vh;
+  overflow: auto;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.2);
+}
+
+.hr-ad-detail-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid #eee;
+}
+
+.hr-ad-detail-modal-title {
+  margin: 0;
+  font-size: 1.25rem;
+  color: #232936;
+  flex: 1;
+  min-width: 0;
+}
+
+.hr-ad-detail-modal-close {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #666;
+  line-height: 1;
+  padding: 0 4px;
+  flex-shrink: 0;
+}
+
+.hr-ad-detail-modal-close:hover {
+  color: #333;
+}
+
+.hr-ad-detail-modal-body {
+  padding: 1.25rem;
+}
+
+.hr-ad-detail-modal-meta {
+  margin: 0 0 0.5rem 0;
+  font-size: 0.9rem;
+  color: #495057;
+}
+
+.hr-ad-detail-modal-tags {
+  margin: 0 0 0.5rem 0;
+  font-size: 0.85rem;
+  color: #6c757d;
+}
+
+.hr-ad-detail-modal-date {
+  margin: 0 0 1rem 0;
+  font-size: 0.85rem;
+  color: #6c757d;
+}
+
+.hr-ad-detail-modal-section {
+  margin-bottom: 1rem;
+}
+
+.hr-ad-detail-modal-section:last-of-type {
+  margin-bottom: 0;
+}
+
+.hr-ad-detail-modal-label {
+  margin: 0 0 0.35rem 0;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: #495057;
+}
+
+.hr-ad-detail-modal-content {
+  font-size: 0.95rem;
+  line-height: 1.55;
+  color: #232936;
+  white-space: pre-wrap;
+}
+
+.hr-ad-detail-modal-publish-days {
+  margin: 0;
+  padding-left: 1.25rem;
+  font-size: 0.9rem;
+  color: #495057;
+}
+
+.hr-ad-detail-modal-publish-days li {
+  margin-bottom: 0.25rem;
+}
+
+.hr-ad-detail-modal-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 1.25rem;
+  padding-top: 1rem;
   border-top: 1px solid #eee;
-  padding-top: 0.5rem;
 }
 
 /* Mobile: match HR dashboard bottom padding */

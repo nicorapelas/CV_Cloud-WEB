@@ -5,6 +5,8 @@ import DashboardHeader from '../Dashboard/DashboardHeader';
 import '../Dashboard/Dashboard.css';
 import './ClassifiedAdsListPage.css';
 
+const formatPublishDay = (d) => (d ? new Date(d).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' }) : '');
+
 const ClassifiedAdsListPage = () => {
   const navigate = useNavigate();
   const [ads, setAds] = useState([]);
@@ -13,13 +15,17 @@ const ClassifiedAdsListPage = () => {
   const [error, setError] = useState(null);
   const [page, setPage] = useState(1);
   const [filters, setFilters] = useState({ category: '', location: '', jobType: '' });
+  const [detailModalAdId, setDetailModalAdId] = useState(null);
+  const [detailModalAd, setDetailModalAd] = useState(null);
+  const [detailModalLoading, setDetailModalLoading] = useState(false);
+  const [detailModalError, setDetailModalError] = useState(null);
   const limit = 20;
 
   const fetchAds = async () => {
     setLoading(true);
     setError(null);
     try {
-      const params = new URLSearchParams({ page, limit });
+      const params = new URLSearchParams({ page, limit, showAll: '1' });
       if (filters.category) params.set('category', filters.category);
       if (filters.location) params.set('location', filters.location);
       if (filters.jobType) params.set('jobType', filters.jobType);
@@ -43,7 +49,36 @@ const ClassifiedAdsListPage = () => {
     fetchAds();
   }, [page, filters.category, filters.location, filters.jobType]);
 
+  useEffect(() => {
+    if (!detailModalAdId) {
+      setDetailModalAd(null);
+      setDetailModalError(null);
+      return;
+    }
+    let cancelled = false;
+    setDetailModalLoading(true);
+    setDetailModalError(null);
+    api.get(`/api/classified-ads/active/${detailModalAdId}`)
+      .then(({ data }) => {
+        if (!cancelled) {
+          setDetailModalAd(data);
+          setDetailModalError(null);
+        }
+      })
+      .catch((err) => {
+        if (!cancelled) {
+          setDetailModalAd(null);
+          setDetailModalError(err.response?.data?.error || 'Failed to load details');
+        }
+      })
+      .finally(() => {
+        if (!cancelled) setDetailModalLoading(false);
+      });
+    return () => { cancelled = true; };
+  }, [detailModalAdId]);
+
   const formatDate = (d) => (d ? new Date(d).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) : '');
+  const closeDetailModal = () => setDetailModalAdId(null);
 
   const totalPages = Math.ceil(total / limit) || 1;
 
@@ -116,16 +151,21 @@ const ClassifiedAdsListPage = () => {
             <ul className="classified-ads-list">
               {ads.map((ad) => (
                 <li key={ad._id}>
-                  <Link to={`/app/classified-ads/${ad._id}`} className="classified-ads-card">
-                    <h2 className="classified-ads-card-title">{ad.title}</h2>
-                    <p className="classified-ads-card-meta">{ad.companyName}{ad.location ? ` · ${ad.location}` : ''}</p>
-                    {(ad.jobType || ad.category) && (
-                      <p className="classified-ads-card-tags">
-                        {[ad.jobType, ad.category].filter(Boolean).join(' · ')}
-                      </p>
-                    )}
-                    {ad.publishedAt && <span className="classified-ads-card-date">Posted {formatDate(ad.publishedAt)}</span>}
-                  </Link>
+                  <div className="classified-ads-card">
+                    <Link to={`/app/classified-ads/${ad._id}`} className="classified-ads-card-link">
+                      <h2 className="classified-ads-card-title">{ad.title}</h2>
+                      <p className="classified-ads-card-meta">{ad.companyName}{ad.location ? ` · ${ad.location}` : ''}</p>
+                      {(ad.jobType || ad.category) && (
+                        <p className="classified-ads-card-tags">
+                          {[ad.jobType, ad.category].filter(Boolean).join(' · ')}
+                        </p>
+                      )}
+                      {ad.publishedAt && <span className="classified-ads-card-date">Posted {formatDate(ad.publishedAt)}</span>}
+                    </Link>
+                    <button type="button" className="classified-ads-card-details-btn" onClick={(e) => { e.preventDefault(); setDetailModalAdId(ad._id); }}>
+                      Details
+                    </button>
+                  </div>
                 </li>
               ))}
             </ul>
@@ -137,6 +177,66 @@ const ClassifiedAdsListPage = () => {
               </div>
             )}
           </>
+        )}
+
+        {detailModalAdId && (
+          <div className="classified-ads-detail-modal-overlay" onClick={closeDetailModal}>
+            <div className="classified-ads-detail-modal" onClick={(e) => e.stopPropagation()}>
+              <div className="classified-ads-detail-modal-header">
+                <h2 className="classified-ads-detail-modal-title">
+                  {detailModalAd ? detailModalAd.title : 'Job details'}
+                </h2>
+                <button type="button" className="classified-ads-detail-modal-close" onClick={closeDetailModal} aria-label="Close">×</button>
+              </div>
+              <div className="classified-ads-detail-modal-body">
+                {detailModalLoading && <p className="classified-ads-detail-modal-loading">Loading…</p>}
+                {detailModalError && <p className="classified-ads-detail-modal-error">{detailModalError}</p>}
+                {detailModalAd && !detailModalLoading && (
+                  <>
+                    <p className="classified-ads-detail-modal-meta">
+                      {detailModalAd.companyName}{detailModalAd.location ? ` · ${detailModalAd.location}` : ''}
+                    </p>
+                    {(detailModalAd.jobType || detailModalAd.category) && (
+                      <p className="classified-ads-detail-modal-tags">
+                        {[detailModalAd.jobType, detailModalAd.category].filter(Boolean).join(' · ')}
+                      </p>
+                    )}
+                    {detailModalAd.publishedAt && (
+                      <p className="classified-ads-detail-modal-date">Posted {formatDate(detailModalAd.publishedAt)}</p>
+                    )}
+                    {detailModalAd.description && (
+                      <div className="classified-ads-detail-modal-section">
+                        <h4 className="classified-ads-detail-modal-label">Description</h4>
+                        <div className="classified-ads-detail-modal-content">{detailModalAd.description}</div>
+                      </div>
+                    )}
+                    {detailModalAd.contactInstructions && (
+                      <div className="classified-ads-detail-modal-section">
+                        <h4 className="classified-ads-detail-modal-label">How to apply</h4>
+                        <div className="classified-ads-detail-modal-content">{detailModalAd.contactInstructions}</div>
+                      </div>
+                    )}
+                    {detailModalAd.publishDays && detailModalAd.publishDays.length > 0 && (
+                      <div className="classified-ads-detail-modal-section">
+                        <h4 className="classified-ads-detail-modal-label">Scheduled days</h4>
+                        <ul className="classified-ads-detail-modal-publish-days">
+                          {detailModalAd.publishDays.map((day, i) => (
+                            <li key={i}>{formatPublishDay(day)}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+                    <div className="classified-ads-detail-modal-actions">
+                      <Link to={`/app/classified-ads/${detailModalAd._id}`} className="classified-ads-detail-modal-apply-btn" onClick={closeDetailModal}>
+                        View full ad & apply
+                      </Link>
+                      <button type="button" onClick={closeDetailModal} className="classified-ads-detail-modal-close-btn">Close</button>
+                    </div>
+                  </>
+                )}
+              </div>
+            </div>
+          </div>
         )}
         </div>
       </main>

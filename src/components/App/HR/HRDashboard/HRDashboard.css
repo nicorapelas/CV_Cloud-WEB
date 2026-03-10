@@ -15,7 +15,7 @@
   color: white;
   padding: 1rem 0;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  border-bottom: 4px solid #288acd;
+  border-bottom: 4px solid #764ba2;
 }
 
 .hr-dashboard-header-content {
@@ -46,6 +46,46 @@
   color: #278acd;
 }
 
+.hr-dashboard-user-welcome {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex: 1;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.hr-dashboard-user-welcome span {
+  font-size: 1rem;
+  opacity: 0.9;
+}
+
+.hr-dashboard-user-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.hr-dashboard-user-avatar-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.hr-dashboard-user-avatar-initials {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .hr-dashboard-user-info {
   display: flex;
   align-items: center;
@@ -63,10 +103,35 @@
   gap: 0.75rem;
 }
 
-.hr-dashboard-switch-button,
+/* Same purple as Dashboard "HR Dashboard" button */
+.hr-dashboard-switch-button:not(.cv-dashboard),
 .hr-dashboard-browse-button {
-  background: linear-gradient(135deg, #288acd 0%, #1e6ba8 100%);
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: rgb(255, 255, 255);
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  transition: all 0.3s ease;
+  border: none;
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+  backdrop-filter: blur(10px);
+  position: relative;
+  overflow: hidden;
+  min-width: 80px;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  cursor: pointer;
+}
+
+/* CV Dashboard button: same look as Dashboard "View CV" (.dashboard-header-button) – no shared switch-button class to avoid overrides */
+.hr-dashboard-cv-dashboard-btn {
+  background: linear-gradient(135deg, #288acd 0%, #1e6ba8 100%);
+  color: white;
   text-decoration: none;
   padding: 0.5rem 1rem;
   border-radius: 6px;
@@ -85,6 +150,13 @@
   justify-content: center;
   gap: 0.25rem;
   cursor: pointer;
+}
+
+.hr-dashboard-cv-dashboard-btn:hover {
+  background: linear-gradient(135deg, #2a9ce0 0%, #1f78bf 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(40, 138, 205, 0.4);
+  color: white;
 }
 
 .hr-dashboard-switch-button::before,
@@ -109,11 +181,11 @@
   left: 100%;
 }
 
-.hr-dashboard-switch-button:hover,
+.hr-dashboard-switch-button:not(.cv-dashboard):hover,
 .hr-dashboard-browse-button:hover {
-  background: linear-gradient(135deg, #1e6ba8 0%, #288acd 100%);
+  background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(40, 138, 205, 0.4);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
   color: white;
 }
 
@@ -911,7 +983,11 @@
     flex-shrink: 0;
   }
 
-  /* Hide desktop user info and actions on mobile */
+  /* Hide desktop user welcome and actions on mobile */
+  .hr-dashboard-user-welcome {
+    display: none !important;
+  }
+
   .hr-dashboard-user-info {
     display: none !important;
   }

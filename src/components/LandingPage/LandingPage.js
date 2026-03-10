@@ -137,7 +137,7 @@ const LandingPage = () => {
                 </div>
               </div>
               <h1 className="landing-hero-title">
-                Create Professional CVs with Ease
+                First impressions count
               </h1>
               <p className="landing-hero-subtitle">
                 Build stunning resumes and CVs that stand out. Our intuitive

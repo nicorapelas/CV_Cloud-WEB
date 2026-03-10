@@ -63,6 +63,9 @@ const AdminPanel = () => {
   const [affiliateInfoData, setAffiliateInfoData] = useState(null);
   const [affiliateInfoLoading, setAffiliateInfoLoading] = useState(false);
   const [affiliateInfoError, setAffiliateInfoError] = useState('');
+  const [affiliateRemoveLoading, setAffiliateRemoveLoading] = useState(false);
+  const [affiliateRemoveError, setAffiliateRemoveError] = useState('');
+  const [reactivatingAffiliate, setReactivatingAffiliate] = useState(false);
   // Classified Ads: credit tokens to HR user
   const [tokenCreditUserId, setTokenCreditUserId] = useState('');
   const [tokenCreditAmount, setTokenCreditAmount] = useState('');
@@ -167,6 +170,7 @@ const AdminPanel = () => {
     let cancelled = false;
     setAffiliateInfoLoading(true);
     setAffiliateInfoError('');
+    setAffiliateRemoveError('');
     setAffiliateInfoData(null);
     api
       .post('/auth/user/fetch-affiliate-info', { userEmail: affiliateInfoModalEmail })
@@ -195,7 +199,11 @@ const AdminPanel = () => {
   }, [affiliateInfoModalEmail]);
 
   const openAffiliateModal = (u) => {
-    setAffiliateModalUser({ email: u.email, _id: u._id });
+    setAffiliateModalUser({
+      email: u.email,
+      _id: u._id,
+      suspendedAffiliateCode: u.suspendedAffiliateCode || null,
+    });
     setAffiliateCodeInput('');
     setAffiliateModalError('');
   };
@@ -204,6 +212,62 @@ const AdminPanel = () => {
     setAffiliateModalUser(null);
     setAffiliateCodeInput('');
     setAffiliateModalError('');
+  };
+
+  const handleRemoveAffiliate = async () => {
+    if (!affiliateInfoModalEmail) return;
+    setAffiliateRemoveError('');
+    setAffiliateRemoveLoading(true);
+    try {
+      const response = await api.patch('/auth/user/remove-affiliate', {
+        userEmail: affiliateInfoModalEmail,
+      });
+      if (response.data?.error) {
+        setAffiliateRemoveError(response.data.error);
+        setAffiliateRemoveLoading(false);
+        return;
+      }
+      setAffiliateInfoModalEmail(null);
+      setAffiliateInfoData(null);
+      setAffiliateRemoveError('');
+      fetchUsers();
+    } catch (err) {
+      setAffiliateRemoveError(
+        err.response?.data?.error || 'Failed to remove affiliate status'
+      );
+    } finally {
+      setAffiliateRemoveLoading(false);
+    }
+  };
+
+  const handleReactivateAffiliate = async () => {
+    if (!affiliateModalUser?.email) return;
+    setAffiliateModalError('');
+    setReactivatingAffiliate(true);
+    try {
+      const response = await api.patch('/auth/user/reactivate-affiliate', {
+        userEmail: affiliateModalUser.email,
+      });
+      if (response.data?.error) {
+        setAffiliateModalError(response.data.error);
+        setReactivatingAffiliate(false);
+        return;
+      }
+      setSuccess(
+        response.data.code
+          ? `Affiliate re-activated. Code: ${response.data.code}`
+          : response.data.success || 'Affiliate re-activated successfully'
+      );
+      setTimeout(() => setSuccess(''), 5000);
+      closeAffiliateModal();
+      fetchUsers();
+    } catch (err) {
+      setAffiliateModalError(
+        err.response?.data?.error || 'Failed to reactivate affiliate'
+      );
+    } finally {
+      setReactivatingAffiliate(false);
+    }
   };
 
   const handleCreateAffiliate = async () => {
@@ -1274,48 +1338,84 @@ const AdminPanel = () => {
                 </button>
               </div>
               <div className="admin-affiliate-modal-body">
-                <p className="admin-affiliate-modal-hint">
-                  Assign a unique code (2–30 characters, letters and numbers only; case insensitive).
-                </p>
-                <div className="admin-email-field">
-                  <label htmlFor="affiliate-code">Affiliate code *</label>
-                  <input
-                    id="affiliate-code"
-                    type="text"
-                    placeholder="e.g. partner1"
-                    maxLength={30}
-                    value={affiliateCodeInput}
-                    onChange={(e) => {
-                      const v = e.target.value.replace(/[^a-zA-Z0-9]/g, '').slice(0, 30);
-                      setAffiliateCodeInput(v);
-                      setAffiliateModalError('');
-                    }}
-                    className="admin-email-input"
-                    autoComplete="off"
-                  />
-                </div>
-                {affiliateModalError && (
-                  <div className="admin-error-message admin-affiliate-modal-error">
-                    {affiliateModalError}
-                  </div>
+                {affiliateModalUser.suspendedAffiliateCode ? (
+                  <>
+                    <p className="admin-affiliate-modal-hint">
+                      This user was previously an affiliate. Re-activate to restore their status and existing code. Their stats (Introductions, First Impressions) will be preserved.
+                    </p>
+                    <p className="admin-affiliate-reactivate-code">
+                      <strong>Code:</strong>{' '}
+                      <code className="admin-affiliate-code-inline">{affiliateModalUser.suspendedAffiliateCode}</code>
+                    </p>
+                    {affiliateModalError && (
+                      <div className="admin-error-message admin-affiliate-modal-error">
+                        {affiliateModalError}
+                      </div>
+                    )}
+                    <div className="admin-affiliate-modal-actions">
+                      <button
+                        type="button"
+                        onClick={closeAffiliateModal}
+                        className="admin-btn-cancel-affiliate"
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        type="button"
+                        onClick={handleReactivateAffiliate}
+                        disabled={reactivatingAffiliate}
+                        className="admin-btn-submit-affiliate"
+                      >
+                        {reactivatingAffiliate ? 'Re-activating…' : 'Re-activate affiliate'}
+                      </button>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <p className="admin-affiliate-modal-hint">
+                      Assign a unique code (2–30 characters, letters and numbers only; case insensitive).
+                    </p>
+                    <div className="admin-email-field">
+                      <label htmlFor="affiliate-code">Affiliate code *</label>
+                      <input
+                        id="affiliate-code"
+                        type="text"
+                        placeholder="e.g. partner1"
+                        maxLength={30}
+                        value={affiliateCodeInput}
+                        onChange={(e) => {
+                          const v = e.target.value.replace(/[^a-zA-Z0-9]/g, '').slice(0, 30);
+                          setAffiliateCodeInput(v);
+                          setAffiliateModalError('');
+                        }}
+                        className="admin-email-input"
+                        autoComplete="off"
+                      />
+                    </div>
+                    {affiliateModalError && (
+                      <div className="admin-error-message admin-affiliate-modal-error">
+                        {affiliateModalError}
+                      </div>
+                    )}
+                    <div className="admin-affiliate-modal-actions">
+                      <button
+                        type="button"
+                        onClick={closeAffiliateModal}
+                        className="admin-btn-cancel-affiliate"
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        type="button"
+                        onClick={handleCreateAffiliate}
+                        disabled={creatingAffiliate || !affiliateCodeInput.trim()}
+                        className="admin-btn-submit-affiliate"
+                      >
+                        {creatingAffiliate ? 'Creating…' : 'Create affiliate'}
+                      </button>
+                    </div>
+                  </>
                 )}
-                <div className="admin-affiliate-modal-actions">
-                  <button
-                    type="button"
-                    onClick={closeAffiliateModal}
-                    className="admin-btn-cancel-affiliate"
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    type="button"
-                    onClick={handleCreateAffiliate}
-                    disabled={creatingAffiliate || !affiliateCodeInput.trim()}
-                    className="admin-btn-submit-affiliate"
-                  >
-                    {creatingAffiliate ? 'Creating…' : 'Create affiliate'}
-                  </button>
-                </div>
               </div>
             </div>
           </div>
@@ -1400,6 +1500,24 @@ const AdminPanel = () => {
                           : '—'}
                       </span>
                     </div>
+                  </div>
+                )}
+                {affiliateInfoData && !affiliateInfoLoading && (
+                  <div className="admin-affiliate-remove-section">
+                    {affiliateRemoveError && (
+                      <div className="admin-error-message admin-affiliate-modal-error">
+                        {affiliateRemoveError}
+                      </div>
+                    )}
+                    <button
+                      type="button"
+                      className="admin-btn-remove-affiliate"
+                      onClick={handleRemoveAffiliate}
+                      disabled={affiliateRemoveLoading}
+                      aria-label="Remove affiliate status"
+                    >
+                      {affiliateRemoveLoading ? 'Removing…' : 'Remove affiliate status'}
+                    </button>
                   </div>
                 )}
               </div>

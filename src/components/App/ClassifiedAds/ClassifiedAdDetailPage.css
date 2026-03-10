@@ -262,6 +262,16 @@
   font-size: 0.95rem;
 }
 
+.classified-ad-detail-apply-already {
+  margin: 0 0 1rem 0;
+  color: #2c3e50;
+  background: #f0f4f8;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  border-left: 4px solid #288acd;
+}
+
 @media (max-width: 768px) {
   .classified-ad-detail-page {
     padding-bottom: 80px;

@@ -3,10 +3,14 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Context as AuthContext } from '../../../../context/AuthContext';
 import { Context as SaveCVContext } from '../../../../context/SaveCVContext';
 import { Context as ClassifiedAdsContext } from '../../../../context/ClassifiedAdsContext';
+import { Context as PersonalInfoContext } from '../../../../context/PersonalInfoContext';
+import { Context as PhotoContext } from '../../../../context/PhotoContext';
 import hrLogo from '../../../../assets/images/logo-hr.png';
 import DashSwapLoader from '../../../common/DashSwapLoader/DashSwapLoader';
+import NotificationCenter from '../../../common/NotificationCenter/NotificationCenter';
 import socketService from '../../../../services/socketService';
 import TokenModal from './TokenModal';
+import { getInitials, getAvatarStyle } from '../../../../utils/avatarUtils';
 import './HRDashboard.css';
 
 const HRDashboard = () => {
@@ -36,7 +40,23 @@ const HRDashboard = () => {
     handleCVUpdated,
   } = useContext(SaveCVContext);
 
-  const { state: { classifiedAdsActive } } = useContext(ClassifiedAdsContext);
+  const {
+    state: { classifiedAdsActive },
+  } = useContext(ClassifiedAdsContext);
+
+  const {
+    state: { personalInfo },
+    fetchPersonalInfo,
+  } = useContext(PersonalInfoContext);
+  const {
+    state: { assignedPhotoUrl },
+    fetchAssignedPhoto,
+  } = useContext(PhotoContext);
+
+  useEffect(() => {
+    fetchPersonalInfo();
+    fetchAssignedPhoto();
+  }, [fetchPersonalInfo, fetchAssignedPhoto]);
 
   // Auto-scroll to top when component mounts
   useEffect(() => {
@@ -231,10 +251,62 @@ const HRDashboard = () => {
               />
             </div>
 
+            {/* Centered user photo and name (between logo and actions) */}
+            <div className="hr-dashboard-user-welcome">
+              <div
+                className="hr-dashboard-user-avatar"
+                style={
+                  assignedPhotoUrl &&
+                  assignedPhotoUrl !== 'noneAssigned' &&
+                  assignedPhotoUrl.trim() !== ''
+                    ? {}
+                    : getAvatarStyle(
+                        personalInfo?.[0]?.fullName || user?.fullName || 'HR',
+                        36
+                      )
+                }
+              >
+                {assignedPhotoUrl &&
+                assignedPhotoUrl !== 'noneAssigned' &&
+                assignedPhotoUrl.trim() !== '' ? (
+                  <>
+                    <img
+                      src={assignedPhotoUrl}
+                      alt={personalInfo?.[0]?.fullName || user?.fullName || 'HR'}
+                      className="hr-dashboard-user-avatar-image"
+                      onError={e => {
+                        e.target.style.display = 'none';
+                        const initialsSpan = e.target.nextSibling;
+                        if (initialsSpan) initialsSpan.style.display = 'flex';
+                      }}
+                    />
+                    <span
+                      className="hr-dashboard-user-avatar-initials"
+                      style={{ display: 'none' }}
+                    >
+                      {getInitials(
+                        personalInfo?.[0]?.fullName || user?.fullName || 'HR'
+                      )}
+                    </span>
+                  </>
+                ) : (
+                  <span className="hr-dashboard-user-avatar-initials">
+                    {getInitials(
+                      personalInfo?.[0]?.fullName || user?.fullName || 'HR'
+                    )}
+                  </span>
+                )}
+              </div>
+              <span>
+                Hi,{' '}
+                {(personalInfo?.[0]?.fullName || user?.fullName || 'HR Professional').split(' ')[0]}
+              </span>
+            </div>
+
             {/* Desktop User Info and Actions */}
             <div className="hr-dashboard-user-info">
-              <span>Welcome, {user?.fullName || 'HR Professional'}</span>
               <div className="hr-dashboard-header-actions">
+                <NotificationCenter />
                 <button
                   onClick={() => navigate('/app/hr-browse-cvs')}
                   className="hr-dashboard-browse-button"
@@ -262,17 +334,13 @@ const HRDashboard = () => {
                   <button
                     onClick={() => navigate('/app/admin')}
                     className="hr-dashboard-switch-button"
-                    style={{
-                      background:
-                        'linear-gradient(135deg, #ffc107 0%, #ff9800 100%)',
-                    }}
                   >
                     👑 Admin Panel
                   </button>
                 )}
                 <button
                   onClick={handleSwitchToDashboard}
-                  className="hr-dashboard-switch-button"
+                  className="hr-dashboard-cv-dashboard-btn"
                 >
                   CV Dashboard
                 </button>
@@ -307,8 +375,9 @@ const HRDashboard = () => {
                 ></div>
                 <div className="hr-dashboard-mobile-menu">
                   <div className="hr-dashboard-mobile-user-info">
-                    Welcome, {user?.fullName || 'HR Professional'}
+                    Hi, {user?.fullName || 'HR Professional'}
                   </div>
+                  <NotificationCenter />
                   <button
                     onClick={() => {
                       navigate('/app/hr-browse-cvs');

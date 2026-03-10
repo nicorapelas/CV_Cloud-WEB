@@ -15,6 +15,9 @@ const ClassifiedAdDetailPage = () => {
   const [applySubmitting, setApplySubmitting] = useState(false);
   const [applySubmitted, setApplySubmitted] = useState(false);
   const [applyError, setApplyError] = useState(null);
+  const [myEnquiry, setMyEnquiry] = useState(null);
+  const [myEnquiryLoading, setMyEnquiryLoading] = useState(false);
+  const [updateSuccess, setUpdateSuccess] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -50,6 +53,30 @@ const ClassifiedAdDetailPage = () => {
     };
   }, [id]);
 
+  useEffect(() => {
+    if (!id || !ad) return;
+    let cancelled = false;
+    setMyEnquiryLoading(true);
+    setMyEnquiry(null);
+    (async () => {
+      try {
+        const { data } = await api.get(`/api/classified-ads/active/${id}/my-enquiry`);
+        if (!cancelled) {
+          setMyEnquiry(data);
+          setApplyMessage(data.message || '');
+          setIncludeCv(data.includeCv !== false);
+        }
+      } catch (err) {
+        if (!cancelled && err.response?.status !== 404) {
+          setApplyError(err.response?.data?.error || 'Failed to load application status');
+        }
+      } finally {
+        if (!cancelled) setMyEnquiryLoading(false);
+      }
+    })();
+    return () => { cancelled = true; };
+  }, [id, ad]);
+
   const formatDate = d =>
     d
       ? new Date(d).toLocaleDateString('en-US', {
@@ -64,14 +91,49 @@ const ClassifiedAdDetailPage = () => {
     setApplyError(null);
     setApplySubmitting(true);
     try {
-      await api.post(`/api/classified-ads/active/${id}/enquiries`, {
+      const { data } = await api.post(`/api/classified-ads/active/${id}/enquiries`, {
         message: applyMessage.trim(),
         includeCv,
       });
       setApplySubmitted(true);
+      setMyEnquiry({
+        id: data.id,
+        message: applyMessage.trim(),
+        includeCv,
+      });
       setApplyMessage('');
     } catch (err) {
-      setApplyError(err.response?.data?.error || 'Failed to send application');
+      const res = err.response;
+      if (res?.status === 409 && res?.data?.enquiryId) {
+        setMyEnquiry({
+          id: res.data.enquiryId,
+          message: applyMessage.trim(),
+          includeCv,
+        });
+        setApplyError(res.data.error || 'You have already applied to this position.');
+      } else {
+        setApplyError(res?.data?.error || 'Failed to send application');
+      }
+    } finally {
+      setApplySubmitting(false);
+    }
+  };
+
+  const handleUpdateSubmit = async e => {
+    e.preventDefault();
+    if (!myEnquiry?.id) return;
+    setApplyError(null);
+    setApplySubmitting(true);
+    setUpdateSuccess(false);
+    try {
+      await api.patch(`/api/classified-ads/enquiries/${myEnquiry.id}`, {
+        message: applyMessage.trim(),
+        includeCv,
+      });
+      setUpdateSuccess(true);
+      setMyEnquiry(prev => prev ? { ...prev, message: applyMessage.trim(), includeCv } : null);
+    } catch (err) {
+      setApplyError(err.response?.data?.error || 'Failed to update application');
     } finally {
       setApplySubmitting(false);
     }
@@ -217,7 +279,58 @@ const ClassifiedAdDetailPage = () => {
             )}
             <div className="classified-ad-detail-apply">
               <h3>Apply for this job</h3>
-              {applySubmitted ? (
+              {myEnquiry ? (
+                <>
+                  {applySubmitted && !updateSuccess && (
+                    <p className="classified-ad-detail-apply-success">
+                      Application sent. The employer may contact you via the details in your profile.
+                    </p>
+                  )}
+                  <p className="classified-ad-detail-apply-already">
+                    You have already applied to this position. You can update your message below.
+                  </p>
+                  {updateSuccess && (
+                    <p className="classified-ad-detail-apply-success">
+                      Application updated.
+                    </p>
+                  )}
+                  <form onSubmit={handleUpdateSubmit}>
+                    <label className="classified-ad-detail-apply-label">
+                      Your message *
+                    </label>
+                    <textarea
+                      className="classified-ad-detail-apply-textarea"
+                      value={applyMessage}
+                      onChange={e => setApplyMessage(e.target.value)}
+                      required
+                      maxLength={2000}
+                      placeholder="Introduce yourself and why you're interested..."
+                      rows={4}
+                    />
+                    <label className="classified-ad-detail-apply-checkbox-label">
+                      <input
+                        type="checkbox"
+                        checked={includeCv}
+                        onChange={e => setIncludeCv(e.target.checked)}
+                        className="classified-ad-detail-apply-checkbox"
+                      />
+                      Include my CV with this application
+                    </label>
+                    {applyError && (
+                      <p className="classified-ad-detail-apply-error">
+                        {applyError}
+                      </p>
+                    )}
+                    <button
+                      type="submit"
+                      className="classified-ad-detail-apply-btn"
+                      disabled={applySubmitting}
+                    >
+                      {applySubmitting ? 'Updating…' : 'Update application'}
+                    </button>
+                  </form>
+                </>
+              ) : applySubmitted ? (
                 <p className="classified-ad-detail-apply-success">
                   Application sent. The employer may contact you via the details
                   in your profile.
@@ -253,7 +366,7 @@ const ClassifiedAdDetailPage = () => {
                   <button
                     type="submit"
                     className="classified-ad-detail-apply-btn"
-                    disabled={applySubmitting}
+                    disabled={applySubmitting || myEnquiryLoading}
                   >
                     {applySubmitting ? 'Sending…' : 'Send application'}
                   </button>

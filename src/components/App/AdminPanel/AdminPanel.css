@@ -903,6 +903,44 @@
   margin-top: 0.75rem;
 }
 
+.admin-affiliate-reactivate-code {
+  margin: 1rem 0;
+  font-size: 1rem;
+}
+
+.admin-affiliate-code-inline {
+  font-family: monospace;
+  background: #f0f0f0;
+  padding: 0.2em 0.5em;
+  border-radius: 4px;
+  font-size: 1.05rem;
+}
+
+.admin-affiliate-remove-section {
+  margin-top: 1.25rem;
+  padding-top: 1rem;
+  border-top: 1px solid #eee;
+}
+
+.admin-btn-remove-affiliate {
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  color: #fff;
+  background: #c62828;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.admin-btn-remove-affiliate:hover:not(:disabled) {
+  background: #b71c1c;
+}
+
+.admin-btn-remove-affiliate:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
 .admin-affiliate-modal-actions {
   display: flex;
   gap: 0.75rem;

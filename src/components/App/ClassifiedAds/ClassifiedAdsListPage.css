@@ -157,24 +157,64 @@
   margin: 0;
   padding: 0;
   display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 1rem;
 }
 
 .classified-ads-list li {
   margin: 0;
+  width: 200px;
+  min-height: 200px;
+  aspect-ratio: 1;
 }
 
 .classified-ads-card {
-  display: block;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  box-sizing: border-box;
   background: white;
   padding: 1.25rem 1.5rem;
   border-radius: 12px;
-  text-decoration: none;
-  color: inherit;
   border: 1px solid #e9ecef;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.14);
   transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  overflow: hidden;
+}
+
+.classified-ads-card-link {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+  color: inherit;
+  overflow: hidden;
+}
+
+.classified-ads-card-link:hover {
+  color: inherit;
+}
+
+.classified-ads-card-details-btn {
+  margin-top: 0.75rem;
+  padding: 0.45rem 0.9rem;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+  background: rgba(40, 138, 205, 0.12);
+  color: #1e6ba8;
+  border: 1px solid rgba(40, 138, 205, 0.35);
+  transition: background 0.2s ease, border-color 0.2s ease;
+  flex-shrink: 0;
+}
+
+.classified-ads-card-details-btn:hover {
+  background: rgba(40, 138, 205, 0.2);
+  border-color: #288acd;
 }
 
 .classified-ads-card:hover {
@@ -187,25 +227,43 @@
   margin: 0 0 0.35rem 0;
   font-size: 1.1rem;
   color: #232936;
+  flex-shrink: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
 }
 
 .classified-ads-card-meta {
   margin: 0;
   font-size: 0.9rem;
   color: #495057;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .classified-ads-card-tags {
   margin: 0.25rem 0 0 0;
   font-size: 0.85rem;
   color: #6c757d;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
 }
 
 .classified-ads-card-date {
   display: inline-block;
-  margin-top: 0.5rem;
+  margin-top: auto;
+  padding-top: 0.5rem;
   font-size: 0.8rem;
   color: #868e96;
+  flex-shrink: 0;
 }
 
 .classified-ads-pagination {
@@ -242,6 +300,170 @@
 .classified-ads-pagination span {
   color: rgba(255, 255, 255, 0.95);
   font-size: 0.9rem;
+}
+
+/* Detail modal */
+.classified-ads-detail-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+}
+
+.classified-ads-detail-modal {
+  background: #fff;
+  border-radius: 12px;
+  max-width: 520px;
+  width: 100%;
+  max-height: 90vh;
+  overflow: auto;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.2);
+}
+
+.classified-ads-detail-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid #eee;
+}
+
+.classified-ads-detail-modal-title {
+  margin: 0;
+  font-size: 1.25rem;
+  color: #232936;
+  flex: 1;
+  min-width: 0;
+}
+
+.classified-ads-detail-modal-close {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #666;
+  line-height: 1;
+  padding: 0 4px;
+  flex-shrink: 0;
+}
+
+.classified-ads-detail-modal-close:hover {
+  color: #333;
+}
+
+.classified-ads-detail-modal-body {
+  padding: 1.25rem;
+}
+
+.classified-ads-detail-modal-loading,
+.classified-ads-detail-modal-error {
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+.classified-ads-detail-modal-error {
+  color: #c0392b;
+}
+
+.classified-ads-detail-modal-meta {
+  margin: 0 0 0.5rem 0;
+  font-size: 0.9rem;
+  color: #495057;
+}
+
+.classified-ads-detail-modal-tags {
+  margin: 0 0 0.5rem 0;
+  font-size: 0.85rem;
+  color: #6c757d;
+}
+
+.classified-ads-detail-modal-date {
+  margin: 0 0 1rem 0;
+  font-size: 0.85rem;
+  color: #6c757d;
+}
+
+.classified-ads-detail-modal-section {
+  margin-bottom: 1rem;
+}
+
+.classified-ads-detail-modal-section:last-of-type {
+  margin-bottom: 0;
+}
+
+.classified-ads-detail-modal-label {
+  margin: 0 0 0.35rem 0;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: #495057;
+}
+
+.classified-ads-detail-modal-content {
+  font-size: 0.95rem;
+  line-height: 1.55;
+  color: #232936;
+  white-space: pre-wrap;
+}
+
+.classified-ads-detail-modal-publish-days {
+  margin: 0;
+  padding-left: 1.25rem;
+  font-size: 0.9rem;
+  color: #495057;
+}
+
+.classified-ads-detail-modal-publish-days li {
+  margin-bottom: 0.25rem;
+}
+
+.classified-ads-detail-modal-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 1.25rem;
+  padding-top: 1rem;
+  border-top: 1px solid #eee;
+}
+
+.classified-ads-detail-modal-apply-btn {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-decoration: none;
+  background: linear-gradient(135deg, #288acd 0%, #1e6ba8 100%);
+  color: #fff;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.classified-ads-detail-modal-apply-btn:hover {
+  color: #fff;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(40, 138, 205, 0.4);
+}
+
+.classified-ads-detail-modal-close-btn {
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  background: #e9ecef;
+  color: #495057;
+  border: 1px solid #dee2e6;
+  transition: background 0.2s ease;
+}
+
+.classified-ads-detail-modal-close-btn:hover {
+  background: #dee2e6;
 }
 
 @media (max-width: 768px) {
