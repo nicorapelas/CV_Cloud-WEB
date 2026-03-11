@@ -51,6 +51,7 @@ const FirstImpressionRecordUpload = ({ onUploadingChange }) => {
   const playbackVideoRef = useRef(null);
   const mediaRecorderRef = useRef(null);
   const recordedChunksRef = useRef([]);
+  const recordingMimeTypeRef = useRef('video/webm');
   const ffmpegRef = useRef(new FFmpeg());
   const demoUrlFetchedRef = useRef(false);
   const [pendingDemoOpen, setPendingDemoOpen] = useState(false);
@@ -230,11 +231,41 @@ const FirstImpressionRecordUpload = ({ onUploadingChange }) => {
   const startRecording = () => {
     if (!mediaStream) return;
 
+    // Try mime types that support both video and audio (opus). Firefox fails when only video codec
+    // is specified but the stream has audio - it needs e.g. video/webm;codecs=vp8,opus.
+    const mimeTypesToTry = [
+      'video/webm;codecs=vp9,opus',
+      'video/webm;codecs=vp8,opus',
+      'video/webm;codecs=vp9',
+      'video/webm;codecs=vp8',
+      'video/webm',
+    ];
+    let selectedMimeType = null;
+    let mediaRecorder = null;
+    for (const mimeType of mimeTypesToTry) {
+      if (!MediaRecorder.isTypeSupported(mimeType)) continue;
+      const options = {
+        mimeType,
+        videoBitsPerSecond: 250000, // Very low bitrate for minimal file size
+      };
+      try {
+        const recorder = new MediaRecorder(mediaStream, options);
+        recorder.start(); // Firefox can throw here if audio+video codec combo is unsupported
+        selectedMimeType = mimeType;
+        mediaRecorder = recorder;
+        break;
+      } catch (e) {
+        // This mime type fails with this stream (e.g. "audio track cannot be recorded"), try next
+        continue;
+      }
+    }
+    if (!selectedMimeType || !mediaRecorder) {
+      setError('Video recording is not supported in this browser. Please try Chrome or Firefox with a recent version.');
+      return;
+    }
+
+    recordingMimeTypeRef.current = selectedMimeType;
     recordedChunksRef.current = [];
-    const mediaRecorder = new MediaRecorder(mediaStream, {
-      mimeType: 'video/webm;codecs=vp9',
-      videoBitsPerSecond: 250000, // Very low bitrate for minimal file size
-    });
 
     mediaRecorder.ondataavailable = event => {
       if (event.data.size > 0) {
@@ -243,7 +274,8 @@ const FirstImpressionRecordUpload = ({ onUploadingChange }) => {
     };
 
     mediaRecorder.onstop = () => {
-      const blob = new Blob(recordedChunksRef.current, { type: 'video/webm' });
+      const blobType = recordingMimeTypeRef.current;
+      const blob = new Blob(recordedChunksRef.current, { type: blobType });
       const url = URL.createObjectURL(blob);
 
       // Clear the camera stream from the video element to prepare for playback
@@ -255,7 +287,6 @@ const FirstImpressionRecordUpload = ({ onUploadingChange }) => {
     };
 
     mediaRecorderRef.current = mediaRecorder;
-    mediaRecorder.start();
     setIsRecording(true);
   };
 
