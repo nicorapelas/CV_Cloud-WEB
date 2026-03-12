@@ -88,8 +88,8 @@
   box-sizing: border-box;
 }
 
-/* Ensure images are responsive */
-[class*='template'] img {
+/* Ensure images are responsive (exclude profile/avatar photos so they stay square and round) */
+[class*='template'] img:not([class*='-photo']) {
   max-width: 100%;
   height: auto;
 }

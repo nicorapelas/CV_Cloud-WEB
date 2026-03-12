@@ -44,8 +44,8 @@
   word-break: break-word;
 }
 
-/* Media elements should never overflow the viewport */
-.cv-template-wrapper img,
+/* Media elements should never overflow the viewport (exclude profile/avatar photos so they stay square and round) */
+.cv-template-wrapper img:not([class*='-photo']),
 .cv-template-wrapper svg,
 .cv-template-wrapper video,
 .cv-template-wrapper canvas {
