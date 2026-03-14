@@ -102,6 +102,18 @@ const AdminPanel = () => {
     []
   );
 
+  const SAVE_CV_APOLOGY_DEFAULT_MESSAGE =
+    `<p>Hi,</p>` +
+    `<p>If you recently <strong>saved a shared CV</strong> to your HR dashboard after signing up or logging in from the shared link, you may have seen a “CV Not Found” message when trying to view it.</p>` +
+    `<p>We’ve fixed the issue. The problem was on our side, and we’re sorry for any inconvenience.</p>` +
+    `<p><strong>What you can do now:</strong></p>` +
+    `<ul>` +
+    `<li>If you have the <strong>original shared CV link</strong> from the email, open it again and click <strong>Save CV</strong> while you’re logged in. The CV will save correctly and you’ll be able to view it from your HR dashboard.</li>` +
+    `<li>If you no longer have the link, you can ask the candidate to share their CV with you again from CV Cloud.</li>` +
+    `</ul>` +
+    `<p>Thank you for using CV Cloud. If you have any questions, please reply to this email or contact our support team.</p>` +
+    `<p>Best regards,<br/>The CV Cloud Team</p>`;
+
   const JOB_SEEKER_DEFAULT_MESSAGE =
     `<p>Hi there,</p>` +
     `<p>Applying for jobs shouldn’t mean blending in with hundreds of other CVs.</p>` +
@@ -432,6 +444,36 @@ const AdminPanel = () => {
           next.recipients = {
             ...next.recipients,
             regular: true,
+          };
+        }
+
+        return next;
+      });
+    } else if (value === 'saveCvApologyTemplate') {
+      setTemplateHint(
+        'Service update / apology template. Use to notify HR users about the Save CV fix. Prefills subject and message; edit as needed and choose recipients (e.g. HR users).'
+      );
+
+      setEmailForm(prev => {
+        const next = { ...prev, template: value };
+
+        if (!next.subject) {
+          next.subject = 'We fixed an issue with saving shared CVs – CV Cloud';
+        }
+        if (!next.message) {
+          next.message = SAVE_CV_APOLOGY_DEFAULT_MESSAGE;
+        }
+
+        const anySelected =
+          next.recipients.all ||
+          next.recipients.regular ||
+          next.recipients.hr ||
+          (next.marketingEnabled && next.recipients.marketing.length > 0);
+
+        if (!anySelected && !next.recipients.all) {
+          next.recipients = {
+            ...next.recipients,
+            hr: true,
           };
         }
 
@@ -937,6 +979,9 @@ const AdminPanel = () => {
                 </option>
                 <option value="firstImpressionJobSeekerPromoTemplate">
                   Promo: First Impression (Job Seekers)
+                </option>
+                <option value="saveCvApologyTemplate">
+                  Service update: Save CV apology
                 </option>
               </select>
               {templateHint ? (
