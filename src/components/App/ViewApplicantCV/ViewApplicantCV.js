@@ -34,9 +34,13 @@ const ViewApplicantCV = () => {
   const [showFirstImpression, setShowFirstImpression] = useState(false);
   const [showCertificates, setShowCertificates] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isSavingSharedCV, setIsSavingSharedCV] = useState(false);
 
   const { setCVToSave, saveSharedCV } = useContext(SaveCVContext);
   const { state: { user } } = useContext(AuthContext);
+
+  // Prevent duplicate save requests (double click / mobile + desktop button)
+  const saveInFlightRef = useRef(new Set());
 
   const fetchWithPin = async (pinValue) => {
     if (!enquiryId || !pinValue.trim()) return;
@@ -155,6 +159,11 @@ const ViewApplicantCV = () => {
       alert('Unable to save: CV data missing.');
       return;
     }
+
+    if (saveInFlightRef.current.has(cv._id)) return;
+    saveInFlightRef.current.add(cv._id);
+
+    setIsSavingSharedCV(true);
     if (user) {
       try {
         await saveSharedCV({ curriculumVitaeID: cv._id, fullName });
@@ -162,10 +171,18 @@ const ViewApplicantCV = () => {
       } catch (err) {
         console.error('Error saving CV:', err);
         alert('Failed to save CV. Please try again.');
+      } finally {
+        saveInFlightRef.current.delete(cv._id);
+        setIsSavingSharedCV(false);
       }
     } else {
-      setCVToSave({ curriculumVitaeID: cv._id, fullName });
-      navigate('/hr-introduction');
+      try {
+        setCVToSave({ curriculumVitaeID: cv._id, fullName });
+        navigate('/hr-introduction');
+      } finally {
+        saveInFlightRef.current.delete(cv._id);
+        setIsSavingSharedCV(false);
+      }
     }
   };
 
@@ -277,8 +294,9 @@ const ViewApplicantCV = () => {
                 onClick={handleSave}
                 className="shared-cv-nav-link save-button"
                 title="Save CV"
+                disabled={isSavingSharedCV}
               >
-                💾 Save CV
+                {isSavingSharedCV ? '⏳ Saving...' : '💾 Save CV'}
               </button>
               <div className="hr-bubble">
                 <span className="hr-text">HR</span>
@@ -342,8 +360,9 @@ const ViewApplicantCV = () => {
               }}
               className="shared-cv-mobile-menu-item save-button"
               title="Save CV"
+              disabled={isSavingSharedCV}
             >
-              💾 Save CV
+              {isSavingSharedCV ? '⏳ Saving...' : '💾 Save CV'}
             </button>
           </div>
         )}

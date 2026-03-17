@@ -36,6 +36,7 @@ const SharedCVView = () => {
   const [showFirstImpression, setShowFirstImpression] = useState(false);
   const [showCertificates, setShowCertificates] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isSavingSharedCV, setIsSavingSharedCV] = useState(false);
 
   const {
     state: { shareCV, shareCV_ToView, loading, cvTemplateSelected },
@@ -97,6 +98,9 @@ const SharedCVView = () => {
 
   // Ref to track if view has been tracked
   const viewTrackedRef = useRef(false);
+
+  // Ref to prevent duplicate save requests (double-click / multiple buttons)
+  const saveInFlightRef = useRef(new Set());
 
   // Track CV view when pin is validated and CV data is loaded (only once)
   useEffect(() => {
@@ -285,30 +289,34 @@ const SharedCVView = () => {
   };
 
   const handleSave = async () => {
-    console.log('handleSave');
-    console.log('user', user);
-    if (user) {
-      const { HR } = user;
-      try {
-        const result = await saveSharedCV({
-          curriculumVitaeID: shareCV_ToView.curriculumVitae[0]._id,
-          fullName: shareCV_ToView.curriculumVitae[0]._personalInfo[0].fullName,
-        });
+    const cv = shareCV_ToView?.curriculumVitae?.[0];
+    const curriculumVitaeID = cv?._id;
+    const fullName = cv?._personalInfo?.[0]?.fullName;
 
-        // Navigate to HR introduction regardless of whether CV was just saved or already saved
+    if (!curriculumVitaeID || !fullName) {
+      alert('Unable to save: CV data missing.');
+      return;
+    }
+
+    if (saveInFlightRef.current.has(curriculumVitaeID)) return;
+    saveInFlightRef.current.add(curriculumVitaeID);
+
+    setIsSavingSharedCV(true);
+    try {
+      if (user) {
+        await saveSharedCV({ curriculumVitaeID, fullName });
         navigate('/hr-introduction');
         return;
-      } catch (error) {
-        console.error('Error saving CV:', error);
-        alert('Failed to save CV. Please try again.');
-        return;
       }
-    } else {
-      setCVToSave({
-        curriculumVitaeID: shareCV_ToView.curriculumVitae[0]._id,
-        fullName: shareCV_ToView.curriculumVitae[0]._personalInfo[0].fullName,
-      });
+
+      setCVToSave({ curriculumVitaeID, fullName });
       navigate('/hr-introduction');
+    } catch (error) {
+      console.error('Error saving CV:', error);
+      alert('Failed to save CV. Please try again.');
+    } finally {
+      saveInFlightRef.current.delete(curriculumVitaeID);
+      setIsSavingSharedCV(false);
     }
   };
 
@@ -359,8 +367,9 @@ const SharedCVView = () => {
                   onClick={handleSave}
                   className="shared-cv-nav-link save-button"
                   title="Save CV"
+                  disabled={isSavingSharedCV}
                 >
-                  💾 Save CV
+                  {isSavingSharedCV ? '⏳ Saving...' : '💾 Save CV'}
                 </button>
                 <div className="hr-bubble">
                   <span className="hr-text">HR</span>
@@ -425,8 +434,9 @@ const SharedCVView = () => {
               }}
               className="shared-cv-mobile-menu-item save-button"
               title="Save CV"
+              disabled={isSavingSharedCV}
             >
-              💾 Save CV
+              {isSavingSharedCV ? '⏳ Saving...' : '💾 Save CV'}
             </button>
           </div>
         )}

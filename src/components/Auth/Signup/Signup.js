@@ -33,6 +33,7 @@ const Signup = () => {
 
   const {
     state: { cvToSave },
+    clearCVToSave,
   } = useContext(SaveCVContext);
 
   useEffect(() => {
@@ -98,6 +99,12 @@ const Signup = () => {
     clearErrorMessage();
     setLocalError(''); // Clear local error before submitting
     await register({ ...formData, termsAccepted });
+
+    // cvToSave is a one-time intent (e.g. from shared CV save flow). Clear it so
+    // it doesn't get re-submitted on subsequent signups/logins.
+    if (cvToSave) {
+      clearCVToSave();
+    }
   };
 
   const handleTermsAccept = accepted => {

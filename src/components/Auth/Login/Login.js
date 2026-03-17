@@ -40,6 +40,7 @@ const Login = () => {
   } = useContext(AuthContext);
   const {
     state: { cvToSave },
+    clearCVToSave,
   } = useContext(SaveCVContext);
 
   // Watch for successful authentication and redirect
@@ -138,6 +139,12 @@ const Login = () => {
       HRIntent,
       cvToSave,
     });
+
+    // cvToSave is a one-time intent (e.g. from shared CV save flow). Clear it so
+    // it doesn't get re-submitted on subsequent logins.
+    if (cvToSave) {
+      clearCVToSave();
+    }
 
     // Immediately restore email after signin attempt (in case of error)
     // Don't wait for errorMessage to be set

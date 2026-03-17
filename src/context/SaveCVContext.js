@@ -100,6 +100,10 @@ const setCVToSave = dispatch => data => {
   dispatch({ type: 'SET_CV_TO_SAVE', payload: data });
 };
 
+const clearCVToSave = dispatch => () => {
+  dispatch({ type: 'SET_CV_TO_SAVE', payload: null });
+};
+
 const fetchSavedCVs = dispatch => async () => {
   dispatch({ type: 'LOADING' });
   const response = await api.get('/hr/saved-cv/saved-cvs');
@@ -203,6 +207,7 @@ export const { Context, Provider } = createDataContext(
   SaveCVContext,
   {
     setCVToSave,
+    clearCVToSave,
     fetchSavedCVs,
     fetchSavedCVToView,
     addNoteToSavedCV,

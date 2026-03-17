@@ -80,6 +80,9 @@ const HRViewCV = () => {
   const hasFetchedRef = useRef(false);
   const lastFetchParamsRef = useRef({ id: null, isPreview: null });
 
+  // Prevent duplicate save requests (same-tick double click)
+  const saveInFlightRef = useRef(false);
+
   // Fetch CV data when component mounts
   useEffect(() => {
     if (!id) return;
@@ -270,7 +273,8 @@ const HRViewCV = () => {
   };
 
   const handleSaveCV = async () => {
-    if (!id || cvSaved) return;
+    if (!id || cvSaved || saveInFlightRef.current) return;
+    saveInFlightRef.current = true;
 
     setIsSavingCV(true);
     try {
@@ -283,6 +287,7 @@ const HRViewCV = () => {
       alert('Failed to save CV. Please try again.');
     } finally {
       setIsSavingCV(false);
+      saveInFlightRef.current = false;
     }
   };
 
