@@ -1,11 +1,38 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Context as AuthContext } from '../../../context/AuthContext';
 import { Context as AdvertisementContext } from '../../../context/AdvertisementContext';
 import { Context as ClassifiedAdsContext } from '../../../context/ClassifiedAdsContext';
 import api from '../../../api/api';
 import { COUNTRIES } from '../../../utils/countryConfig';
+import CVTemplateRenderer from '../ViewCV/CVTemplateRenderer';
 import './AdminPanel.css';
+
+/** Map admin CV API payload to CVTemplateRenderer cvData (same shape as SharedCVView). */
+const buildCvDataForAdminPreview = (payload) => {
+  if (!payload?.curriculumVitae?.[0]) return null;
+  const cv = payload.curriculumVitae[0];
+  const shareCVAssignedPhotoUrl = payload.shareCVAssignedPhotoUrl;
+  const assignedPhotoUrl =
+    shareCVAssignedPhotoUrl || cv._photo?.[0]?.photoUrl || null;
+  return {
+    personalInfo: cv._personalInfo?.[0] || null,
+    contactInfo: cv._contactInfo?.[0] || null,
+    personalSummary: cv._personalSummary?.[0] || null,
+    experiences: cv._experience || [],
+    secondEdu: cv._secondEdu || [],
+    skills: cv._skill || [],
+    languages: cv._language || [],
+    references: cv._reference || [],
+    tertEdus: cv._tertEdu || [],
+    interests: cv._interest || [],
+    attributes: cv._attribute || [],
+    employHistorys: cv._employHistory || [],
+    assignedPhotoUrl,
+    firstImpression: cv._firstImpression?.[0] || null,
+    certificates: cv._certificate || [],
+  };
+};
 
 const AdminPanel = () => {
   const navigate = useNavigate();
@@ -66,6 +93,10 @@ const AdminPanel = () => {
   const [affiliateRemoveLoading, setAffiliateRemoveLoading] = useState(false);
   const [affiliateRemoveError, setAffiliateRemoveError] = useState('');
   const [reactivatingAffiliate, setReactivatingAffiliate] = useState(false);
+  const [cvPreviewModal, setCvPreviewModal] = useState(null);
+  const [cvPreviewLoading, setCvPreviewLoading] = useState(false);
+  const [cvPreviewError, setCvPreviewError] = useState('');
+  const [cvPreviewPayload, setCvPreviewPayload] = useState(null);
   // Classified Ads: credit tokens to HR user
   const [tokenCreditUserId, setTokenCreditUserId] = useState('');
   const [tokenCreditAmount, setTokenCreditAmount] = useState('');
@@ -154,6 +185,19 @@ const AdminPanel = () => {
     window.addEventListener('keydown', onEscape);
     return () => window.removeEventListener('keydown', onEscape);
   }, [firstImpressionModal]);
+
+  useEffect(() => {
+    if (!cvPreviewModal) return;
+    const onEscape = (e) => {
+      if (e.key !== 'Escape') return;
+      setCvPreviewModal(null);
+      setCvPreviewPayload(null);
+      setCvPreviewError('');
+      setCvPreviewLoading(false);
+    };
+    window.addEventListener('keydown', onEscape);
+    return () => window.removeEventListener('keydown', onEscape);
+  }, [cvPreviewModal]);
 
   useEffect(() => {
     if (!affiliateModalUser) return;
@@ -330,6 +374,33 @@ const AdminPanel = () => {
       setLoading(false);
     }
   };
+
+  const closeCvPreviewModal = () => {
+    setCvPreviewModal(null);
+    setCvPreviewPayload(null);
+    setCvPreviewError('');
+    setCvPreviewLoading(false);
+  };
+
+  const openCvPreview = async (u) => {
+    setCvPreviewModal({ email: u.email, _id: u._id });
+    setCvPreviewLoading(true);
+    setCvPreviewError('');
+    setCvPreviewPayload(null);
+    try {
+      const { data } = await api.get(`/api/admin/users/${u._id}/cv`);
+      setCvPreviewPayload(data);
+    } catch (err) {
+      setCvPreviewError(err.response?.data?.error || 'Failed to load CV');
+    } finally {
+      setCvPreviewLoading(false);
+    }
+  };
+
+  const cvPreviewCvData = useMemo(
+    () => buildCvDataForAdminPreview(cvPreviewPayload),
+    [cvPreviewPayload]
+  );
 
   const fetchPlatformStats = async () => {
     try {
@@ -1325,6 +1396,14 @@ const AdminPanel = () => {
                       </td>
                       <td>
                         <div className="admin-user-actions">
+                          <button
+                            type="button"
+                            onClick={() => openCvPreview(u)}
+                            className="admin-btn-view-cv"
+                            title="Preview this user's CV"
+                          >
+                            View
+                          </button>
                           {u.firstImpression?.videoUrl && (
                             <button
                               type="button"
@@ -1563,6 +1642,63 @@ const AdminPanel = () => {
                     >
                       {affiliateRemoveLoading ? 'Removing…' : 'Remove affiliate status'}
                     </button>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Admin CV preview modal */}
+        {cvPreviewModal && (
+          <div
+            className="admin-fi-modal-overlay"
+            onClick={closeCvPreviewModal}
+            role="dialog"
+            aria-modal="true"
+            aria-label="User CV preview"
+          >
+            <div
+              className="admin-fi-modal admin-cv-preview-modal"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="admin-fi-modal-header">
+                <h3>CV preview – {cvPreviewModal.email}</h3>
+                <button
+                  type="button"
+                  className="admin-fi-modal-close"
+                  onClick={closeCvPreviewModal}
+                  aria-label="Close"
+                >
+                  ×
+                </button>
+              </div>
+              <div className="admin-cv-preview-body">
+                {cvPreviewLoading && (
+                  <div className="admin-cv-preview-loading">Loading CV…</div>
+                )}
+                {cvPreviewError && !cvPreviewLoading && (
+                  <div className="admin-error-message admin-cv-preview-error">
+                    {cvPreviewError}
+                  </div>
+                )}
+                {!cvPreviewLoading &&
+                  !cvPreviewError &&
+                  cvPreviewPayload &&
+                  !cvPreviewCvData && (
+                    <div className="admin-cv-preview-error">
+                      Unable to render CV (unexpected data shape).
+                    </div>
+                  )}
+                {!cvPreviewLoading && !cvPreviewError && cvPreviewCvData && (
+                  <div className="admin-cv-preview-template-wrap">
+                    <CVTemplateRenderer
+                      cvData={cvPreviewCvData}
+                      templateSelected={
+                        cvPreviewPayload?.cvTemplate || 'template01'
+                      }
+                      fallbackTemplate="template01"
+                    />
                   </div>
                 )}
               </div>

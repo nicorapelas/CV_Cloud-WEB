@@ -230,6 +230,11 @@ const HRDashboard = () => {
     return `${Math.floor(diffDays / 30)} months ago`;
   };
 
+  const hasAssignedPhoto =
+    typeof assignedPhotoUrl === 'string' &&
+    assignedPhotoUrl !== 'noneAssigned' &&
+    assignedPhotoUrl.trim() !== '';
+
   return (
     <>
       {classifiedAdsActive && showTokenModal && (
@@ -256,9 +261,7 @@ const HRDashboard = () => {
               <div
                 className="hr-dashboard-user-avatar"
                 style={
-                  assignedPhotoUrl &&
-                  assignedPhotoUrl !== 'noneAssigned' &&
-                  assignedPhotoUrl.trim() !== ''
+                  hasAssignedPhoto
                     ? {}
                     : getAvatarStyle(
                         personalInfo?.[0]?.fullName || user?.fullName || 'HR',
@@ -266,9 +269,7 @@ const HRDashboard = () => {
                       )
                 }
               >
-                {assignedPhotoUrl &&
-                assignedPhotoUrl !== 'noneAssigned' &&
-                assignedPhotoUrl.trim() !== '' ? (
+                {hasAssignedPhoto ? (
                   <>
                     <img
                       src={assignedPhotoUrl}

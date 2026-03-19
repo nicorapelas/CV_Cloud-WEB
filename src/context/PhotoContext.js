@@ -3,6 +3,13 @@ import createDataContext from './createDataContext';
 import api from '../api/api';
 import socketService from '../services/socketService';
 
+const normalizeAssignedPhotoPayload = payload => {
+  if (typeof payload === 'string') {
+    return payload;
+  }
+  return null;
+};
+
 // Reducer
 const PhotoReducer = (state, action) => {
   switch (action.type) {
@@ -123,8 +130,9 @@ const fetchAssignedPhoto = dispatch => async (forceRefresh = false) => {
       ? `/api/photo/assigned?t=${Date.now()}`
       : '/api/photo/assigned';
     const response = await api.get(url);
-    dispatch({ type: 'FETCH_ASSIGNED_PHOTO', payload: response.data });
-    return response.data;
+    const normalizedAssignedPhoto = normalizeAssignedPhotoPayload(response.data);
+    dispatch({ type: 'FETCH_ASSIGNED_PHOTO', payload: normalizedAssignedPhoto });
+    return normalizedAssignedPhoto;
   } catch (error) {
     console.error('Error fetching assigned photo:', error);
     return null;
@@ -183,7 +191,10 @@ const assignPhoto = dispatch => async id => {
 
     // Also fetch the updated assigned photo URL
     const assignedResponse = await api.get('/api/photo/assigned');
-    dispatch({ type: 'FETCH_ASSIGNED_PHOTO', payload: assignedResponse.data });
+    dispatch({
+      type: 'FETCH_ASSIGNED_PHOTO',
+      payload: normalizeAssignedPhotoPayload(assignedResponse.data),
+    });
 
     return;
   } catch (error) {

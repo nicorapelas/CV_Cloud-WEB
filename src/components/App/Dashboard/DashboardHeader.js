@@ -69,6 +69,11 @@ const DashboardHeader = ({ showSecondaryRow = false }) => {
     }
   };
 
+  const hasAssignedPhoto =
+    typeof assignedPhotoUrl === 'string' &&
+    assignedPhotoUrl !== 'noneAssigned' &&
+    assignedPhotoUrl.trim() !== '';
+
   return (
     <>
       <DashSwapLoader
@@ -97,16 +102,12 @@ const DashboardHeader = ({ showSecondaryRow = false }) => {
                 <div
                   className="dashboard-user-avatar"
                   style={
-                    assignedPhotoUrl &&
-                    assignedPhotoUrl !== 'noneAssigned' &&
-                    assignedPhotoUrl.trim() !== ''
+                    hasAssignedPhoto
                       ? {}
                       : getAvatarStyle(personalInfo[0].fullName, 36)
                   }
                 >
-                  {assignedPhotoUrl &&
-                  assignedPhotoUrl !== 'noneAssigned' &&
-                  assignedPhotoUrl.trim() !== '' ? (
+                  {hasAssignedPhoto ? (
                     <>
                       <img
                         src={assignedPhotoUrl}
